@@ -1,4 +1,4 @@
-package com.camisola10.camisolabackend.config;
+package com.camisola10.camisolabackend.config.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.camisola10.camisolabackend.config.SecurityConstraints.*;
+import static com.camisola10.camisolabackend.config.security.SecurityConstraints.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 

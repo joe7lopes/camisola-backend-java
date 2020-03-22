@@ -13,6 +13,7 @@ public class RegisterUserCommand extends SelfValidating<RegisterUserCommand> {
     @NotBlank
     private final String lastName;
     @Email(message = "Email should be valid")
+    @NotBlank
     private final String email;
     @NotBlank
     private final String password;

@@ -1,4 +1,4 @@
-package com.camisola10.camisolabackend.config;
+package com.camisola10.camisolabackend.config.security;
 
 public class SecurityConstraints {
     public static final String SECRET = "SecretKeyToGenJWTs";
