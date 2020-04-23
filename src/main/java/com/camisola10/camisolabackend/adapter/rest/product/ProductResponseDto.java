@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor
-public class ProductResponseDto {
+class ProductResponseDto {
     public String id;
     public String name;
     public List<ProductCategory> categories;
