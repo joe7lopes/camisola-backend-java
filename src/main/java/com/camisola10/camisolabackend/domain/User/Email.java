@@ -1,9 +1,9 @@
-package com.camisola10.camisolabackend.domain;
+package com.camisola10.camisolabackend.domain.User;
 
 import lombok.Value;
 
 @Value
-public class Email {
+class Email {
     private String email;
 
     public String asString(){

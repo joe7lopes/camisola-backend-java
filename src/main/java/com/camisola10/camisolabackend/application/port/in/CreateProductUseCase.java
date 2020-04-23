@@ -5,4 +5,5 @@ import com.camisola10.camisolabackend.application.port.in.command.product.Create
 public interface CreateProductUseCase {
 
     void createProduct(CreateProductCommand command);
+
 }

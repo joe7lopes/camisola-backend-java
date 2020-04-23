@@ -3,7 +3,7 @@ package com.camisola10.camisolabackend.adapter.rest;
 public interface ApiUrl {
     String API = "/api";
     String AUTH = API + "/auth";
-    String SIGN_UP_URL = AUTH + "/sign-up";
+    String SIGN_UP = AUTH + "/sign-up";
 
-    String CREATE_PRODUCT = API + "/products";
+    String PRODUCTS = API + "/products";
 }

@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.application.port.in.command;
 
+import com.camisola10.camisolabackend.application.port.in.command.user.RegisterUserCommand;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

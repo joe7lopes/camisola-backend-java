@@ -1,11 +1,12 @@
-package com.camisola10.camisolabackend.application.port.in.command;
+package com.camisola10.camisolabackend.application.port.in.command.user;
 
-import lombok.Value;
+import com.camisola10.camisolabackend.application.port.in.command.SelfValidating;
+import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Value
+@Getter
 public class RegisterUserCommand extends SelfValidating<RegisterUserCommand> {
 
     @NotBlank

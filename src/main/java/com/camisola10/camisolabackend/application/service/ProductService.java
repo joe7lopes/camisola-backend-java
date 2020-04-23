@@ -1,26 +1,47 @@
 package com.camisola10.camisolabackend.application.service;
 
-import com.camisola10.camisolabackend.adapter.presistence.ProductRepository;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
+import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
-import com.camisola10.camisolabackend.domain.Product;
+import com.camisola10.camisolabackend.application.port.out.ProductDB;
+import com.camisola10.camisolabackend.domain.product.Product;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ProductService implements RemoveProductUseCase {
-    private ProductRepository productRepository;
+import java.util.List;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+@Service
+@RequiredArgsConstructor
+class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, RemoveProductUseCase {
+
+    private final ProductDB db;
+
+    @Override
+    public List<Product> getAll() {
+        return db.findAll();
     }
 
 
     @Override
-    public void removeProduct(RemoveProductCommand command) {
-        productRepository.deleteById(command.getProductId());
+    public void createProduct(CreateProductCommand command) {
+
+        var newProduct = Product.builder()
+                .name(command.getName())
+                .categories(command.getCategories())
+                .sizes(command.getSizes())
+                .isCustomizable(command.isCustomizable())
+                .images(command.getImages())
+                .defaultPrice(command.getDefaultPrice())
+                .build()
+                        ;
+
+        db.save(newProduct);
     }
 
-
+    @Override
+    public void removeProduct(RemoveProductCommand command) {
+        db.deleteById(command.getProductId());
+    }
 }
