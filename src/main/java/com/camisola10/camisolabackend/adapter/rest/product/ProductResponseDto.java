@@ -18,7 +18,7 @@ class ProductResponseDto {
     public List<ProductImage> images;
 
     public ProductResponseDto(Product product) {
-        this.id = product.getId().getValue();
+        this.id = product.getProductId().getValue();
         this.name = product.getName();
         this.categories = product.getCategories();
         this.images = product.getImages();
