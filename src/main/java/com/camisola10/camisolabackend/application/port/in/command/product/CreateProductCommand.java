@@ -5,38 +5,31 @@ import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
-import lombok.Value;
+import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Value
-public class CreateProductCommand extends SelfValidating<CreateProductCommand> {
-    @NotBlank
-    String name;
-    List<ProductImage> images;
-    @NotEmpty
-    List<ProductSize> sizes;
-    @NotEmpty
-    List<ProductCategory> categories;
-    boolean isCustomizable;
-    @NotNull
-    Money defaultPrice;
+@Data
+public class CreateProductCommand {
+    private String name;
+    private List<ProductImage> images;
+    private List<ProductSize> sizes;
+    private List<ProductCategory> categories;
+    private Money defaultPrice;
+    private boolean isCustomizable;
 
-    public CreateProductCommand(String name,
-                                List<ProductImage> images,
-                                List<ProductSize> sizes,
-                                List<ProductCategory> categories,
-                                boolean isCustomizable,
-                                Money defaultPrice) {
-        this.name = name;
-        this.images = images;
-        this.sizes = sizes;
-        this.categories = categories;
-        this.isCustomizable = isCustomizable;
-        this.defaultPrice = defaultPrice;
-        validateSelf();
-    }
+//    public CreateProductCommand(String name,
+//                                List<ProductImage> images,
+//                                List<ProductSize> sizes,
+//                                List<ProductCategory> categories,
+//                                boolean isCustomizable,
+//                                Money defaultPrice) {
+//        this.name = name;
+//        this.images = images;
+//        this.sizes = sizes;
+//        this.categories = categories;
+//        this.isCustomizable = isCustomizable;
+//        this.defaultPrice = defaultPrice;
+//        validateSelf();
+//    }
 }

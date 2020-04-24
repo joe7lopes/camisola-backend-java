@@ -5,8 +5,8 @@ import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -14,12 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductRequestMapperTest {
 
-    private ProductRequestMapper mapper;
-
-    @BeforeEach
-    public void setUp() {
-        mapper = new ProductRequestMapper();
-    }
+    private ProductRequestMapper mapper = Mappers.getMapper(ProductRequestMapper.class);
 
     @Test
     public void shouldCreateCommand() {
@@ -47,8 +42,8 @@ public class ProductRequestMapperTest {
                 new ProductCategory("camisolas", "Camisolas")
         ));
 
-        assertThat(command.isCustomizable()).isEqualTo(true);
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("23"));
+        assertThat(command.isCustomizable()).isEqualTo(true);
     }
 
     private List<ProductSizeDto> createSizes() {
