@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class Exceptions {
 
 
-    @ExceptionHandler({HttpMediaTypeNotSupportedException.class, Product.InvalidProductNameException.class})
+    @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String handleMediaTypeNotSupported(Exception e) {
         return "Media type not supported";
@@ -28,7 +28,7 @@ public class Exceptions {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    String handleValidationException(Exception ex) {
+    String handleException(Exception ex) {
         System.out.println("log => " + ex);
         return ex.getMessage();
 

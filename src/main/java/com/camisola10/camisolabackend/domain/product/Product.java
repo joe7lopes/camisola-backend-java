@@ -14,8 +14,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Product {
-    @Builder.Default
-    ProductId productId = new ProductId(UUID.randomUUID().toString());
+
+    ProductId productId;
     String name;
     List<ProductCategory> categories;
     List<ProductSize> sizes;
@@ -25,6 +25,7 @@ public class Product {
 
 
     public Product(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean isCustomizable, Money defaultPrice) {
+        this.productId = new ProductId(UUID.randomUUID().toString());
         this.name = name;
         this.categories = categories;
         this.sizes = sizes;
