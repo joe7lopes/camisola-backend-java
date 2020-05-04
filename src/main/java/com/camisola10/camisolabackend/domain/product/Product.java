@@ -1,36 +1,33 @@
 package com.camisola10.camisolabackend.domain.product;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Builder
+@Data
 public class Product {
 
-    ProductId productId;
-    String name;
-    List<ProductCategory> categories;
-    List<ProductSize> sizes;
-    List<ProductImage> images;
-    boolean isCustomizable;
+    private ProductId id;
+    private String name;
+    private List<ProductCategory> categories;
+    private List<ProductSize> sizes;
+    private List<ProductImage> images;
+    boolean customizable;
     Money defaultPrice;
 
-
-    public Product(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean isCustomizable, Money defaultPrice) {
-        this.productId = new ProductId(UUID.randomUUID().toString());
+    public Product(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
+        this.id = new ProductId(UUID.randomUUID().toString());
         this.name = name;
         this.categories = categories;
         this.sizes = sizes;
         this.images = images;
-        this.isCustomizable = isCustomizable;
+        this.customizable = customizable;
         this.defaultPrice = defaultPrice;
         validate();
     }

@@ -1,28 +1,26 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
-import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor
-class ProductResponseDto {
-    public String id;
-    public String name;
-    public List<ProductCategory> categories;
-    public List<ProductSize> sizes;
-    public boolean isCustomizable;
-    public List<ProductImage> images;
+import static lombok.AccessLevel.PACKAGE;
 
-    public ProductResponseDto(Product product) {
-        this.id = product.getProductId().getValue();
-        this.name = product.getName();
-        this.categories = product.getCategories();
-        this.images = product.getImages();
-        this.isCustomizable = product.isCustomizable();
-        this.sizes = product.getSizes();
-    }
+@NoArgsConstructor
+@AllArgsConstructor(access = PACKAGE)
+@Data
+class ProductResponseDto {
+    private String id;
+    private String name;
+    private List<ProductCategory> categories;
+    private List<ProductSize> sizes;
+    private boolean customizable;
+    private List<ProductImage> images;
+    private String defaultPrice;
+
 }

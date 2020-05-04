@@ -8,9 +8,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ProductDbMapperTest {
+class ProductDBMapperTest {
 
-    private final ProductDbMapper mapper = Mappers.getMapper(ProductDbMapper.class);
+    private ProductDBMapper mapper = Mappers.getMapper(ProductDBMapper.class);
 
     @Test
     void shouldMapToProductDocument() {
@@ -21,22 +21,22 @@ class ProductDbMapperTest {
         );
 
         var categories = List.of(
-                new ProductCategory("benfica", "Benfica"),
-                new ProductCategory("camisolas", "Camisolas")
+                new ProductCategory("benfica"),
+                new ProductCategory("camisolas")
         );
 
         Product product = Product.builder()
-                .productId(new Product.ProductId("123"))
+                .id(new Product.ProductId("123"))
                 .name("p1")
                 .categories(categories)
                 .sizes(sizes)
-                .isCustomizable(false)
+                .customizable(false)
                 .defaultPrice(Money.from("12"))
                 .build();
 
         ProductDb productDb = mapper.map(product);
 
-        assertThat(productDb.getProductId()).isEqualTo(product.getProductId().getValue());
+        assertThat(productDb.getProductId()).isEqualTo(product.getId().getValue());
         assertThat(productDb.getName()).isEqualTo(product.getName());
         assertThat(productDb.isCustomizable()).isEqualTo(product.isCustomizable());
         assertThat(productDb.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue());

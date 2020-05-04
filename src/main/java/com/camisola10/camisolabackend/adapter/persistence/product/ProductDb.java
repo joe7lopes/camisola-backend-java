@@ -4,6 +4,7 @@ package com.camisola10.camisolabackend.adapter.persistence.product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Document("product")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 class ProductDb {
     private String productId;

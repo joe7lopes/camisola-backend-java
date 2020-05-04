@@ -14,7 +14,7 @@ class CreateProductRequest {
     public String name;
     public List<ProductImage> images;
     public List<ProductSizeDto> sizes;
-    public List<ProductCategoryDto> categories;
+    public List<String> categories;
     public String defaultPrice;
     public boolean isCustomizable;
 }

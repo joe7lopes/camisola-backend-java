@@ -7,11 +7,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Value
 public class ProductCategory {
     String name;
-    String displayName;
 
-    public ProductCategory(String name, String displayName) {
+    public ProductCategory(String name) {
         this.name = name;
-        this.displayName = displayName;
         validate();
     }
 

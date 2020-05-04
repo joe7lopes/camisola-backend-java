@@ -2,7 +2,6 @@ package com.camisola10.camisolabackend.adapter.persistence.product;
 
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
 import com.camisola10.camisolabackend.domain.product.Product;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,11 +9,15 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Component
-@RequiredArgsConstructor
 class ProductPersistenceAdapter implements ProductDB {
 
-    private final ProductRepository repository;
-    private final ProductDbMapper mapper;
+    private ProductRepository repository;
+    private ProductDBMapper mapper;
+
+    public ProductPersistenceAdapter(ProductRepository repository, ProductDBMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     @Override
     public List<Product> findAll() {

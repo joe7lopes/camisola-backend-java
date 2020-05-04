@@ -31,7 +31,7 @@ class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, R
                 .name(command.getName())
                 .categories(command.getCategories())
                 .sizes(command.getSizes())
-                .isCustomizable(command.isCustomizable())
+                .customizable(command.isCustomizable())
                 .images(command.getImages())
                 .defaultPrice(command.getDefaultPrice())
                 .build()

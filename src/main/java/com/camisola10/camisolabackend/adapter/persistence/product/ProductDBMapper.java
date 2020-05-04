@@ -8,13 +8,12 @@ import org.mapstruct.Mapping;
 import java.math.BigDecimal;
 
 @Mapper(componentModel = "spring")
-interface ProductDbMapper {
+interface ProductDBMapper {
 
-    @Mapping(target= "productId", source= "product.productId.value")
+    @Mapping(target= "productId", source= "product.id.value")
     @Mapping(target= "defaultPrice", source= "product.defaultPrice.value")
     ProductDb map(Product product);
 
-    @Mapping(target= "isCustomizable", source= "customizable")
     Product map(ProductDb productDb);
 
     default Product.ProductId convert(String productId){

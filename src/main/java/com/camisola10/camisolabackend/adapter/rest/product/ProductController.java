@@ -17,19 +17,19 @@ class ProductController {
 
     private final CreateProductUseCase createProductUseCase;
     private final RetrieveProductsUseCase retrieveProductsUseCase;
-    private final ProductRequestMapper productRequestMapper;
+    private final ProductRequestMapper mapper;
 
     @GetMapping(ApiUrl.PRODUCTS)
     List<ProductResponseDto> findAll() {
         List<Product> products = retrieveProductsUseCase.getAll();
-        return products.stream().map(ProductResponseDto::new)
+        return products.stream().map(mapper::map)
                 .collect(Collectors.toList());
     }
 
     @PostMapping(ApiUrl.PRODUCTS)
     @ResponseStatus(HttpStatus.CREATED)
     void createProduct(@RequestBody CreateProductRequest dto) {
-        var command = productRequestMapper.toCommand(dto);
+        var command = mapper.toCommand(dto);
         createProductUseCase.createProduct(command);
     }
 }

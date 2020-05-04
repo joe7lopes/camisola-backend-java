@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.domain.product.Money;
+import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
@@ -16,10 +17,53 @@ public class ProductRequestMapperTest {
 
     private ProductRequestMapper mapper = Mappers.getMapper(ProductRequestMapper.class);
 
+
+    @Test
+    public void shouldMapToDTO() {
+        var sizes = List.of(
+                new ProductSize(new Size("XL"), Money.from("23")),
+                new ProductSize(new Size("S"), Money.from("13"))
+        );
+
+        var categories = List.of(
+                new ProductCategory("benfica"),
+                new ProductCategory("sporting")
+        );
+
+        var product = Product.builder()
+                .id(new Product.ProductId("123"))
+                .name("p1")
+                .sizes(sizes)
+                .categories(categories)
+                .customizable(true)
+                .defaultPrice(Money.from("23"))
+                .build();
+
+        ProductResponseDto dto = mapper.map(product);
+
+        assertThat(dto.getId()).isEqualTo(product.getId().getValue());
+        assertThat(dto.getName()).isEqualTo(product.getName());
+
+        assertThat(dto.getSizes().get(0).getSize()).isEqualTo(product.getSizes().get(0).getSize());
+        assertThat(dto.getSizes().get(0).getPrice()).isEqualTo(product.getSizes().get(0).getPrice());
+        assertThat(dto.getSizes().get(1).getSize()).isEqualTo(product.getSizes().get(1).getSize());
+        assertThat(dto.getSizes().get(1).getPrice()).isEqualTo(product.getSizes().get(1).getPrice());
+
+        assertThat(dto.getCategories().get(0).getName()).isEqualTo(product.getCategories().get(0).getName());
+        assertThat(dto.getCategories().get(0).getName()).isEqualTo(product.getCategories().get(0).getName());
+        assertThat(dto.getCategories().get(1).getName()).isEqualTo(product.getCategories().get(1).getName());
+        assertThat(dto.getCategories().get(1).getName()).isEqualTo(product.getCategories().get(1).getName());
+
+        assertThat(dto.isCustomizable()).isEqualTo(product.isCustomizable());
+        assertThat(dto.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue().toPlainString());
+
+
+    }
+
     @Test
     public void shouldCreateCommand() {
         List<ProductSizeDto> sizes = createSizes();
-        List<ProductCategoryDto> categories = createCategories();
+        List<String> categories = createCategories();
 
         var request = CreateProductRequest.builder()
                 .name("p1")
@@ -38,8 +82,8 @@ public class ProductRequestMapperTest {
         ));
 
         assertThat(command.getCategories()).containsAll(List.of(
-                new ProductCategory("benfica", "Benfica"),
-                new ProductCategory("camisolas", "Camisolas")
+                new ProductCategory("benfica"),
+                new ProductCategory("camisolas")
         ));
 
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("23"));
@@ -53,10 +97,7 @@ public class ProductRequestMapperTest {
         );
     }
 
-    private List<ProductCategoryDto> createCategories() {
-        return List.of(
-                new ProductCategoryDto("benfica", "Benfica"),
-                new ProductCategoryDto("camisolas", "Camisolas")
-        );
+    private List<String> createCategories() {
+        return List.of("benfica", "camisolas");
     }
 }
