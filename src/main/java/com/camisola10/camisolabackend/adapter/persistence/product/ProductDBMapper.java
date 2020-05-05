@@ -16,10 +16,6 @@ interface ProductDBMapper {
 
     Product map(ProductDb productDb);
 
-    default Product.ProductId convert(String productId){
-        return new Product.ProductId(productId);
-    }
-
     default Money convert(BigDecimal defaultPrice){
         return new Money(defaultPrice);
     }

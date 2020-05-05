@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.config;
 
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
+@Slf4j
 public class Exceptions {
 
 
@@ -21,17 +23,14 @@ public class Exceptions {
     @ExceptionHandler({Product.InvalidProductNameException.class, ProductCategory.InvalidCategoryNameException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String handleProductExceptions(Exception e) {
-        //TODO: add logger
-        System.out.println(e);
+       log.warn("invalid product creation", e);
         return e.getMessage();
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    String handleException(Exception ex) {
-        System.out.println("log => " + ex);
-        return ex.getMessage();
-
+    void handleException(Exception ex) {
+        log.error("Server error", ex);
     }
 }
 
