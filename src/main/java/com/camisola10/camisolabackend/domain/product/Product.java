@@ -65,6 +65,10 @@ public class Product {
     @Value
     public static class ProductId {
         UUID value;
+
+       public String asString() {
+            return value.toString();
+        }
     }
 
 

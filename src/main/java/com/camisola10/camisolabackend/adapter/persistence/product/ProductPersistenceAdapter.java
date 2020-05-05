@@ -34,6 +34,6 @@ class ProductPersistenceAdapter implements ProductDB {
 
     @Override
     public void deleteById(Product.ProductId productId) {
-        repository.deleteById(productId.getValue().toString());
+        repository.deleteById(productId.asString());
     }
 }

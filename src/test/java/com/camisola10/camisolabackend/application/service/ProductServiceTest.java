@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.application.service;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
 import com.camisola10.camisolabackend.domain.product.Product;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -54,6 +57,18 @@ class ProductServiceTest {
         productService.createProduct(command);
 
         verify(db).save(productMock);
+        verifyNoMoreInteractions(db);
+    }
+
+    @Test
+    public void shouldRemoveProduct() {
+        var command = mock(RemoveProductCommand.class);
+        var id = mock(Product.ProductId.class);
+        when(command.getProductId()).thenReturn(id);
+
+        productService.removeProduct(command);
+
+        verify(db).deleteById(id);
         verifyNoMoreInteractions(db);
     }
 }

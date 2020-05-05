@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -72,7 +74,7 @@ public class ProductRequestMapperTest {
                 .defaultPrice("23")
                 .build();
 
-        CreateProductCommand command = mapper.toCommand(request);
+        CreateProductCommand command = mapper.map(request);
 
         assertThat(command.getName()).isEqualTo("p1");
         assertThat(command.getSizes()).containsAll(List.of(
@@ -87,6 +89,15 @@ public class ProductRequestMapperTest {
 
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("23"));
         assertThat(command.isCustomizable()).isEqualTo(true);
+    }
+
+    @Test
+    public void shouldMapToRemoveProductCommand() {
+        String id = UUID.randomUUID().toString();
+
+        RemoveProductCommand command = mapper.map(id);
+
+        assertThat(command.getProductId().getValue().toString()).isEqualTo(id);
     }
 
     private List<ProductSizeDto> createSizes() {

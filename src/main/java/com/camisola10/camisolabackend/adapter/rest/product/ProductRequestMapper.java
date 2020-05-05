@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
@@ -11,15 +12,19 @@ import org.mapstruct.Mapping;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 interface ProductRequestMapper {
 
     @Mapping(target="customizable" , source="isCustomizable")
-    CreateProductCommand toCommand(CreateProductRequest request);
+    CreateProductCommand map(CreateProductRequest request);
 
     ProductResponseDto map(Product product);
+
+    @Mapping(target = "productId", source = "id")
+    RemoveProductCommand map(String id);
 
     default List<ProductSize> toProductSize(List<ProductSizeDto> sizes) {
         return sizes.stream().map(s -> new ProductSize(new Size(s.size), new Money(new BigDecimal(s.price))))
@@ -41,5 +46,9 @@ interface ProductRequestMapper {
 
     default String fromProductId(Product.ProductId productId){
         return productId.getValue().toString();
+    }
+
+    default Product.ProductId toProductId(String id){
+        return new Product.ProductId(UUID.fromString(id));
     }
 }

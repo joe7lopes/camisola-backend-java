@@ -61,4 +61,16 @@ class ProductPersistenceAdapterTest {
         verifyNoMoreInteractions(mapper);
         verifyNoMoreInteractions(repository);
     }
+
+    @Test
+    public void shouldDeleteById() {
+        var pId = mock(Product.ProductId.class);
+        var id = "123";
+        when(pId.asString()).thenReturn(id);
+
+        adapter.deleteById(pId);
+
+        verify(repository).deleteById(id);
+        verifyNoMoreInteractions(repository);
+    }
 }
