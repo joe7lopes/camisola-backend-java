@@ -33,13 +33,6 @@ public class Product {
         validate();
     }
 
-//    public static class ProductBuilder {
-//        public Product build() {
-//            return new Product(new ProductId(UUID.randomUUID()), name, categories, sizes, images, customizable, defaultPrice);
-//        }
-//    }
-
-
     private void validate() {
         if (isBlank(name)) {
             throw new InvalidProductNameException("Product Name Cannot be empty");
