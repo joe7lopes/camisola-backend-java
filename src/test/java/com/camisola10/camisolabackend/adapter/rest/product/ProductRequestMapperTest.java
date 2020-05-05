@@ -45,10 +45,10 @@ public class ProductRequestMapperTest {
         assertThat(dto.getId()).isEqualTo(product.getId().getValue().toString());
         assertThat(dto.getName()).isEqualTo(product.getName());
 
-        assertThat(dto.getSizes().get(0).getSize()).isEqualTo(product.getSizes().get(0).getSize());
-        assertThat(dto.getSizes().get(0).getPrice()).isEqualTo(product.getSizes().get(0).getPrice());
-        assertThat(dto.getSizes().get(1).getSize()).isEqualTo(product.getSizes().get(1).getSize());
-        assertThat(dto.getSizes().get(1).getPrice()).isEqualTo(product.getSizes().get(1).getPrice());
+        assertThat(dto.getSizes().get(0).getSize()).isEqualTo(product.getSizes().get(0).getSize().getValue());
+        assertThat(dto.getSizes().get(0).getPrice()).isEqualTo(product.getSizes().get(0).getPrice().asString());
+        assertThat(dto.getSizes().get(1).getSize()).isEqualTo(product.getSizes().get(1).getSize().getValue());
+        assertThat(dto.getSizes().get(1).getPrice()).isEqualTo(product.getSizes().get(1).getPrice().asString());
 
         assertThat(dto.getCategories().get(0).getName()).isEqualTo(product.getCategories().get(0).getName());
         assertThat(dto.getCategories().get(0).getName()).isEqualTo(product.getCategories().get(0).getName());

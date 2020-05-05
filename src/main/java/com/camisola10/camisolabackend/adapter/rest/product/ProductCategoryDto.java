@@ -1,14 +1,12 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
-class ProductSizeDto {
-    private String size;
-    private String price;
+class ProductCategoryDto {
+    private String name;
 }

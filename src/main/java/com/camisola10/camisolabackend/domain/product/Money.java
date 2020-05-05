@@ -11,4 +11,8 @@ public class Money {
     public static Money from(String value) {
         return new Money(new BigDecimal(value));
     }
+
+    public String asString(){
+        return value.toPlainString();
+    }
 }

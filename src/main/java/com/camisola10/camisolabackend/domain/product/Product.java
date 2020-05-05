@@ -2,7 +2,6 @@ package com.camisola10.camisolabackend.domain.product;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.util.List;
@@ -10,30 +9,20 @@ import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@NoArgsConstructor
+@Builder
 @Data
 public class Product {
-
-    private ProductId id = new ProductId(UUID.randomUUID());;
+    @Builder.Default
+    private ProductId id = new ProductId(UUID.randomUUID());
     private String name;
     private List<ProductCategory> categories;
     private List<ProductSize> sizes;
     private List<ProductImage> images;
-    boolean customizable;
-    Money defaultPrice;
+    private boolean customizable;
+    private Money defaultPrice;
 
-    @Builder
-    public Product(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
-        this.name = name;
-        this.categories = categories;
-        this.sizes = sizes;
-        this.images = images;
-        this.customizable = customizable;
-        this.defaultPrice = defaultPrice;
-        validate();
-    }
 
-    public Product(ProductId id, String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
+    private Product(ProductId id, String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
         this.id = id;
         this.name = name;
         this.categories = categories;
@@ -44,11 +33,11 @@ public class Product {
         validate();
     }
 
-    public static class ProductBuilder {
-        public Product build() {
-            return new Product(name, categories, sizes, images, customizable, defaultPrice);
-        }
-    }
+//    public static class ProductBuilder {
+//        public Product build() {
+//            return new Product(new ProductId(UUID.randomUUID()), name, categories, sizes, images, customizable, defaultPrice);
+//        }
+//    }
 
 
     private void validate() {
@@ -66,7 +55,7 @@ public class Product {
     public static class ProductId {
         UUID value;
 
-       public String asString() {
+        public String asString() {
             return value.toString();
         }
     }

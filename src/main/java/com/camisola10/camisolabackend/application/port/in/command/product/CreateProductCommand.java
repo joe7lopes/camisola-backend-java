@@ -1,11 +1,9 @@
 package com.camisola10.camisolabackend.application.port.in.command.product;
 
-import com.camisola10.camisolabackend.application.port.in.command.SelfValidating;
 import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -27,7 +27,7 @@ interface ProductRequestMapper {
     RemoveProductCommand map(String id);
 
     default List<ProductSize> toProductSize(List<ProductSizeDto> sizes) {
-        return sizes.stream().map(s -> new ProductSize(new Size(s.size), new Money(new BigDecimal(s.price))))
+        return sizes.stream().map(s -> new ProductSize(new Size(s.getSize()), new Money(new BigDecimal(s.getPrice()))))
                 .collect(Collectors.toList());
     }
 
@@ -35,6 +35,11 @@ interface ProductRequestMapper {
         return categories.stream().map(ProductCategory::new)
                 .collect(Collectors.toList());
     }
+
+    default ProductSizeDto map(ProductSize size){
+        return new ProductSizeDto(size.getSize().getValue(), size.getPrice().asString());
+    }
+
 
     default Money toMoney(String amount){
         return Money.from(amount);

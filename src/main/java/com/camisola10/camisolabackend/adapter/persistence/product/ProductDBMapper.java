@@ -13,11 +13,13 @@ interface ProductDBMapper {
 
     @Mapping(target = "defaultPrice", source = "product.defaultPrice.value")
     @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "isCustomizable", source = "customizable")
     ProductDb map(Product product);
 
+    @Mapping(target = "id", source = "productId")
     Product map(ProductDb productDb);
 
-    default Product.ProductId id(String productId){
+    default Product.ProductId map(String productId) {
         return new Product.ProductId(UUID.fromString(productId));
     }
 
