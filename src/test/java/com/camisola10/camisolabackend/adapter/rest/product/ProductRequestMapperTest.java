@@ -31,7 +31,6 @@ public class ProductRequestMapperTest {
         );
 
         var product = Product.builder()
-                .id(new Product.ProductId("123"))
                 .name("p1")
                 .sizes(sizes)
                 .categories(categories)
@@ -41,7 +40,7 @@ public class ProductRequestMapperTest {
 
         ProductResponseDto dto = mapper.map(product);
 
-        assertThat(dto.getId()).isEqualTo(product.getId().getValue());
+        assertThat(dto.getId()).isEqualTo(product.getId().getValue().toString());
         assertThat(dto.getName()).isEqualTo(product.getName());
 
         assertThat(dto.getSizes().get(0).getSize()).isEqualTo(product.getSizes().get(0).getSize());

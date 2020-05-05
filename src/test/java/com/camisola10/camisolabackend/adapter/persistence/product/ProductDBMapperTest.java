@@ -26,7 +26,6 @@ class ProductDBMapperTest {
         );
 
         Product product = Product.builder()
-                .id(new Product.ProductId("123"))
                 .name("p1")
                 .categories(categories)
                 .sizes(sizes)
@@ -36,7 +35,7 @@ class ProductDBMapperTest {
 
         ProductDb productDb = mapper.map(product);
 
-        assertThat(productDb.getProductId()).isEqualTo("123");
+        assertThat(productDb.getProductId()).isEqualTo(product.getId().getValue().toString());
         assertThat(productDb.getName()).isEqualTo(product.getName());
         assertThat(productDb.isCustomizable()).isEqualTo(product.isCustomizable());
         assertThat(productDb.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue());

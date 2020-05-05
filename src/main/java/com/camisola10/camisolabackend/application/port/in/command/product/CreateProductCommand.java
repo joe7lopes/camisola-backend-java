@@ -5,10 +5,17 @@ import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 public class CreateProductCommand {
     private String name;
@@ -16,20 +23,5 @@ public class CreateProductCommand {
     private List<ProductSize> sizes;
     private List<ProductCategory> categories;
     private Money defaultPrice;
-    private boolean isCustomizable;
-
-//    public CreateProductCommand(String name,
-//                                List<ProductImage> images,
-//                                List<ProductSize> sizes,
-//                                List<ProductCategory> categories,
-//                                boolean isCustomizable,
-//                                Money defaultPrice) {
-//        this.name = name;
-//        this.images = images;
-//        this.sizes = sizes;
-//        this.categories = categories;
-//        this.isCustomizable = isCustomizable;
-//        this.defaultPrice = defaultPrice;
-//        validateSelf();
-//    }
+    private boolean customizable;
 }

@@ -47,4 +47,18 @@ class ProductPersistenceAdapterTest {
         verify(mapper,times(2)).map(any(ProductDb.class));
         verifyNoMoreInteractions(repository);
     }
+
+    @Test
+    public void shouldSaveProduct() {
+        var productMock = mock(Product.class);
+        var productDbMock = mock(ProductDb.class);
+        when(mapper.map(productMock)).thenReturn(productDbMock);
+
+        adapter.save(productMock);
+
+        verify(mapper).map(productMock);
+        verify(repository).save(productDbMock);
+        verifyNoMoreInteractions(mapper);
+        verifyNoMoreInteractions(repository);
+    }
 }

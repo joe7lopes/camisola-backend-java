@@ -20,7 +20,9 @@ public class Exceptions {
         return "Media type not supported";
     }
 
-    @ExceptionHandler({Product.InvalidProductNameException.class, ProductCategory.InvalidCategoryNameException.class})
+    @ExceptionHandler({
+            Product.InvalidProductNameException.class,
+            ProductCategory.InvalidCategoryNameException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     String handleProductExceptions(Exception e) {
        log.warn("invalid product creation", e);

@@ -6,17 +6,26 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 interface ProductDBMapper {
 
-    @Mapping(target= "productId", source= "product.id.value")
-    @Mapping(target= "defaultPrice", source= "product.defaultPrice.value")
+    @Mapping(target = "defaultPrice", source = "product.defaultPrice.value")
+    @Mapping(target = "productId", source = "product.id")
     ProductDb map(Product product);
 
     Product map(ProductDb productDb);
 
-    default Money convert(BigDecimal defaultPrice){
+    default Product.ProductId id(String productId){
+        return new Product.ProductId(UUID.fromString(productId));
+    }
+
+    default String productId(Product.ProductId productId) {
+        return productId.getValue().toString();
+    }
+
+    default Money convert(BigDecimal defaultPrice) {
         return new Money(defaultPrice);
     }
 }

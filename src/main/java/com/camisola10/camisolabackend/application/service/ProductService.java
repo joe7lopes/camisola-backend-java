@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, RemoveProductUseCase {
 
+    private final CommandMapper mapper;
     private final ProductDB db;
 
     @Override
@@ -26,17 +27,7 @@ class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, R
 
     @Override
     public void createProduct(CreateProductCommand command) {
-
-        var newProduct = Product.builder()
-                .name(command.getName())
-                .categories(command.getCategories())
-                .sizes(command.getSizes())
-                .customizable(command.isCustomizable())
-                .images(command.getImages())
-                .defaultPrice(command.getDefaultPrice())
-                .build()
-                        ;
-
+        var newProduct = mapper.map(command);
         db.save(newProduct);
     }
 

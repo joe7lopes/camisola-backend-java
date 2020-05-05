@@ -40,6 +40,6 @@ interface ProductRequestMapper {
     }
 
     default String fromProductId(Product.ProductId productId){
-        return productId.getValue();
+        return productId.getValue().toString();
     }
 }

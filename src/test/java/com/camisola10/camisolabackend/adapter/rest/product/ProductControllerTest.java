@@ -2,22 +2,26 @@ package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
+import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +42,7 @@ class ProductControllerTest {
     @Test
     public void shouldReturnEmptyList() throws Exception {
         mockMvc.perform(get("/api/products"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
@@ -47,7 +51,6 @@ class ProductControllerTest {
     void shouldReturnListOfProducts() throws Exception {
 
         var product = Product.builder()
-                .id(new Product.ProductId("123"))
                 .name("p1")
                 .customizable(true)
                 .defaultPrice(Money.from("23"))
@@ -59,7 +62,7 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value("123"))
                 .andExpect(jsonPath("$[0].name").value("p1"))
                 .andExpect(jsonPath("$[0].customizable").value(true))
@@ -70,6 +73,41 @@ class ProductControllerTest {
     }
 
     @Test
-    void createProduct() {
+    void shouldCreateNewProduct() throws Exception {
+
+        var s1 = new JSONObject();
+        s1.put("size", "S");
+        s1.put("price", "23");
+
+        var s2 = new JSONObject();
+        s2.put("size", "XL");
+        s2.put("price", "27");
+        var sizes = new JSONArray();
+        sizes.put(s1);
+        sizes.put(s2);
+
+        var categories = new JSONArray();
+        categories.put("benfica");
+        categories.put("camisolas");
+
+        var requestBody = new JSONObject();
+        requestBody.put("name", "camisola slb");
+        requestBody.put("sizes", sizes);
+        requestBody.put("categories", categories);
+        requestBody.put("defaultPrice", "40");
+        requestBody.put("isCustomizable", true);
+
+        var commandMock = mock(CreateProductCommand.class);
+        when(mapper.toCommand(any(CreateProductRequest.class))).thenReturn(commandMock);
+
+
+        mockMvc.perform(post("/api/products")
+                        .contentType(APPLICATION_JSON)
+                        .content(requestBody.toString()))
+                .andExpect(status().isCreated());
+
+
+        verify(mapper).toCommand(any(CreateProductRequest.class));
+        verify(createProductUseCaseMock).createProduct(commandMock);
     }
 }
