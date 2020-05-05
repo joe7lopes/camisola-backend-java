@@ -15,7 +15,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +43,7 @@ class ProductPersistenceAdapterTest {
 
         assertThat(products).hasSize(2);
 
-        verify(mapper,times(2)).map(any(ProductDb.class));
+        verify(mapper, times(2)).map(any(ProductDb.class));
         verifyNoMoreInteractions(repository);
     }
 

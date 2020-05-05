@@ -54,8 +54,9 @@ class ProductServiceTest {
         var productMock = mock(Product.class);
         when(mapper.map(command)).thenReturn(productMock);
 
-        productService.createProduct(command);
+        var product = productService.createProduct(command);
 
+        assertThat(product).isEqualTo(productMock);
         verify(db).save(productMock);
         verifyNoMoreInteractions(db);
     }

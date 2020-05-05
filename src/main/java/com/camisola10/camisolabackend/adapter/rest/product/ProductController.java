@@ -8,11 +8,15 @@ import com.camisola10.camisolabackend.application.port.in.command.product.Remove
 import com.camisola10.camisolabackend.domain.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +34,12 @@ class ProductController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(ApiUrl.PRODUCTS)
+    @PostMapping(value = ApiUrl.PRODUCTS)
     @ResponseStatus(HttpStatus.CREATED)
-    void createProduct(@RequestBody CreateProductRequest dto) {
+    ProductResponseDto createProduct(@RequestBody CreateProductRequest dto) {
         var command = mapper.map(dto);
-        createProductUseCase.createProduct(command);
+        Product product = createProductUseCase.createProduct(command);
+        return mapper.map(product);
     }
 
     @DeleteMapping(ApiUrl.PRODUCTS + "/{id}")

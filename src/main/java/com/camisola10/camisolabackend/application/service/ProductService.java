@@ -26,9 +26,10 @@ class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, R
 
 
     @Override
-    public void createProduct(CreateProductCommand command) {
+    public Product createProduct(CreateProductCommand command) {
         var newProduct = mapper.map(command);
         db.save(newProduct);
+        return newProduct;
     }
 
     @Override

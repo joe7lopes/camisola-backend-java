@@ -105,13 +105,20 @@ class ProductControllerTest {
         requestBody.put("isCustomizable", true);
 
         var commandMock = mock(CreateProductCommand.class);
+        var productMock = mock(Product.class);
         when(mapper.map(any(CreateProductRequest.class))).thenReturn(commandMock);
-
+        when(createProductUseCaseMock.createProduct(commandMock)).thenReturn(productMock);
+        var response = ProductResponseDto.builder()
+                .name("camisola slb")
+                .build();
+        when(mapper.map(productMock)).thenReturn(response);
 
         mockMvc.perform(post("/api/products")
-                        .contentType(APPLICATION_JSON)
-                        .content(requestBody.toString()))
-                .andExpect(status().isCreated());
+                .contentType(APPLICATION_JSON)
+                .content(requestBody.toString()))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value(requestBody.get("name")));
 
 
         verify(mapper).map(any(CreateProductRequest.class));
@@ -121,10 +128,10 @@ class ProductControllerTest {
     @Test
     public void shouldRemoveProduct() throws Exception {
         var id = UUID.randomUUID().toString();
-        var  command = mock(RemoveProductCommand.class);
+        var command = mock(RemoveProductCommand.class);
         when(mapper.map(id)).thenReturn(command);
 
-        mockMvc.perform(delete("/api/products/"+ id)
+        mockMvc.perform(delete("/api/products/" + id)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
