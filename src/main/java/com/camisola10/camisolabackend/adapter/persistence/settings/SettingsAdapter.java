@@ -5,6 +5,8 @@ import com.camisola10.camisolabackend.domain.settings.Settings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 class SettingsAdapter implements SettingsDB {
@@ -13,6 +15,7 @@ class SettingsAdapter implements SettingsDB {
 
     @Override
     public Settings findAll() {
-        return repository.findAll().get(0);
+        List<Settings> settingsList = repository.findAll();
+        return settingsList.size() > 0 ? settingsList.get(0) : null;
     }
 }

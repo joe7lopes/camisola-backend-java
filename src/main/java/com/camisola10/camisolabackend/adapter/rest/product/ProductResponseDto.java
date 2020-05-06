@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.domain.product.ProductImage;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import static lombok.AccessLevel.PACKAGE;
 @AllArgsConstructor(access = PACKAGE)
 @Builder
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class ProductResponseDto {
     private String id;
     private String name;
