@@ -3,10 +3,11 @@ package com.camisola10.camisolabackend.application.service;
 import com.camisola10.camisolabackend.application.port.in.SignUpUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.user.RegisterUserCommand;
 import com.camisola10.camisolabackend.application.port.out.UserDB;
-import com.camisola10.camisolabackend.domain.User.User;
+import com.camisola10.camisolabackend.domain.user.User;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 @RequiredArgsConstructor

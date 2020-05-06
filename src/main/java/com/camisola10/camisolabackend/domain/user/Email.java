@@ -1,4 +1,4 @@
-package com.camisola10.camisolabackend.domain.User;
+package com.camisola10.camisolabackend.domain.user;
 
 import lombok.Value;
 
