@@ -24,6 +24,6 @@ class ProductDb {
     private List<ProductCategory> categories;
     private List<ProductSize> sizes;
     private List<ProductImage> images;
-    private boolean isCustomizable;
+    private boolean customizable;
     private BigDecimal defaultPrice;
 }

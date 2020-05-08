@@ -62,7 +62,7 @@ class ProductDBMapperTest {
                 .categories(categories)
                 .images(images)
                 .defaultPrice(new BigDecimal("70"))
-                .isCustomizable(true)
+                .customizable(true)
                 .build();
 
         var product = mapper.map(productDb);

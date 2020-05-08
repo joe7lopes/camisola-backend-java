@@ -17,3 +17,8 @@ logging:
       springframework:
         data: DEBUG
 
+aws:
+  bucketName: camisola-backend
+  accessKey: AKIAJJHJUDSTSR7BJ5MQ
+  accessKeySecret: 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
+  region: eu-west-1
