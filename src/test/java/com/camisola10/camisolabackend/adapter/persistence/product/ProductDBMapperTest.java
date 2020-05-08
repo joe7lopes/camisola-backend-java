@@ -1,6 +1,6 @@
 package com.camisola10.camisolabackend.adapter.persistence.product;
 
-import com.camisola10.camisolabackend.domain.product.Money;
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductImage;

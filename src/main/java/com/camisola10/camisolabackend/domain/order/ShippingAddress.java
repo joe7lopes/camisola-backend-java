@@ -8,6 +8,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Builder
 @Value
+public
 class ShippingAddress {
 
     String firstName;

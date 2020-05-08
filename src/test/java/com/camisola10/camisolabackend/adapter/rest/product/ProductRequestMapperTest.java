@@ -2,7 +2,7 @@ package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
-import com.camisola10.camisolabackend.domain.product.Money;
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;

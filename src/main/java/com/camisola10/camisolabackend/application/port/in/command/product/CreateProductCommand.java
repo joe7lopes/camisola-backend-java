@@ -1,6 +1,6 @@
 package com.camisola10.camisolabackend.application.port.in.command.product;
 
-import com.camisola10.camisolabackend.domain.product.Money;
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import lombok.AllArgsConstructor;

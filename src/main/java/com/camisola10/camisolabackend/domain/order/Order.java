@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.domain.order;
 
+import com.camisola10.camisolabackend.domain.Money;
 import lombok.Builder;
 import lombok.Value;
 
@@ -7,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static java.math.BigDecimal.ZERO;
 import static java.util.Objects.isNull;
 
 @Builder
@@ -26,6 +28,13 @@ public class Order {
         this.createdAt = createdAt;
         this.status = status;
         validate();
+    }
+
+    public Money getTotal() {
+        return items.stream()
+                .map(i -> i.getSize().getPrice())
+                .peek(System.out::println)
+                .reduce(Money.from(ZERO), Money::add);
     }
 
     private void validate() {
@@ -51,14 +60,14 @@ public class Order {
 
     }
 
-    enum Status {
+    public enum Status {
         RECEIVED,
         PROCESSING,
         SHIPPED,
     }
 
     @Value
-    static class OrderId {
+    public static class OrderId {
         UUID value;
 
         public OrderId(UUID value) {
@@ -72,7 +81,7 @@ public class Order {
             }
         }
 
-        static OrderId create() {
+        public static OrderId create() {
             return new OrderId(UUID.randomUUID());
         }
 
