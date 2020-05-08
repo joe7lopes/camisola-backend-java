@@ -33,6 +33,7 @@ public class ProductRequestMapperTest {
         );
 
         var product = Product.builder()
+                .id(Product.ProductId.create())
                 .name("p1")
                 .sizes(sizes)
                 .categories(categories)
@@ -57,18 +58,18 @@ public class ProductRequestMapperTest {
 
         assertThat(dto.isCustomizable()).isEqualTo(product.isCustomizable());
         assertThat(dto.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue().toPlainString());
-
-
     }
 
     @Test
-    public void shouldCreateCommand() {
+    public void shouldMapFromDtoToCreateCommand() {
         List<ProductSizeDto> sizes = createSizes();
         List<String> categories = createCategories();
+        List<ProductImageDto> images = createImages();
 
         var request = CreateProductRequest.builder()
                 .name("p1")
                 .sizes(sizes)
+                .images(images)
                 .categories(categories)
                 .isCustomizable(true)
                 .defaultPrice("23")
@@ -87,6 +88,7 @@ public class ProductRequestMapperTest {
                 new ProductCategory("camisolas")
         ));
 
+        assertThat(command.getImages()).hasSize(2);
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("23"));
         assertThat(command.isCustomizable()).isEqualTo(true);
     }
@@ -109,5 +111,12 @@ public class ProductRequestMapperTest {
 
     private List<String> createCategories() {
         return List.of("benfica", "camisolas");
+    }
+
+    private List<ProductImageDto> createImages() {
+        return List.of(
+                new ProductImageDto("img1", "data:image/png;base64,c29tZXRoaW5n", true),
+                new ProductImageDto("img2", "data:image/png;base64,c29tZXRoaW5n", false)
+        );
     }
 }

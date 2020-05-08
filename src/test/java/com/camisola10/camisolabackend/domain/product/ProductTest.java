@@ -37,10 +37,9 @@ class ProductTest {
                 .build());
     }
 
-
     @Test
     public void shouldCreateProductWithUniqueID() {
-        Product product = Product.builder().name("p1").build();
+        Product product = Product.createWithId("p1", null, null, null,false, null);
 
         assertThat(product.getId().getValue().toString()).isNotBlank();
     }

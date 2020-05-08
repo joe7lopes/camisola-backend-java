@@ -5,7 +5,6 @@ import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
-import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,16 +55,9 @@ class ProductControllerTest {
 
     @Test
     void shouldReturnListOfProducts() throws Exception {
-
-        var product = Product.builder()
-                .name("p1")
-                .customizable(true)
-                .defaultPrice(Money.from("23"))
-                .build();
-
+        var product = mock(Product.class);
         when(retrieveProductsUseCase.getAll()).thenReturn(List.of(product));
-        when(mapper.map(any(Product.class)))
-                .thenReturn(new ProductResponseDto("123", "p1", null, null, true, null, "23"));
+        when(mapper.map(any(Product.class))).thenReturn(new ProductResponseDto("123", "p1", null, null, true, null, "23"));
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())

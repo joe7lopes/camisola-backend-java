@@ -6,4 +6,5 @@ import lombok.Value;
 public class ProductImage {
     String name;
     String url;
+    boolean isDefault;
 }

@@ -2,13 +2,20 @@ package com.camisola10.camisolabackend.application.service;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-interface CommandMapper {
+@Component
+class CommandMapper {
 
-    @Mapping(target = "id", ignore = true)
-    Product map(CreateProductCommand command);
+    Product map(CreateProductCommand command) {
+        return Product.createWithId(
+                command.getName(),
+                command.getCategories(),
+                command.getSizes(),
+                null,
+                command.isCustomizable(),
+                command.getDefaultPrice()
+        );
+    }
 
 }

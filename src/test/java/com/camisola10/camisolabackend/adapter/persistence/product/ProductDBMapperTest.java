@@ -3,6 +3,7 @@ package com.camisola10.camisolabackend.adapter.persistence.product;
 import com.camisola10.camisolabackend.domain.product.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
+import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
 import org.junit.jupiter.api.Test;
@@ -21,13 +22,16 @@ class ProductDBMapperTest {
     @Test
     void shouldMapToProductDocument() {
 
-        List<ProductSize> sizes = getProductSizes();
-        List<ProductCategory> categories = getProductCategories();
+        var sizes = getProductSizes();
+        var categories = getProductCategories();
+        var images = getProductImages();
 
         Product product = Product.builder()
+                .id(Product.ProductId.create())
                 .name("p1")
                 .categories(categories)
                 .sizes(sizes)
+                .images(images)
                 .customizable(false)
                 .defaultPrice(Money.from("12"))
                 .build();
@@ -41,12 +45,14 @@ class ProductDBMapperTest {
 
         assertThat(productDb.getSizes()).containsAll(sizes);
         assertThat(productDb.getCategories()).containsAll(categories);
+        assertThat(productDb.getImages()).containsAll(images);
     }
 
     @Test
     public void shouldMapFromDBToProduct() {
-        List<ProductSize> sizes = getProductSizes();
-        List<ProductCategory> categories = getProductCategories();
+        var sizes = getProductSizes();
+        var categories = getProductCategories();
+        var images = getProductImages();
 
         var id = UUID.randomUUID().toString();
         var productDb = ProductDb.builder()
@@ -54,6 +60,7 @@ class ProductDBMapperTest {
                 .name("product2")
                 .sizes(sizes)
                 .categories(categories)
+                .images(images)
                 .defaultPrice(new BigDecimal("70"))
                 .isCustomizable(true)
                 .build();
@@ -64,6 +71,7 @@ class ProductDBMapperTest {
         assertThat(product.getName()).isEqualTo(productDb.getName());
         assertThat(product.getSizes()).containsAll(productDb.getSizes());
         assertThat(product.getCategories()).containsAll(productDb.getCategories());
+        assertThat(product.getImages()).containsAll(productDb.getImages());
         assertThat(product.isCustomizable()).isEqualTo(productDb.isCustomizable());
         assertThat(product.getDefaultPrice().getValue()).isEqualTo(productDb.getDefaultPrice());
     }
@@ -79,6 +87,13 @@ class ProductDBMapperTest {
         return List.of(
                 new ProductCategory("benfica"),
                 new ProductCategory("camisolas")
+        );
+    }
+
+    private List<ProductImage> getProductImages() {
+        return List.of(
+                new ProductImage("img1", "data1", true),
+                new ProductImage("img2", "data2", true)
         );
     }
 }
