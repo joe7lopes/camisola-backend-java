@@ -5,7 +5,7 @@ import lombok.Value;
 import static java.util.Objects.isNull;
 
 @Value
-class Email {
+public class Email {
     private static final String EMAIL_REGEX = "^[\\w-_.+]*[\\w-_.]@([\\w]+\\.)+[\\w]+[\\w]$";
 
     String value;
@@ -13,6 +13,10 @@ class Email {
     public Email(String value) {
         this.value = value;
         validate();
+    }
+
+    public String asString(){
+        return value;
     }
 
     private void validate() {

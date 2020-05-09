@@ -75,18 +75,18 @@ public class Order {
             validate();
         }
 
-        private void validate() {
-            if (isNull(value)) {
-                throw new InvalidOrderIdException("Order Id cannot be empty");
-            }
-        }
-
         public static OrderId create() {
             return new OrderId(UUID.randomUUID());
         }
 
-        String asString() {
+        public String asString() {
             return value.toString();
+        }
+
+        private void validate() {
+            if (isNull(value)) {
+                throw new InvalidOrderIdException("Order Id cannot be empty");
+            }
         }
     }
 }

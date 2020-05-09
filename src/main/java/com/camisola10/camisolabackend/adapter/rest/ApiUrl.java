@@ -8,4 +8,5 @@ public interface ApiUrl {
 
     String PRODUCTS = API + "/products";
     String SETTINGS = API + "/settings";
+    String ORDERS = API + "/orders";
 }

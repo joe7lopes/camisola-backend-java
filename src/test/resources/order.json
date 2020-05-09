@@ -1,0 +1,29 @@
+{
+  "items": [
+    {
+      "productId": "1",
+      "sizeId": "1",
+      "stampingName": "John",
+      "stampingNumber": "Due"
+    },
+    {
+      "productId": "2",
+      "sizeId": "2",
+      "stampingName": "Ewa",
+      "stampingNumber": "Mendes"
+    },
+    {
+      "productId": "1",
+      "sizeId": "3"
+    }
+  ],
+  "shippingAddress": {
+    "firstName": "John",
+    "lastName": "Due",
+    "email": "john.due@gmail.com",
+    "phone": "99223",
+    "address": "ul.. milan",
+    "city": "Moscow",
+    "postCode": "443-23"
+  }
+}

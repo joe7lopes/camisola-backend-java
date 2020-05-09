@@ -55,8 +55,8 @@ class CommandMapperTest {
 
     private List<ProductSize> getProductSizes() {
         return List.of(
-                new ProductSize(new Size("S"), Money.from("34")),
-                new ProductSize(new Size("XL"), Money.from("36.6"))
+                new ProductSize(ProductSize.ProductSizeId.create(), new Size("S"), Money.from("34")),
+                new ProductSize(ProductSize.ProductSizeId.create(), new Size("XL"), Money.from("36.6"))
         );
     }
 

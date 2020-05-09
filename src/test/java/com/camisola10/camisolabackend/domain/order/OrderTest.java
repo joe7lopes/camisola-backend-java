@@ -73,17 +73,6 @@ class OrderTest {
     }
 
     @Test
-    public void shouldHaveTotal() {
-        var item = mock(OrderItem.class);
-        var shippingAddress = mock(ShippingAddress.class);
-        InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> {
-            new Order(Order.OrderId.create(),shippingAddress , List.of(item), LocalDateTime.now(), PROCESSING);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("An order should have a total");
-    }
-
-    @Test
     public void shouldCalculateOrderTotal() {
         assertTotal("0", "0", "0");
         assertTotal("-1", "-22", "-23");

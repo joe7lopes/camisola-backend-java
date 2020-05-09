@@ -23,8 +23,8 @@ public class ProductRequestMapperTest {
     @Test
     public void shouldMapToDTO() {
         var sizes = List.of(
-                new ProductSize(new Size("XL"), Money.from("23")),
-                new ProductSize(new Size("S"), Money.from("13"))
+                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("XL"), Money.from("23")),
+                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("S"), Money.from("13"))
         );
 
         var categories = List.of(
@@ -79,8 +79,8 @@ public class ProductRequestMapperTest {
 
         assertThat(command.getName()).isEqualTo("p1");
         assertThat(command.getSizes()).containsAll(List.of(
-                new ProductSize(new Size("S"), Money.from("34")),
-                new ProductSize(new Size("XL"), Money.from("36.6"))
+                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("S"), Money.from("34")),
+                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("XL"), Money.from("36.6"))
         ));
 
         assertThat(command.getCategories()).containsAll(List.of(
