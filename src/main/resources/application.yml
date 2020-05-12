@@ -19,6 +19,6 @@ logging:
 
 aws:
   bucketName: camisola-backend
-  accessKey: AKIAJJHJUDSTSR7BJ5MQ
-  accessKeySecret: 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
+  accessKey: ${AWS_ACCESS_KEY}
+  accessKeySecret: ${AWS_ACCESS_SECRET}
   region: eu-west-1
