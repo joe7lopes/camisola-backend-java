@@ -28,6 +28,14 @@ public class ProductSize {
             return new ProductSizeId(UUID.randomUUID());
         }
 
+        public static ProductSizeId from(String value){
+            return new ProductSizeId(UUID.fromString(value));
+        }
+
+        public String asString(){
+            return value.toString();
+        }
+
         private void validate() {
             if (isNull(value) || isBlank(value.toString())) {
                 throw new InvalidProductSizeId();

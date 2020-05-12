@@ -14,7 +14,7 @@ class ShippingAddressTest {
                     .build();
         });
 
-        assertThat(exception.getMessage()).isEqualTo("Email or Phone number cannot be empty");
+        assertThat(exception.getMessage()).isEqualTo("Email or Phone number cannot be null");
     }
 
     @Test
@@ -25,7 +25,7 @@ class ShippingAddressTest {
                     .build();
         });
 
-        assertThat(exception.getMessage()).isEqualTo("Email or Phone number cannot be empty");
+        assertThat(exception.getMessage()).isEqualTo("Phone number cannot be empty");
     }
 
     @Test

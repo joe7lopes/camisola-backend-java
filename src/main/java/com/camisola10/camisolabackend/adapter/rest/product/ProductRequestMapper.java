@@ -1,7 +1,6 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
-import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
@@ -25,11 +24,9 @@ interface ProductRequestMapper {
 
     ProductResponseDto map(Product product);
 
-    @Mapping(target = "productId", source = "id")
-    RemoveProductCommand map(String id);
 
     default List<ProductSize> toProductSize(List<ProductSizeDto> sizes) {
-        return sizes.stream().map(s -> new ProductSize(ProductSize.ProductSizeId.create() ,new Size(s.getSize()), new Money(new BigDecimal(s.getPrice()))))
+        return sizes.stream().map(s -> new ProductSize(ProductSize.ProductSizeId.create(), new Size(s.getSize()), new Money(new BigDecimal(s.getPrice()))))
                 .collect(Collectors.toList());
     }
 
@@ -38,15 +35,15 @@ interface ProductRequestMapper {
                 .collect(Collectors.toList());
     }
 
-    default ProductSizeDto map(ProductSize size) {
-        return new ProductSizeDto(size.getSize().getValue(), size.getPrice().asString());
+    default ProductSizeResponseDto map(ProductSize size) {
+        return new ProductSizeResponseDto(size.getId().asString(), size.getSize().getValue(), size.getPrice().asString());
     }
 
     default CreateProductCommand.Base64Image map(ProductImageDto dto) {
         var parts = dto.getFile().split("[:;,]");
         var contentType = ContentType.create(parts[1]);
         var bytes = Base64.getDecoder().decode(parts[3]);
-        return new CreateProductCommand.Base64Image(dto.getName(), bytes,contentType, dto.isDefault());
+        return new CreateProductCommand.Base64Image(dto.getName(), bytes, contentType, dto.isDefault());
     }
 
     default Money toMoney(String amount) {

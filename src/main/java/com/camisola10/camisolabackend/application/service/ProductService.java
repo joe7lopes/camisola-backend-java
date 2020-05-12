@@ -8,11 +8,13 @@ import com.camisola10.camisolabackend.application.port.in.command.product.Remove
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
 import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +44,9 @@ class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, R
     @Override
     public void removeProduct(RemoveProductCommand command) {
         db.deleteById(command.getProductId());
+    }
+
+    Optional<Product> findProductById(ProductId productId) {
+        return db.findById(productId);
     }
 }

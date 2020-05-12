@@ -1,16 +1,19 @@
 package com.camisola10.camisolabackend.adapter.rest.order;
 
-import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.order.Email;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.UUID;
+
+import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderRequestMapperTest {
 
     private OrderRequestMapper mapper = Mappers.getMapper(OrderRequestMapper.class);
-
 
     @Test
     void shouldMapFromRequestToCommand() {
@@ -24,10 +27,18 @@ class OrderRequestMapperTest {
                 .address("ul.. milan")
                 .build();
 
-        CreateOrderRequestDto dto = new CreateOrderRequestDto(null, shippingAddress);
-        CreateOrderCommand command = mapper.map(dto);
+        var items = List.of(
+                new OrderItemDto("1", "1", "sergio", "mendonca"),
+                new OrderItemDto("2", "12"),
+                new OrderItemDto("1", "2")
+        );
 
-        assertThat(command.getItems()).isEqualTo(dto.getItems());
+        var dto = new CreateOrderRequest(items, shippingAddress);
+        var command = mapper.map(dto);
+
+        //TODO assert all values
+        assertThat(command.getItems()).hasSize(items.size());
+
         assertThat(command.getShippingAddress().getFirstName()).isEqualTo(dto.getShippingAddress().getFirstName());
         assertThat(command.getShippingAddress().getLastName()).isEqualTo(dto.getShippingAddress().getLastName());
         assertThat(command.getShippingAddress().getAddress()).isEqualTo(dto.getShippingAddress().getAddress());
@@ -44,5 +55,16 @@ class OrderRequestMapperTest {
         Email result = mapper.map(email);
 
         assertThat(result.asString()).isEqualTo(email);
+    }
+
+    @Test
+    public void shouldMapToUpdateStatusCommand() {
+        var orderId = UUID.randomUUID().toString();
+        var request = new UpdateOrderStatusRequest("PROCESSING");
+
+        UpdateOrderStatusCommand command = mapper.map(orderId, request);
+
+        assertThat(command.getOrderId().asString()).isEqualTo(orderId);
+        assertThat(command.getStatus()).isEqualTo(PROCESSING);
     }
 }

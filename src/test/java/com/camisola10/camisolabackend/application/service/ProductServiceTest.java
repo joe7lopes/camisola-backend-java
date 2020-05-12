@@ -52,6 +52,16 @@ class ProductServiceTest {
     }
 
     @Test
+    public void shouldFindById() {
+
+        Product.ProductId id = Product.ProductId.create();
+        productService.findProductById(id);
+
+        verify(db).findById(id);
+        verifyNoMoreInteractions(db);
+    }
+
+    @Test
     public void shouldSaveProduct() {
         var command = mock(CreateProductCommand.class);
         var productMock = mock(Product.class);

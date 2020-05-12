@@ -2,12 +2,12 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-class CreateOrderRequestDto {
-    private List<OrderItemsDto> items;
-    private ShippingAddressDto shippingAddress;
+class UpdateOrderStatusRequest {
+    private String status;
+
 }

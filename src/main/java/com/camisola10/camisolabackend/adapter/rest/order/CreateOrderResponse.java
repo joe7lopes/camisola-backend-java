@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-class CreateOrderResponseDto {
+class CreateOrderResponse {
     private String orderId;
 }

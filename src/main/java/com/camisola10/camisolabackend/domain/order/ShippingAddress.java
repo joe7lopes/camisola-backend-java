@@ -1,15 +1,14 @@
 package com.camisola10.camisolabackend.domain.order;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Builder
-@Value
-public
-class ShippingAddress {
+@Data
+public class ShippingAddress {
 
     String firstName;
     String lastName;
@@ -31,21 +30,21 @@ class ShippingAddress {
     }
 
     private void validate() {
-        if(isNull(email) && isNull(phone)){
-            throw new InvalidShippingAddress("Email or Phone number cannot be empty");
+        if (isNull(email) && isNull(phone)) {
+            throw new InvalidShippingAddress("Email or Phone number cannot be null");
         }
 
-        if(isBlank(phone)){
-            throw new InvalidShippingAddress("Email or Phone number cannot be empty");
+        if (isBlank(phone)) {
+            throw new InvalidShippingAddress("Phone number cannot be empty");
         }
 
-        if(isBlank(address) || isBlank(city) || isBlank(postCode)){
+        if (isBlank(address) || isBlank(city) || isBlank(postCode)) {
             throw new InvalidShippingAddress("Address or city or post code cannot be empty");
         }
 
     }
 
-    static class InvalidShippingAddress extends RuntimeException{
+    public static class InvalidShippingAddress extends RuntimeException {
         public InvalidShippingAddress(String message) {
             super(message);
         }

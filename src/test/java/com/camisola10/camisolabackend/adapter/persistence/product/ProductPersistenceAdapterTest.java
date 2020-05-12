@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.adapter.persistence.product;
 
 
 import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,6 +50,22 @@ class ProductPersistenceAdapterTest {
     }
 
     @Test
+    public void shouldFindById() {
+        var id = ProductId.create();
+        var p1 = mock(ProductDb.class);
+        var productMock = mock(Product.class);
+        when(repository.findByProductId(id.asString())).thenReturn(Optional.of(p1));
+        when(mapper.map(p1)).thenReturn(productMock);
+
+        Optional<Product> product = adapter.findById(id);
+
+        assertThat(product).isEqualTo(Optional.of(productMock));
+        verify(mapper).map(p1);
+        verifyNoMoreInteractions(mapper);
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
     public void shouldSaveProduct() {
         var productMock = mock(Product.class);
         var productDbMock = mock(ProductDb.class);
@@ -63,7 +81,7 @@ class ProductPersistenceAdapterTest {
 
     @Test
     public void shouldDeleteById() {
-        var pId = mock(Product.ProductId.class);
+        var pId = mock(ProductId.class);
         var id = "123";
         when(pId.asString()).thenReturn(id);
 

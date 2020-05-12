@@ -4,6 +4,7 @@ import com.camisola10.camisolabackend.domain.Money;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Value;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+@NoArgsConstructor
 @Builder
 @Data
 public class Product {
@@ -50,8 +52,8 @@ public class Product {
         );
     }
 
-    public void addImage(ProductImage image){
-        if (images == null){
+    public void addImage(ProductImage image) {
+        if (images == null) {
             this.images = new ArrayList<>();
         }
         this.images.add(image);
@@ -73,8 +75,12 @@ public class Product {
     public static class ProductId {
         UUID value;
 
-        public static ProductId create(){
+        public static ProductId create() {
             return new ProductId(UUID.randomUUID());
+        }
+
+        public static ProductId from(String productId) {
+            return new ProductId(UUID.fromString(productId));
         }
 
         public String asString() {

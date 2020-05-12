@@ -1,38 +1,58 @@
 package com.camisola10.camisolabackend.config;
 
+import com.camisola10.camisolabackend.application.service.ProductNotFoundException;
+import com.camisola10.camisolabackend.application.service.ProductSizeNotFoundException;
+import com.camisola10.camisolabackend.domain.order.Email.InvalidEmailException;
+import com.camisola10.camisolabackend.domain.order.ShippingAddress.InvalidShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.mediatype.vnderrors.VndErrors;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
+@RequestMapping(produces = "application/vnd.error+json")
 @Slf4j
 public class Exceptions {
 
-
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String handleMediaTypeNotSupported(Exception e) {
-        return "Media type not supported";
+    ResponseEntity<VndErrors> handleMediaTypeNotSupported(Exception e) {
+        return error(e, BAD_REQUEST);
     }
 
     @ExceptionHandler({
             Product.InvalidProductNameException.class,
-            ProductCategory.InvalidCategoryNameException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String handleProductExceptions(Exception e) {
-       log.warn("invalid product creation", e);
-        return e.getMessage();
+            ProductCategory.InvalidCategoryNameException.class,
+            ProductNotFoundException.class,
+            ProductSizeNotFoundException.class,
+            InvalidEmailException.class,
+            InvalidShippingAddress.class})
+    ResponseEntity<VndErrors> handleProductExceptions(Exception e) {
+        log.warn("invalid request", e);
+        return error(e, BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    void handleException(Exception ex) {
+    ResponseEntity<VndErrors> handleException(Exception ex) {
         log.error("Server error", ex);
+        return error(ex, INTERNAL_SERVER_ERROR);
+    }
+
+    private ResponseEntity<VndErrors> error(Exception exception, HttpStatus httpStatus) {
+        String logref = UUID.randomUUID().toString();
+        var message = Optional.of(exception.getMessage()).orElse(exception.getClass().getSimpleName());
+        return new ResponseEntity<>(new VndErrors(logref, message), httpStatus);
     }
 }
 

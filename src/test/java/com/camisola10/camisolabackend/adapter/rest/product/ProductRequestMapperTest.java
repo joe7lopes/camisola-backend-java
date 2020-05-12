@@ -1,17 +1,16 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
-import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
+import com.camisola10.camisolabackend.domain.product.ProductSize.ProductSizeId;
 import com.camisola10.camisolabackend.domain.product.Size;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,8 +22,8 @@ public class ProductRequestMapperTest {
     @Test
     public void shouldMapToDTO() {
         var sizes = List.of(
-                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("XL"), Money.from("23")),
-                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("S"), Money.from("13"))
+                new ProductSize(ProductSizeId.create(), new Size("XL"), Money.from("23")),
+                new ProductSize(ProductSizeId.create(), new Size("S"), Money.from("13"))
         );
 
         var categories = List.of(
@@ -78,10 +77,11 @@ public class ProductRequestMapperTest {
         CreateProductCommand command = mapper.map(request);
 
         assertThat(command.getName()).isEqualTo("p1");
-        assertThat(command.getSizes()).containsAll(List.of(
-                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("S"), Money.from("34")),
-                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("XL"), Money.from("36.6"))
-        ));
+        assertThat(command.getSizes().get(0).getSize()).isEqualTo(new Size("S"));
+        assertThat(command.getSizes().get(0).getPrice()).isEqualTo(Money.from("34"));
+
+        assertThat(command.getSizes().get(1).getSize()).isEqualTo(new Size("XL"));
+        assertThat(command.getSizes().get(1).getPrice()).isEqualTo(Money.from("36.6"));
 
         assertThat(command.getCategories()).containsAll(List.of(
                 new ProductCategory("benfica"),
@@ -91,15 +91,6 @@ public class ProductRequestMapperTest {
         assertThat(command.getImages()).hasSize(2);
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("23"));
         assertThat(command.isCustomizable()).isEqualTo(true);
-    }
-
-    @Test
-    public void shouldMapToRemoveProductCommand() {
-        String id = UUID.randomUUID().toString();
-
-        RemoveProductCommand command = mapper.map(id);
-
-        assertThat(command.getProductId().getValue().toString()).isEqualTo(id);
     }
 
     private List<ProductSizeDto> createSizes() {

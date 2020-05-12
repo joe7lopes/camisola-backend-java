@@ -4,7 +4,6 @@ import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
-import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,15 +14,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -117,19 +113,4 @@ class ProductControllerTest {
         verify(createProductUseCaseMock).createProduct(commandMock);
     }
 
-    @Test
-    public void shouldRemoveProduct() throws Exception {
-        var id = UUID.randomUUID().toString();
-        var command = mock(RemoveProductCommand.class);
-        when(mapper.map(id)).thenReturn(command);
-
-        mockMvc.perform(delete("/api/products/" + id)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        verify(mapper).map(id);
-        verify(removeProductUseCase).removeProduct(command);
-        verifyNoMoreInteractions(mapper);
-        verifyNoMoreInteractions(retrieveProductsUseCase);
-    }
 }

@@ -40,6 +40,6 @@ class EmailTest {
     }
 
     private void assertMessage(String email, Exception ex) {
-        assertThat(ex.getMessage()).isEqualTo("The email " + email + " is an invalid email address");
+        assertThat(ex.getMessage()).isEqualTo("Invalid email address " + email);
     }
 }

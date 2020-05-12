@@ -21,11 +21,11 @@ public class Email {
 
     private void validate() {
         if(isNull(value) || !value.matches(EMAIL_REGEX)){
-            throw new InvalidEmailException(String.format("The email %s is an invalid email address", value));
+            throw new InvalidEmailException(String.format("Invalid email address %s", value));
         }
     }
 
-    static class InvalidEmailException extends RuntimeException{
+    public static class InvalidEmailException extends RuntimeException{
         public InvalidEmailException(String message) {
             super(message);
         }

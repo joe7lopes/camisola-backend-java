@@ -20,7 +20,7 @@ class ProductResponseDto {
     private String id;
     private String name;
     private List<ProductCategoryDto> categories;
-    private List<ProductSizeDto> sizes;
+    private List<ProductSizeResponseDto> sizes;
     private boolean customizable;
     private List<ProductImage> images;
     private String defaultPrice;

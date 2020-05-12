@@ -79,6 +79,10 @@ public class Order {
             return new OrderId(UUID.randomUUID());
         }
 
+        public static OrderId from(String orderId) {
+            return new OrderId(UUID.fromString(orderId));
+        }
+
         public String asString() {
             return value.toString();
         }
