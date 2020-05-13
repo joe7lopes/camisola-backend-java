@@ -10,6 +10,7 @@ interface OrderDBMapper {
 
     @Mapping(target="orderId", source="id")
     @Mapping(target="lastModified", ignore = true)
+    @Mapping(target="id", ignore = true)
     OrderDb map(Order order);
 
     default String map(OrderId orderId){
