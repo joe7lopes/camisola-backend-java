@@ -15,6 +15,10 @@ public class Email {
         validate();
     }
 
+    public static Email from(String value){
+        return new Email(value);
+    }
+
     public String asString(){
         return value;
     }

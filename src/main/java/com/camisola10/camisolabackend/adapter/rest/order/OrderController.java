@@ -2,16 +2,22 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
+import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.domain.order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(ApiUrl.ORDERS)
@@ -19,8 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
+    private final FetchOrdersUseCase fetchOrdersUseCase;
     private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
     private final OrderRequestMapper mapper;
+
+    @GetMapping
+    FetchOrdersResponse fetchOrders(@RequestParam String status){
+        var fetchOrdersCommand = mapper.mapStatus(status);
+        List<Order> orders = fetchOrdersUseCase.fetchOrders(fetchOrdersCommand);
+        return mapper.map(orders);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

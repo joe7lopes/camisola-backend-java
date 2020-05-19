@@ -1,9 +1,11 @@
 package com.camisola10.camisolabackend.application.service;
 
 import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
+import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
 import com.camisola10.camisolabackend.domain.order.Order;
@@ -15,13 +17,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 
 @Service
 @RequiredArgsConstructor
-class OrderService implements CreateOrderUseCase, UpdateOrderStatusUseCase {
+class OrderService implements CreateOrderUseCase, UpdateOrderStatusUseCase, FetchOrdersUseCase {
 
     private final ProductService productService;
     private final OrderDB db;
@@ -48,6 +51,11 @@ class OrderService implements CreateOrderUseCase, UpdateOrderStatusUseCase {
     @Override
     public void updateOrderStatus(UpdateOrderStatusCommand command) {
         db.updateOrderStatus(command.getOrderId(), command.getStatus());
+    }
+
+    @Override
+    public List<Order> fetchOrders(FetchOrdersCommand command) {
+        return null;
     }
 
     private OrderItem mapItems(OrderItemCommand item) {

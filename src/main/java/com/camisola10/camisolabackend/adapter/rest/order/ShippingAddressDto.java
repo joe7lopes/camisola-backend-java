@@ -8,11 +8,11 @@ import lombok.Data;
 @Builder
 @Data
 class ShippingAddressDto {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-    private String address;
-    private String city;
-    private String postCode;
+    String firstName;
+    String lastName;
+    String email;
+    String phone;
+    String address;
+    String city;
+    String postCode;
 }

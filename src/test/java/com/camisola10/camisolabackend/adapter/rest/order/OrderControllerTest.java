@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
+import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
@@ -40,6 +41,9 @@ class OrderControllerTest {
 
     @MockBean
     UpdateOrderStatusUseCase updateOrderStatusUseCase;
+
+    @MockBean
+    FetchOrdersUseCase fetchOrdersUseCase;
 
     @Test
     public void shouldCreateNewOrder() throws Exception {
