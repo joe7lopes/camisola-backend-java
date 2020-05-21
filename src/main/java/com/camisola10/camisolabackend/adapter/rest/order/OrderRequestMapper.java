@@ -19,7 +19,9 @@ interface OrderRequestMapper {
 
     UpdateOrderStatusCommand map(String orderId, UpdateOrderStatusRequest request);
 
-    FetchOrdersCommand mapStatus(String status);
+    default FetchOrdersCommand mapStatus(String status){
+        return new FetchOrdersCommand(Order.Status.valueOf(status.toUpperCase()));
+    };
 
     default FetchOrdersResponse map(List<Order> orders) {
         List<OrderDto> ordersDto = orders.stream()

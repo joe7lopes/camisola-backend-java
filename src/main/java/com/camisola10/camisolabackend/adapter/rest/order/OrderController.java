@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(ApiUrl.ORDERS)
@@ -30,9 +32,12 @@ class OrderController {
     private final OrderRequestMapper mapper;
 
     @GetMapping
-    FetchOrdersResponse fetchOrders(@RequestParam String status){
-        var fetchOrdersCommand = mapper.mapStatus(status);
-        List<Order> orders = fetchOrdersUseCase.fetchOrders(fetchOrdersCommand);
+    FetchOrdersResponse fetchOrders(@RequestParam Optional<String> status) {
+        List<Order> orders = new ArrayList<>();
+        status.map(mapper::mapStatus)
+                .ifPresentOrElse(command -> orders.addAll(fetchOrdersUseCase.fetchOrders(command)),
+                        () -> orders.addAll(fetchOrdersUseCase.fetchOrders()));
+
         return mapper.map(orders);
     }
 

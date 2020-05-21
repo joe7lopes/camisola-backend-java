@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${DB_USER}:${DB_PASSWORD}@ds151247.mlab.com:51247/camisola10?retryWrites=false

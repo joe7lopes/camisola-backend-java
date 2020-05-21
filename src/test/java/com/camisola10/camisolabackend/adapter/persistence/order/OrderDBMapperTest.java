@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSING;
+import static com.camisola10.camisolabackend.domain.order.Order.Status.SHIPPED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -41,5 +42,31 @@ class OrderDBMapperTest {
         assertThat(orderDb.getShippingAddress()).isEqualTo(order.getShippingAddress());
         assertThat(orderDb.getStatus()).isEqualTo(order.getStatus());
         assertThat(orderDb.getCreatedAt()).isEqualTo(order.getCreatedAt());
+    }
+
+    @Test
+    public void shouldMapToOrder() {
+        var orderId = OrderId.create().asString();
+        var product = mock(Product.class);
+        var productSize = mock(ProductSize.class);
+        var items = List.of(new OrderItem(product, productSize, "name", "number"));
+        var shippingAddress = mock(ShippingAddress.class);
+        LocalDateTime dateNow = LocalDateTime.now();
+
+        var orderDb = OrderDb.builder()
+                .orderId(orderId)
+                .status(SHIPPED)
+                .items(items)
+                .shippingAddress(shippingAddress)
+                .createdAt(dateNow)
+                .lastModified(dateNow)
+                .build();
+
+        Order order = mapper.map(orderDb);
+
+        assertThat(order.getId().asString()).isEqualTo(orderDb.getOrderId());
+        assertThat(order.getItems()).hasSize(1);
+        assertThat(order.getCreatedAt()).isEqualTo(dateNow);
+        assertThat(order.getStatus()).isEqualTo(orderDb.getStatus());
     }
 }

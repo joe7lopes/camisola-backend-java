@@ -83,7 +83,7 @@ class OrderRequestMapperTest {
     @Test
     public void shouldMapToFetchOrdersCommand() {
 
-        FetchOrdersCommand command = mapper.mapStatus("PROCESSING");
+        FetchOrdersCommand command = mapper.mapStatus("processing");
 
         assertThat(command.getStatus()).isEqualTo(PROCESSING);
     }

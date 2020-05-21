@@ -16,4 +16,11 @@ interface OrderDBMapper {
     default String map(OrderId orderId){
         return orderId.asString();
     }
+
+    @Mapping(target = "id", source = "orderId")
+    Order map(OrderDb orderDb);
+
+    default OrderId map(String orderId){
+        return OrderId.from(orderId);
+    }
 }

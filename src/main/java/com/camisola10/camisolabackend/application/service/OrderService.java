@@ -10,6 +10,7 @@ import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOr
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
+import com.camisola10.camisolabackend.domain.order.Order.Status;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
@@ -54,8 +55,14 @@ class OrderService implements CreateOrderUseCase, UpdateOrderStatusUseCase, Fetc
     }
 
     @Override
+    public List<Order> fetchOrders() {
+        return db.findAll();
+    }
+
+    @Override
     public List<Order> fetchOrders(FetchOrdersCommand command) {
-        return null;
+        Status status = command.getStatus();
+        return db.findOrdersByStatus(status);
     }
 
     private OrderItem mapItems(OrderItemCommand item) {

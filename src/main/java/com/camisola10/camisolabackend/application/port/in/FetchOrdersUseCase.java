@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface FetchOrdersUseCase {
 
+    List<Order> fetchOrders();
     List<Order> fetchOrders(FetchOrdersCommand command);
 }
