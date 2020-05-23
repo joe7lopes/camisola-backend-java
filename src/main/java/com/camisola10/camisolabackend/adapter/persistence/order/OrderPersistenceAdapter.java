@@ -19,7 +19,7 @@ class OrderPersistenceAdapter implements OrderDB {
 
     @Override
     public List<Order> findAll() {
-        return repository.findAll().stream()
+        return repository.findAllByOrderByCreatedAtDesc().stream()
                 .map(mapper::map)
                 .collect(Collectors.toList());
     }

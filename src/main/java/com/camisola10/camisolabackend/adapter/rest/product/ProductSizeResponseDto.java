@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ProductSizeResponseDto {
+class ProductSizeResponseDto {
     private String id;
     private String size;
     private String price;

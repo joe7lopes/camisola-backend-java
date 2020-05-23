@@ -46,7 +46,7 @@ class OrderServiceTest {
 
     @Test
     void shouldCreateOrder() {
-        var productId = Product.ProductId.create();
+        var productId = Product.ProductId.from("e8d948e2-e896-4c03-9af1-23da0ff3036b");
         var productSizeId = ProductSizeId.create();
         var item1 = CreateOrderCommand.OrderItemCommand.builder()
                 .productId(productId.asString())

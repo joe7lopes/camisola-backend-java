@@ -89,24 +89,25 @@ class OrderRequestMapperTest {
     }
 
     @Test
-    public void shouldMapFromOrderToOrderDto() {
+    public void shouldMapFromOrderToFetchOrdersResponse() {
         var order = createOrder();
 
         FetchOrdersResponse response = mapper.map(Collections.singletonList(order));
 
-        OrderDto actual = response.getOrders().get(0);
-        assertThat(actual.getItems().get(0).getProductId()).isEqualTo(order.getItems().get(0).getProduct().getId().asString());
-        assertShippingAddress(actual.getShippingAddress(), order.getShippingAddress());
-        assertItems(actual.getItems().get(0), order.getItems().get(0));
+        FetchOrdersResponse.OrderDto actual = response.getOrders().get(0);
+        assertThat(actual.getItems().get(0).productId).isEqualTo(order.getItems().get(0).getProduct().getId().asString());
+        assertShippingAddress(actual.shippingAddress, order.getShippingAddress());
+        assertItems(actual.items.get(0), order.getItems().get(0));
         assertThat(actual.getCreatedAt()).isEqualTo(LocalDateTime.of(2020, 2, 5, 2, 2).toString());
         assertThat(actual.getStatus()).isEqualTo(order.getStatus().name());
     }
 
-    private void assertItems(OrderItemDto actual, OrderItem expected) {
-        assertThat(actual.getProductId()).isEqualTo(expected.getProduct().getId().asString());
-        assertThat(actual.getSizeId()).isEqualTo(expected.getSize().getId().asString());
-        assertThat(actual.getStampingName()).isEqualTo(expected.getStampingName());
-        assertThat(actual.getStampingNumber()).isEqualTo(expected.getStampingNumber());
+    private void assertItems(FetchOrdersResponse.OrderItemDto actual, OrderItem expected) {
+        assertThat(actual.productId).isEqualTo(expected.getProduct().getId().asString());
+        assertThat(actual.productName).isEqualTo(expected.getProduct().getName());
+        assertThat(actual.size).isEqualTo(expected.getSize().getSize().asString());
+        assertThat(actual.stampingName).isEqualTo(expected.getStampingName());
+        assertThat(actual.stampingNumber).isEqualTo(expected.getStampingNumber());
     }
 
     private void assertShippingAddress(ShippingAddressDto actual, ShippingAddress expected){

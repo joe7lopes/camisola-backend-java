@@ -6,6 +6,7 @@ import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -22,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -87,7 +91,7 @@ class OrderControllerTest {
         var command = mock(UpdateOrderStatusCommand.class);
         when(mapper.map(eq("1"), any(UpdateOrderStatusRequest.class))).thenReturn(command);
 
-        mockMvc.perform(post(ApiUrl.ORDERS+"/1")
+        mockMvc.perform(post(ApiUrl.ORDERS + "/1")
                 .contentType(APPLICATION_JSON)
                 .content(payload))
                 .andExpect(status().isOk());
@@ -101,5 +105,23 @@ class OrderControllerTest {
     private String convertToJsonString(CreateOrderRequest request) throws JsonProcessingException {
         ObjectMapper jsonMapper = new ObjectMapper();
         return jsonMapper.writeValueAsString(request);
+    }
+
+    @Test
+    public void shouldFetchOrders() throws Exception {
+        var orderMock = mock(Order.class);
+        var orders = List.of(orderMock);
+        FetchOrdersResponse fetchOrdersResponse = mock(FetchOrdersResponse.class);
+        when(fetchOrdersUseCase.fetchOrders()).thenReturn(orders);
+        when(mapper.map(orders)).thenReturn(fetchOrdersResponse);
+
+        mockMvc.perform(get(ApiUrl.ORDERS)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(fetchOrdersUseCase).fetchOrders();
+        verify(mapper).map(orders);
+        verifyNoMoreInteractions(fetchOrdersUseCase);
+        verifyNoMoreInteractions(mapper);
     }
 }

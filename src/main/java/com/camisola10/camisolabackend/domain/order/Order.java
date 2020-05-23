@@ -33,7 +33,6 @@ public class Order {
     public Money getTotal() {
         return items.stream()
                 .map(i -> i.getSize().getPrice())
-                .peek(System.out::println)
                 .reduce(Money.from(ZERO), Money::add);
     }
 
