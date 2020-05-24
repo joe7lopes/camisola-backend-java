@@ -6,9 +6,3 @@ logging:
     org:
       springframework:
         data: DEBUG
-
-aws:
-  bucketName: camisola-backend
-  accessKey: ${AWS_ACCESS_KEY}
-  accessKeySecret: ${AWS_ACCESS_SECRET}
-  region: eu-west-1

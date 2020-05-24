@@ -2,3 +2,9 @@ spring:
   data:
     mongodb:
       uri: mongodb://${DB_USER}:${DB_PASSWORD}@ds223019.mlab.com:23019/camisola10-staging?retryWrites=false
+
+aws:
+  bucketName: camisola-backend/images-test
+  accessKey: ${AWS_ACCESS_KEY}
+  accessKeySecret: ${AWS_ACCESS_SECRET}
+  region: eu-west-1
