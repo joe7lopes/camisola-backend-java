@@ -4,7 +4,8 @@ spring:
       uri: mongodb://${DB_USER}:${DB_PASSWORD}@ds151247.mlab.com:51247/camisola10?retryWrites=false
 
 aws:
-  bucketName: camisola-backend/images
+  bucketName: camisola-backend
+  bucketPath: images
   accessKey: ${AWS_ACCESS_KEY}
   accessKeySecret: ${AWS_ACCESS_SECRET}
   region: eu-west-1

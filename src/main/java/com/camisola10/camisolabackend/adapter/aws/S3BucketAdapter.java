@@ -38,12 +38,15 @@ class S3BucketAdapter implements CloudStorage {
                         .getHeaderValue()
         );
 
-        var bucketPath = s3Properties.getBucketName();
-        s3Client.putObject(bucketPath, image.getName(), fis, metadata);
-        s3Client.setObjectAcl(bucketPath, image.getName(), PublicRead);
-        log.info("Image {} uploaded successfully to {}", image.getName(), bucketPath);
-        return String.format("https://%s.s3-%s.amazonaws.com/images/%s",
-                s3Properties.getBucketName(), s3Properties.getRegion(), image.getName());
+
+        var bucketName = s3Properties.getBucketName();
+        var bucketPath = s3Properties.getBucketPath();
+        var filePath = bucketName + "/" + bucketPath;
+        s3Client.putObject(filePath, image.getName(), fis, metadata);
+        s3Client.setObjectAcl(filePath, image.getName(), PublicRead);
+        log.info("Image {} uploaded successfully to {}", image.getName(), filePath);
+        return String.format("https://%s.s3-%s.amazonaws.com/%s/%s",
+                bucketName, s3Properties.getRegion(), bucketPath, image.getName());
     }
 }
 
