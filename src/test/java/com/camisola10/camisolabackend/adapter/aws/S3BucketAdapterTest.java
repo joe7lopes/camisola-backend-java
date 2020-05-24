@@ -40,6 +40,7 @@ class S3BucketAdapterTest {
         var image = new CreateProductCommand.Base64Image("img1", new byte[]{}, IMAGE_PNG, false);
         when(properties.getBucketName()).thenReturn(bucketName);
         when(properties.getRegion()).thenReturn(region);
+        when(properties.getBucketPath()).thenReturn("images");
         var url = adapter.store(image);
 
         verify(s3Client).putObject(eq(bucketName +"/images"), eq("img1"), any(InputStream.class), any(ObjectMetadata.class));
