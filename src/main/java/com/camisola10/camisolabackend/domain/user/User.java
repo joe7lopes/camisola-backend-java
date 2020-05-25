@@ -1,30 +1,50 @@
 package com.camisola10.camisolabackend.domain.user;
 
 import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
-import java.util.UUID;
+import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 @Value
 @Builder
-@RequiredArgsConstructor
 public class User {
-    @Builder.Default
-    String userId = UUID.randomUUID().toString();
+    String id;
     String firstName;
     String lastName;
     Address address;
     Email email;
-    String password;
+    Password password;
+    String[] roles;
 
-    public static Email withEmail(String email) {
-        return new Email(email);
+    private User(String id, String firstName, String lastName, Address address, Email email, Password password, String[] roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        validate();
     }
 
-    public String getEmail() {
-        return email.asString();
+    private void validate() {
+        boolean invalid =
+                isBlank(id) ||
+                isBlank(firstName) ||
+                isBlank(lastName) ||
+                isNull(address) ||
+                isNull(email) ||
+                isNull(password) ||
+                roles.length <= 0;
+
+        if (invalid) throw new InvalidUserException(this);
     }
 
+    static class InvalidUserException extends RuntimeException {
+        public InvalidUserException(User user) {
+            super("Invalid user" + user);
+        }
+    }
 }

@@ -6,7 +6,5 @@ import java.util.Optional;
 
 public interface UserDB {
 
-    Optional<User> findByEmail(String email);
-
-    void save(User user);
+    Optional<User> findByUserName();
 }
