@@ -8,6 +8,7 @@ import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOr
 import com.camisola10.camisolabackend.domain.order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ class OrderController {
     private final OrderRequestMapper mapper;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     FetchOrdersResponse fetchOrders(@RequestParam Optional<String> status) {
         List<Order> orders = new ArrayList<>();
         status.map(mapper::mapStatus)
@@ -50,6 +52,7 @@ class OrderController {
     }
 
     @PostMapping("/{orderId}")
+    @PreAuthorize("hasRole('ADMIN')")
     void updateOrderStatus(@PathVariable String orderId, @RequestBody UpdateOrderStatusRequest request) {
         UpdateOrderStatusCommand command = mapper.map(orderId, request);
         updateOrderStatusUseCase.updateOrderStatus(command);

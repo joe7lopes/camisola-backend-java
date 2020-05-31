@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = OrderController.class)
+@ActiveProfiles("local")
 class OrderControllerTest {
 
     @Autowired
@@ -86,6 +89,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void shouldUpdateOrderStatusToProcessing() throws Exception {
         var payload = "{\"status\":\"PROCESSING\"}";
         var command = mock(UpdateOrderStatusCommand.class);
@@ -102,12 +106,8 @@ class OrderControllerTest {
         verifyNoMoreInteractions(service);
     }
 
-    private String convertToJsonString(CreateOrderRequest request) throws JsonProcessingException {
-        ObjectMapper jsonMapper = new ObjectMapper();
-        return jsonMapper.writeValueAsString(request);
-    }
-
     @Test
+    @WithMockUser(roles = {"ADMIN"})
     public void shouldFetchOrders() throws Exception {
         var orderMock = mock(Order.class);
         var orders = List.of(orderMock);
@@ -123,5 +123,26 @@ class OrderControllerTest {
         verify(mapper).map(orders);
         verifyNoMoreInteractions(fetchOrdersUseCase);
         verifyNoMoreInteractions(mapper);
+    }
+
+    @Test
+    public void shouldReturn401WhenFetchingOrders() throws Exception {
+        mockMvc.perform(get(ApiUrl.ORDERS)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void shouldReturn401WhenUpdatingOrderStatus() throws Exception {
+        var payload = "{\"status\":\"PROCESSING\"}";
+        mockMvc.perform(post(ApiUrl.ORDERS + "/1")
+                .contentType(APPLICATION_JSON)
+                .content(payload))
+                .andExpect(status().isUnauthorized());
+    }
+
+    private String convertToJsonString(CreateOrderRequest request) throws JsonProcessingException {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        return jsonMapper.writeValueAsString(request);
     }
 }

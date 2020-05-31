@@ -11,15 +11,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserPersistenceAdapter implements UserDB {
 
-    private final UserRepository repository;
+    //private final UserRepository repository;
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email);
-    }
-
-    @Override
-    public void save(User user) {
-        repository.save(user);
+    public Optional<User> findByUserName() {
+        return Optional.empty();
     }
 }

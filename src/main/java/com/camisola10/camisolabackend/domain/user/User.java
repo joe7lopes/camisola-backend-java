@@ -47,4 +47,9 @@ public class User {
             super("Invalid user" + user);
         }
     }
+
+    public enum Role {
+        ADMIN,
+        SHOP_MANAGER
+    }
 }
