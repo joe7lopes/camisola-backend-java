@@ -98,7 +98,7 @@ class OrderRequestMapperTest {
         assertThat(actual.getItems().get(0).productId).isEqualTo(order.getItems().get(0).getProduct().getId().asString());
         assertShippingAddress(actual.shippingAddress, order.getShippingAddress());
         assertItems(actual.items.get(0), order.getItems().get(0));
-        assertThat(actual.getCreatedAt()).isEqualTo(LocalDateTime.of(2020, 2, 5, 2, 2).toString());
+        assertThat(actual.getCreatedAt()).isEqualTo("05/02/2020 02:02");
         assertThat(actual.getStatus()).isEqualTo(order.getStatus().name());
     }
 

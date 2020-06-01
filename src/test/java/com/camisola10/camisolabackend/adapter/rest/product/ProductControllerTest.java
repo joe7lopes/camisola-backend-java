@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
+import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -27,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ProductController.class)
+@ActiveProfiles("local")
 class ProductControllerTest {
 
     @MockBean
@@ -43,7 +47,7 @@ class ProductControllerTest {
 
     @Test
     public void shouldReturnEmptyList() throws Exception {
-        mockMvc.perform(get("/api/products"))
+        mockMvc.perform(get(ApiUrl.PRODUCTS))
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
@@ -55,7 +59,7 @@ class ProductControllerTest {
         when(retrieveProductsUseCase.getAll()).thenReturn(List.of(product));
         when(mapper.map(any(Product.class))).thenReturn(new ProductResponseDto("123", "p1", null, null, true, null, "23"));
 
-        mockMvc.perform(get("/api/products"))
+        mockMvc.perform(get(ApiUrl.PRODUCTS))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value("123"))
@@ -68,6 +72,7 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void shouldCreateNewProduct() throws Exception {
 
         var s1 = new JSONObject();
@@ -101,7 +106,7 @@ class ProductControllerTest {
                 .build();
         when(mapper.map(productMock)).thenReturn(response);
 
-        mockMvc.perform(post("/api/products")
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
                 .contentType(APPLICATION_JSON)
                 .content(requestBody.toString()))
                 .andExpect(status().isCreated())
@@ -111,6 +116,21 @@ class ProductControllerTest {
 
         verify(mapper).map(any(CreateProductRequest.class));
         verify(createProductUseCaseMock).createProduct(commandMock);
+    }
+
+    @Test
+    @WithMockUser
+    public void shouldOnlyAllowAdminRoleToCreateProducts() throws Exception {
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shouldOnlyAllowAuthenticatedUsersToCreateProducts() throws Exception {
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 
 }
