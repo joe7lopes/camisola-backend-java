@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.adapter.persistence.product;
 
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,12 +20,12 @@ interface ProductDBMapper {
     @Mapping(target = "id", source = "productId")
     Product map(ProductDb productDb);
 
-    default Product.ProductId map(String productId) {
-        return new Product.ProductId(UUID.fromString(productId));
+    default ProductId map(String productId) {
+        return new ProductId(UUID.fromString(productId));
     }
 
-    default String productId(Product.ProductId productId) {
-        return productId.getValue().toString();
+    default String productId(ProductId productId) {
+        return productId.asString();
     }
 
     default Money convert(BigDecimal defaultPrice) {
