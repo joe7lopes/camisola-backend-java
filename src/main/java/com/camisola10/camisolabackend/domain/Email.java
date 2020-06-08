@@ -7,7 +7,6 @@ import static java.util.Objects.isNull;
 @Value
 public class Email {
     private static final String EMAIL_REGEX = "^[\\w-_.+]*[\\w-_.]@([\\w]+\\.)+[\\w]+[\\w]$";
-
     String value;
 
     public Email(String value) {
