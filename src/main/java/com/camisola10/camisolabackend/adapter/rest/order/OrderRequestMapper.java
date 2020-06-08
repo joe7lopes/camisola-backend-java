@@ -4,7 +4,7 @@ import com.camisola10.camisolabackend.application.port.in.command.order.CreateOr
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.Money;
-import com.camisola10.camisolabackend.domain.order.Email;
+import com.camisola10.camisolabackend.domain.Email;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.OrderItem;

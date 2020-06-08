@@ -1,4 +1,4 @@
-package com.camisola10.camisolabackend.domain.order;
+package com.camisola10.camisolabackend.domain;
 
 import lombok.Value;
 

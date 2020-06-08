@@ -7,6 +7,7 @@ import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCas
 import com.camisola10.camisolabackend.domain.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,6 @@ class ProductController {
 
     private final RetrieveProductsUseCase retrieveProductsUseCase;
     private final CreateProductUseCase createProductUseCase;
-    private final RemoveProductUseCase removeProductUseCase;
     private final ProductRequestMapper mapper;
 
     @GetMapping
@@ -35,6 +35,7 @@ class ProductController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     ProductResponseDto createProduct(@RequestBody CreateProductRequest dto) {
         var command = mapper.map(dto);

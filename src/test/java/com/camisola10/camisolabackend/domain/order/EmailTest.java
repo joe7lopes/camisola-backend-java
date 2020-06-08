@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.domain.order;
 
-import com.camisola10.camisolabackend.domain.order.Email.InvalidEmailException;
+import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.Email.InvalidEmailException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

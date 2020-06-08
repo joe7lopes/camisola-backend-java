@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.domain.order;
 
+import com.camisola10.camisolabackend.domain.Email;
 import lombok.Builder;
 import lombok.Data;
 

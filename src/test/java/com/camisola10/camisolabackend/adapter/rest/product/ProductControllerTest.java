@@ -1,16 +1,16 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
+import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
-import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,41 +19,37 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = ProductController.class)
+@ControllerTest(controllers = ProductController.class)
 @ActiveProfiles("local")
 class ProductControllerTest {
 
     @MockBean
-    CreateProductUseCase createProductUseCaseMock;
+    private CreateProductUseCase createProductUseCase;
     @MockBean
-    RemoveProductUseCase removeProductUseCase;
+    private RetrieveProductsUseCase retrieveProductsUseCase;
     @MockBean
-    RetrieveProductsUseCase retrieveProductsUseCase;
-    @MockBean
-    ProductRequestMapper mapper;
+    private ProductRequestMapper mapper;
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     public void shouldReturnEmptyList() throws Exception {
-        mockMvc.perform(get(ApiUrl.PRODUCTS))
+        mockMvc.perform(get(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON))
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
 
     @Test
+    @WithMockUser
     void shouldReturnListOfProducts() throws Exception {
         var product = mock(Product.class);
         when(retrieveProductsUseCase.getAll()).thenReturn(List.of(product));
@@ -72,9 +68,49 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(roles = {"ADMIN"})
     void shouldCreateNewProduct() throws Exception {
 
+        JSONObject requestBody = createRequestBody();
+
+        var commandMock = mock(CreateProductCommand.class);
+        var productMock = mock(Product.class);
+        when(mapper.map(any(CreateProductRequest.class))).thenReturn(commandMock);
+        when(createProductUseCase.createProduct(commandMock)).thenReturn(productMock);
+        var response = ProductResponseDto.builder()
+                .name("camisola slb")
+                .build();
+        when(mapper.map(productMock)).thenReturn(response);
+
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON)
+                .content(requestBody.toString()))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.name").value(requestBody.get("name")));
+
+
+        verify(mapper).map(any(CreateProductRequest.class));
+        verify(createProductUseCase).createProduct(commandMock);
+    }
+
+    @Test
+    public void shouldOnlyAllowAdminRoleToCreateProducts() throws Exception {
+        var requestBody = createRequestBody();
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON)
+                .content(requestBody.toString()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void shouldOnlyAllowAuthenticatedUsersToCreateProducts() throws Exception {
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    private JSONObject createRequestBody() throws JSONException {
         var s1 = new JSONObject();
         s1.put("size", "S");
         s1.put("price", "23");
@@ -96,41 +132,7 @@ class ProductControllerTest {
         requestBody.put("categories", categories);
         requestBody.put("defaultPrice", "40");
         requestBody.put("isCustomizable", true);
-
-        var commandMock = mock(CreateProductCommand.class);
-        var productMock = mock(Product.class);
-        when(mapper.map(any(CreateProductRequest.class))).thenReturn(commandMock);
-        when(createProductUseCaseMock.createProduct(commandMock)).thenReturn(productMock);
-        var response = ProductResponseDto.builder()
-                .name("camisola slb")
-                .build();
-        when(mapper.map(productMock)).thenReturn(response);
-
-        mockMvc.perform(post(ApiUrl.PRODUCTS)
-                .contentType(APPLICATION_JSON)
-                .content(requestBody.toString()))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value(requestBody.get("name")));
-
-
-        verify(mapper).map(any(CreateProductRequest.class));
-        verify(createProductUseCaseMock).createProduct(commandMock);
-    }
-
-    @Test
-    @WithMockUser
-    public void shouldOnlyAllowAdminRoleToCreateProducts() throws Exception {
-        mockMvc.perform(post(ApiUrl.PRODUCTS)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    public void shouldOnlyAllowAuthenticatedUsersToCreateProducts() throws Exception {
-        mockMvc.perform(post(ApiUrl.PRODUCTS)
-                .contentType(APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+        return requestBody;
     }
 
 }

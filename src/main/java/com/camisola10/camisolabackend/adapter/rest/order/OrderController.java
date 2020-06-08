@@ -52,7 +52,7 @@ class OrderController {
     }
 
     @PostMapping("/{orderId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void updateOrderStatus(@PathVariable String orderId, @RequestBody UpdateOrderStatusRequest request) {
         UpdateOrderStatusCommand command = mapper.map(orderId, request);
         updateOrderStatusUseCase.updateOrderStatus(command);

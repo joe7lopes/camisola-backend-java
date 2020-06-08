@@ -1,29 +1,25 @@
 package com.camisola10.camisolabackend.application.service;
 
-import com.camisola10.camisolabackend.application.port.out.UserDB;
+import com.camisola10.camisolabackend.application.port.in.SignInUseCase;
+import com.camisola10.camisolabackend.config.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import static java.lang.String.format;
 
 @Service
 @RequiredArgsConstructor
-class UserService implements UserDetailsService {
+class UserService implements SignInUseCase {
 
-    private final UserDB db;
+    private final AuthenticationManager authenticationManager;
+    private final TokenProvider jwtTokenUtil;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = db.findByUserName()
-                .orElseThrow(() -> new UsernameNotFoundException(format("username %s not found", username)));
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getFirstName(),
-                user.getPassword().asString(),
-                AuthorityUtils.createAuthorityList(user.getRoles()));
+    public String signIn(String email, String password) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtTokenUtil.generateToken(authentication);
     }
 }

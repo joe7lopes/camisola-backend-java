@@ -18,7 +18,6 @@ public class ProductRequestMapperTest {
 
     private ProductRequestMapper mapper = Mappers.getMapper(ProductRequestMapper.class);
 
-
     @Test
     public void shouldMapToDTO() {
         var sizes = List.of(

@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
+import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
 import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
 import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
@@ -12,7 +13,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,18 +22,13 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = OrderController.class)
+@ControllerTest(controllers = OrderController.class)
 @ActiveProfiles("local")
 class OrderControllerTest {
 
@@ -145,4 +140,6 @@ class OrderControllerTest {
         ObjectMapper jsonMapper = new ObjectMapper();
         return jsonMapper.writeValueAsString(request);
     }
+
+
 }

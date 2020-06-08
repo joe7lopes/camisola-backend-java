@@ -2,14 +2,17 @@ package com.camisola10.camisolabackend.config;
 
 import com.camisola10.camisolabackend.application.service.ProductNotFoundException;
 import com.camisola10.camisolabackend.application.service.ProductSizeNotFoundException;
-import com.camisola10.camisolabackend.domain.order.Email.InvalidEmailException;
+import com.camisola10.camisolabackend.domain.Email.InvalidEmailException;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress.InvalidShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.mediatype.vnderrors.VndErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -41,6 +45,24 @@ public class Exceptions {
     ResponseEntity<VndErrors> handleProductExceptions(Exception e) {
         log.warn("invalid request", e);
         return error(e, BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ExpiredJwtException.class})
+    ResponseEntity<VndErrors> handleTokenExpiredException(ExpiredJwtException e) {
+        log.warn("Token is expired and not valid anymore", e);
+        return error(e, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({SignatureException.class})
+    ResponseEntity<VndErrors> handleTokenSignatureException(SignatureException e) {
+        log.error("Authentication Failed. Username or Password not valid.");
+        return error(e, UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    ResponseEntity<VndErrors> handleEmptyBodyRequestException(Exception ex) {
+        log.error("Empty request body ", ex);
+        return error(ex, BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
