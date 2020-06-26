@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.domain.order;
 
 import com.camisola10.camisolabackend.domain.Money;
+import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -10,9 +11,7 @@ import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSIN
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class OrderTest {
 
@@ -26,21 +25,21 @@ class OrderTest {
     @Test
     public void shouldThrowForEmptyId() {
         assertThrows(InvalidOrderIdException.class, () -> {
-            new Order(new Order.OrderId(null), null, null, null, null);
+            new Order(OrderId.from(null), null, null, null, null);
         });
     }
 
     @Test
     public void shouldThrowForNullItems() {
         assertThrows(InvalidOrderException.class, () -> {
-            new Order(Order.OrderId.create(), null, null, null, null);
+            new Order(OrderId.create(), null, null, null, null);
         });
     }
 
     @Test
     public void shouldThrowForEmptyItems() {
         assertThrows(InvalidOrderException.class, () -> {
-            new Order(Order.OrderId.create(), null, emptyList(), null, null);
+            new Order(OrderId.create(), null, emptyList(), null, null);
         });
     }
 
@@ -48,7 +47,7 @@ class OrderTest {
     public void shouldHaveCreatedDateTime() {
         var item = mock(OrderItem.class);
         assertThrows(InvalidOrderException.class, () -> {
-            new Order(Order.OrderId.create(), null, List.of(item) , null, null);
+            new Order(OrderId.create(), null, List.of(item) , null, null);
         });
     }
 
@@ -56,7 +55,7 @@ class OrderTest {
     public void shouldHaveStatus() {
         var item = mock(OrderItem.class);
         InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> {
-            new Order(Order.OrderId.create(), null, List.of(item), LocalDateTime.now(), null);
+            new Order(OrderId.create(), null, List.of(item), LocalDateTime.now(), null);
         });
 
         assertThat(exception.getMessage()).isEqualTo("An order should have status");
@@ -66,7 +65,7 @@ class OrderTest {
     public void shouldHaveShippingAddress() {
         var item = mock(OrderItem.class);
         InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> {
-            new Order(Order.OrderId.create(), null, List.of(item), LocalDateTime.now(), PROCESSING);
+            new Order(OrderId.create(), null, List.of(item), LocalDateTime.now(), PROCESSING);
         });
 
         assertThat(exception.getMessage()).isEqualTo("An order should have a shipping address");
@@ -86,7 +85,7 @@ class OrderTest {
         var item2 = mock(OrderItem.class, RETURNS_DEEP_STUBS);
         var shippingAddress = mock(ShippingAddress.class);
         var order1 = Order.builder()
-                .id(Order.OrderId.create())
+                .id(OrderId.create())
                 .shippingAddress(shippingAddress)
                 .status(PROCESSING)
                 .items(List.of(item1, item2))

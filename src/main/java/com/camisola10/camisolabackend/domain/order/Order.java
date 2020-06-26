@@ -69,7 +69,7 @@ public class Order {
     public static class OrderId {
         UUID value;
 
-        public OrderId(UUID value) {
+        private OrderId(UUID value) {
             this.value = value;
             validate();
         }
@@ -79,7 +79,11 @@ public class Order {
         }
 
         public static OrderId from(String orderId) {
-            return new OrderId(UUID.fromString(orderId));
+            try {
+                return new OrderId(UUID.fromString(orderId));
+            }catch (Exception e){
+                throw new InvalidOrderIdException("Order Id cannot be empty");
+            }
         }
 
         public String asString() {

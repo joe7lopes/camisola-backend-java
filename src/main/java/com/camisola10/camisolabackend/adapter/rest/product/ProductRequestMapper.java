@@ -24,9 +24,9 @@ interface ProductRequestMapper {
 
     ProductResponseDto map(Product product);
 
-
     default List<ProductSize> toProductSize(List<ProductSizeDto> sizes) {
-        return sizes.stream().map(s -> new ProductSize(ProductSize.ProductSizeId.create(), new Size(s.getSize()), new Money(new BigDecimal(s.getPrice()))))
+        return sizes.stream()
+                .map(s -> new ProductSize(ProductSize.ProductSizeId.create(), new Size(s.getSize()), new Money(new BigDecimal(s.getPrice()))))
                 .collect(Collectors.toList());
     }
 
