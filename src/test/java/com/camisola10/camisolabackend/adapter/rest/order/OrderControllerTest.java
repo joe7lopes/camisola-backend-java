@@ -121,19 +121,19 @@ class OrderControllerTest {
     }
 
     @Test
-    public void shouldReturn401WhenFetchingOrders() throws Exception {
+    public void shouldReturn403WhenFetchingOrders() throws Exception {
         mockMvc.perform(get(ApiUrl.ORDERS)
                 .contentType(APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    public void shouldReturn401WhenUpdatingOrderStatus() throws Exception {
+    public void shouldReturn403WhenUpdatingOrderStatus() throws Exception {
         var payload = "{\"status\":\"PROCESSING\"}";
         mockMvc.perform(post(ApiUrl.ORDERS + "/1")
                 .contentType(APPLICATION_JSON)
                 .content(payload))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     private String convertToJsonString(CreateOrderRequest request) throws JsonProcessingException {

@@ -49,7 +49,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldReturnListOfProducts() throws Exception {
         var product = mock(Product.class);
         when(retrieveProductsUseCase.getAll()).thenReturn(List.of(product));
@@ -95,19 +94,26 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
+    public void shouldNotAllowRoleUserToCreateProducts() throws Exception {
+        mockMvc.perform(post(ApiUrl.PRODUCTS)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+    @Test
     public void shouldOnlyAllowAdminRoleToCreateProducts() throws Exception {
         var requestBody = createRequestBody();
         mockMvc.perform(post(ApiUrl.PRODUCTS)
                 .contentType(APPLICATION_JSON)
                 .content(requestBody.toString()))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    public void shouldOnlyAllowAuthenticatedUsersToCreateProducts() throws Exception {
+    public void shouldNotAllowUnauthenticatedUsersToCreateProducts() throws Exception {
         mockMvc.perform(post(ApiUrl.PRODUCTS)
                 .contentType(APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isForbidden());
     }
 
     private JSONObject createRequestBody() throws JSONException {

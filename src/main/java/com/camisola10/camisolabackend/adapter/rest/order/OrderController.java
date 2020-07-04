@@ -33,7 +33,6 @@ class OrderController {
     private final OrderRequestMapper mapper;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     FetchOrdersResponse fetchOrders(@RequestParam Optional<String> status) {
         List<Order> orders = new ArrayList<>();
         status.map(mapper::mapStatus)
@@ -52,7 +51,6 @@ class OrderController {
     }
 
     @PostMapping("/{orderId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void updateOrderStatus(@PathVariable String orderId, @RequestBody UpdateOrderStatusRequest request) {
         UpdateOrderStatusCommand command = mapper.map(orderId, request);
         updateOrderStatusUseCase.updateOrderStatus(command);

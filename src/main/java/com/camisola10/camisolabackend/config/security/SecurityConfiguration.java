@@ -17,11 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.http.HttpServletResponse;
 
 import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.*;
+import static com.camisola10.camisolabackend.domain.user.Role.ADMIN;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -32,17 +32,18 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
-                .antMatchers(GET, PRODUCTS).permitAll()
-                .antMatchers(POST, ORDERS).permitAll()
-                .anyRequest().authenticated()
+                .mvcMatchers(POST, PRODUCTS).hasRole(ADMIN.name())
+                .mvcMatchers(GET, ORDERS).hasRole(ADMIN.name())
+                .mvcMatchers(POST, ORDERS+"/{#orderId}").hasRole(ADMIN.name())
+                .mvcMatchers(GET, PRODUCTS).permitAll()
+                .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
+                .mvcMatchers(POST, ORDERS).permitAll()
+                .anyRequest().denyAll()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint());;
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

@@ -35,7 +35,6 @@ class ProductController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     ProductResponseDto createProduct(@RequestBody CreateProductRequest dto) {
         var command = mapper.map(dto);
