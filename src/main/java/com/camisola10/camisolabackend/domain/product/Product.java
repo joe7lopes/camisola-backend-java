@@ -59,6 +59,13 @@ public class Product {
         this.images.add(image);
     }
 
+    public List<ProductImage> getImages() {
+        if (images == null){
+            return List.of(ProductImage.createDefault());
+        }
+        return images;
+    }
+
     private void validate() {
         if (isBlank(name)) {
             throw new InvalidProductNameException("Product Name Cannot be empty");

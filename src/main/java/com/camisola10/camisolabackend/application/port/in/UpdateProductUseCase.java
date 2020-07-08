@@ -1,0 +1,26 @@
+package com.camisola10.camisolabackend.application.port.in;
+
+import com.camisola10.camisolabackend.domain.Money;
+import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.product.ProductCategory;
+import com.camisola10.camisolabackend.domain.product.ProductSize;
+import lombok.Builder;
+import lombok.Value;
+
+import java.util.List;
+
+public interface UpdateProductUseCase {
+
+    Product updateProduct(UpdateProductCommand command);
+
+    @Value
+    @Builder
+    class UpdateProductCommand {
+        String id;
+        String name;
+        List<ProductSize> sizes;
+        List<ProductCategory> categories;
+        Money defaultPrice;
+        boolean customizable;
+    }
+}

@@ -3,6 +3,7 @@ package com.camisola10.camisolabackend.application.service;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
+import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
@@ -20,7 +21,11 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, RemoveProductUseCase {
+class ProductService implements
+        CreateProductUseCase,
+        RetrieveProductsUseCase,
+        RemoveProductUseCase,
+        UpdateProductUseCase {
 
     private final CloudStorage cloudStorage;
     private final CommandMapper mapper;
@@ -39,8 +44,30 @@ class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, R
             var productImage = new ProductImage(image.getName(), url, image.isDefault());
             newProduct.addImage(productImage);
         });
+
         db.save(newProduct);
         log.info("Product created: {}", newProduct);
+        return newProduct;
+    }
+
+    @Override
+    public Product updateProduct(UpdateProductCommand command) {
+        var productId = ProductId.from(command.getId());
+        Product product = db.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("unable to find product with id: " + command.getId()));
+
+        var newProduct = Product.builder()
+                .id(product.getId())
+                .name(command.getName())
+                .categories(command.getCategories())
+                .sizes(command.getSizes())
+                .images(product.getImages())
+                .customizable(command.isCustomizable())
+                .defaultPrice(command.getDefaultPrice())
+                .build();
+
+        db.save(newProduct);
+        log.info("product {} updated", product.getId().asString());
         return newProduct;
     }
 

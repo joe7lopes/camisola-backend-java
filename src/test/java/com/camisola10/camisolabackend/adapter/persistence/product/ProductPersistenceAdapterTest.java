@@ -54,7 +54,7 @@ class ProductPersistenceAdapterTest {
         var id = ProductId.create();
         var p1 = mock(ProductDb.class);
         var productMock = mock(Product.class);
-        when(repository.findByProductId(id.asString())).thenReturn(Optional.of(p1));
+        when(repository.findById(id.asString())).thenReturn(Optional.of(p1));
         when(mapper.map(p1)).thenReturn(productMock);
 
         Optional<Product> product = adapter.findById(id);
@@ -87,7 +87,7 @@ class ProductPersistenceAdapterTest {
 
         adapter.deleteById(pId);
 
-        verify(repository).deleteByProductId(id);
+        verify(repository).deleteById(id);
         verifyNoMoreInteractions(repository);
     }
 }

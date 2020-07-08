@@ -5,6 +5,8 @@ import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
+import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase;
+import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase.UpdateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
@@ -29,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,6 +45,9 @@ class ProductControllerTest {
 
     @MockBean
     private RetrieveProductsUseCase retrieveProductsUseCase;
+
+    @MockBean
+    private UpdateProductUseCase updateProductUseCase;
 
     @MockBean
     private RemoveProductUseCase removeProductUseCase;
@@ -128,6 +134,34 @@ class ProductControllerTest {
         mockMvc.perform(post(ApiUrl.PRODUCTS)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shouldNotAllowUnauthenticatedUsersToUpdateProducts() throws Exception {
+        mockMvc.perform(put(ApiUrl.PRODUCTS + "/123")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void shouldUpdateProduct() throws Exception {
+        var requestBody = createRequestBody();
+        var command = mock(UpdateProductCommand.class);
+        var product = mock(Product.class);
+        when(mapper.map(any(UpdateProductRequest.class))).thenReturn(command);
+        when(updateProductUseCase.updateProduct(command)).thenReturn(product);
+
+        mockMvc.perform(put(ApiUrl.PRODUCTS + "/123")
+                .contentType(APPLICATION_JSON)
+                .content(requestBody.toString()))
+                .andExpect(status().isOk());
+
+        verify(mapper).map(any(UpdateProductRequest.class));
+        verify(updateProductUseCase).updateProduct(command);
+        verify(mapper).map(product);
+        verifyNoMoreInteractions(mapper);
+        verifyNoMoreInteractions(updateProductUseCase);
     }
 
     @Test

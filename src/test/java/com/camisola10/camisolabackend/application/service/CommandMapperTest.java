@@ -41,7 +41,7 @@ class CommandMapperTest {
         assertThat(product.getName()).isEqualTo(command.getName());
         assertThat(product.getSizes()).containsAll(command.getSizes());
         assertThat(product.getCategories()).containsAll(command.getCategories());
-        assertThat(product.getImages()).isNull();
+        assertThat(product.getImages()).hasSize(1);
         assertThat(product.getDefaultPrice()).isEqualTo(command.getDefaultPrice());
         assertThat(product.isCustomizable()).isEqualTo(command.isCustomizable());
     }

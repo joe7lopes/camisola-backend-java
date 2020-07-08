@@ -17,5 +17,4 @@ class CommandMapper {
                 command.getDefaultPrice()
         );
     }
-
 }

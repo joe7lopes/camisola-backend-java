@@ -48,4 +48,11 @@ class ProductTest {
     public void shouldValidateUsingBuilder() {
         Assertions.assertThrows(Product.InvalidProductNameException.class, () -> Product.builder().customizable(true).build());
     }
+
+    @Test
+    public void shouldReturnDefaultImage() {
+        Product product = Product.createWithId("p1", null, null, null,false, null);
+        assertThat(product.getImages()).hasSize(1);
+        assertThat(product.getImages().get(0).getName()).isEqualTo("camisola10");
+    }
 }

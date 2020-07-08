@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
+import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase.UpdateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
@@ -20,6 +21,9 @@ interface ProductRequestMapper {
     @Mapping(target = "customizable", source = "isCustomizable")
     CreateProductCommand map(CreateProductRequest request);
 
+    @Mapping(target = "customizable", source = "isCustomizable")
+    UpdateProductCommand map(UpdateProductRequest request);
+
     ProductResponseDto map(Product product);
 
     default ProductSize toProductSize(ProductSizeDto size) {
@@ -29,8 +33,8 @@ interface ProductRequestMapper {
                 new Money(new BigDecimal(size.getPrice())));
     }
 
-    default ProductCategory toProductCategory(String categorie) {
-        return new ProductCategory(categorie);
+    default ProductCategory toProductCategory(String category) {
+        return new ProductCategory(category);
     }
 
     default String fromProductCategory(ProductCategory category) {

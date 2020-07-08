@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
+import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase.UpdateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
@@ -89,6 +90,27 @@ public class ProductRequestMapperTest {
 
         assertThat(command.getImages()).hasSize(2);
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("23"));
+        assertThat(command.isCustomizable()).isEqualTo(true);
+    }
+
+    @Test
+    public void shouldMapFromUpdateProductRequestToUpdateProductCommand() {
+        var request = UpdateProductRequest.builder()
+                .id(Product.ProductId.create().asString())
+                .name("name")
+                .categories(createCategories())
+                .sizes(createSizes())
+                .defaultPrice("445")
+                .isCustomizable(true)
+                .build();
+
+        UpdateProductCommand command = mapper.map(request);
+
+        assertThat(command.getId()).isEqualTo(request.id);
+        assertThat(command.getName()).isEqualTo(request.name);
+        assertThat(command.getCategories()).hasSize(2);
+        assertThat(command.getSizes()).hasSize(2);
+        assertThat(command.getDefaultPrice()).isEqualTo(Money.from("445"));
         assertThat(command.isCustomizable()).isEqualTo(true);
     }
 

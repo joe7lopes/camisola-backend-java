@@ -14,7 +14,6 @@ interface ProductDBMapper {
 
     @Mapping(target = "defaultPrice", source = "product.defaultPrice.value")
     @Mapping(target = "productId", source = "product.id")
-    @Mapping(target = "id", ignore = true)
     ProductDb map(Product product);
 
     @Mapping(target = "id", source = "productId")

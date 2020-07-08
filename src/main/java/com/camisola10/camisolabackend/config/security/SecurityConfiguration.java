@@ -24,6 +24,7 @@ import static com.camisola10.camisolabackend.domain.user.Role.ADMIN;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -43,7 +44,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(GET, ORDERS).hasRole(ADMIN.name())
                 .mvcMatchers(POST, ORDERS).permitAll()
                 .mvcMatchers(POST, PRODUCTS).hasRole(ADMIN.name())
-                .mvcMatchers(DELETE, PRODUCTS+ "/{#productId}").hasRole(ADMIN.name())
+                .mvcMatchers(PUT, PRODUCTS+ "/{#productId}").hasRole(ADMIN.name())
+                .mvcMatchers(DELETE, PRODUCTS + "/{#productId}").hasRole(ADMIN.name())
                 .mvcMatchers(GET, PRODUCTS).permitAll()
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
                 .anyRequest().denyAll()

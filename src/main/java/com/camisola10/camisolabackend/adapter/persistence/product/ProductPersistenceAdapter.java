@@ -27,7 +27,7 @@ class ProductPersistenceAdapter implements ProductDB {
 
     @Override
     public Optional<Product> findById(ProductId productId) {
-        return repository.findByProductId(productId.asString())
+        return repository.findById(productId.asString())
                 .map(mapper::map);
     }
 
@@ -39,7 +39,7 @@ class ProductPersistenceAdapter implements ProductDB {
 
     @Override
     public void deleteById(ProductId productId) {
-        repository.deleteByProductId(productId.asString());
+        repository.deleteById(productId.asString());
     }
 
 }

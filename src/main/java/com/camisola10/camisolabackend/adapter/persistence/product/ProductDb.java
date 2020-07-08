@@ -21,7 +21,6 @@ import java.util.List;
 @Data
 class ProductDb {
     @Id
-    private String id;
     private String productId;
     private String name;
     private List<ProductCategory> categories;
