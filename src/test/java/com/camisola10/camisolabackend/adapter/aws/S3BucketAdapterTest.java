@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
+import com.camisola10.camisolabackend.domain.product.ProductImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,11 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.InputStream;
+import java.util.List;
 
 import static org.apache.http.entity.ContentType.IMAGE_PNG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,11 +44,25 @@ class S3BucketAdapterTest {
         when(properties.getBucketName()).thenReturn(bucketName);
         when(properties.getRegion()).thenReturn(region);
         when(properties.getBucketPath()).thenReturn("images");
+
         var url = adapter.store(image);
 
-        verify(s3Client).putObject(eq(bucketName +"/images"), eq("img1"), any(InputStream.class), any(ObjectMetadata.class));
-
+        verify(s3Client).putObject(eq(bucketName + "/images"), eq("img1"), any(InputStream.class), any(ObjectMetadata.class));
         assertThat(url).isEqualTo("https://bucketName.s3-region.amazonaws.com/images/img1");
+    }
+
+    @Test
+    public void shouldRemoveImages() {
+        var bucketName = "bucketName";
+        var imageName = "imageName";
+        var productImage = mock(ProductImage.class);
+        when(properties.getBucketName()).thenReturn(bucketName);
+        when(properties.getBucketPath()).thenReturn("images");
+        when(productImage.getName()).thenReturn(imageName);
+
+        adapter.removeImages(List.of(productImage));
+
+        verify(s3Client).deleteObject(bucketName + "/images", imageName);
     }
 
 }

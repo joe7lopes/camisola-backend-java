@@ -11,12 +11,14 @@ import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductImage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, RemoveProductUseCase {
 
@@ -38,12 +40,17 @@ class ProductService implements CreateProductUseCase, RetrieveProductsUseCase, R
             newProduct.addImage(productImage);
         });
         db.save(newProduct);
+        log.info("Product created: {}", newProduct);
         return newProduct;
     }
 
     @Override
     public void removeProduct(RemoveProductCommand command) {
+        db.findById(command.getProductId())
+                .ifPresent(p -> cloudStorage.removeImages(p.getImages()));
+
         db.deleteById(command.getProductId());
+        log.info("Product deleted: {}", command);
     }
 
     Optional<Product> findProductById(ProductId productId) {

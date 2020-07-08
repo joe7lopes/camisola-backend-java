@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,8 +15,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.http.HttpServletResponse;
 
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.*;
+import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.ORDERS;
+import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.PRODUCTS;
+import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.SIGN_IN;
+import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.SIGN_UP;
+import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.USERS;
 import static com.camisola10.camisolabackend.domain.user.Role.ADMIN;
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
@@ -34,16 +38,17 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .mvcMatchers(POST, PRODUCTS).hasRole(ADMIN.name())
                 .mvcMatchers(GET, ORDERS).hasRole(ADMIN.name())
                 .mvcMatchers(POST, ORDERS+"/{#orderId}").hasRole(ADMIN.name())
+                .mvcMatchers(GET, ORDERS).hasRole(ADMIN.name())
+                .mvcMatchers(POST, ORDERS).permitAll()
+                .mvcMatchers(POST, PRODUCTS).hasRole(ADMIN.name())
+                .mvcMatchers(DELETE, PRODUCTS+ "/{#productId}").hasRole(ADMIN.name())
                 .mvcMatchers(GET, PRODUCTS).permitAll()
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
-                .mvcMatchers(POST, ORDERS).permitAll()
                 .anyRequest().denyAll()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
     }
 
     @Override

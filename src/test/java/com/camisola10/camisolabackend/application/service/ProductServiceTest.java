@@ -6,6 +6,7 @@ import com.camisola10.camisolabackend.application.port.in.command.product.Remove
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
 import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.product.ProductImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -102,11 +104,19 @@ class ProductServiceTest {
     public void shouldRemoveProduct() {
         var command = mock(RemoveProductCommand.class);
         var id = mock(Product.ProductId.class);
+        var product = mock(Product.class);
+        var image = mock(ProductImage.class);
+        List<ProductImage> imagesMock = List.of(image);
         when(command.getProductId()).thenReturn(id);
+        when(db.findById(id)).thenReturn(Optional.of(product));
+        when(product.getImages()).thenReturn(imagesMock);
 
         productService.removeProduct(command);
 
+        verify(cloudStorage).removeImages(imagesMock);
         verify(db).deleteById(id);
+        verifyNoMoreInteractions(cloudStorage);
         verifyNoMoreInteractions(db);
     }
+
 }

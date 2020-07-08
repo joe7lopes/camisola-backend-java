@@ -4,11 +4,13 @@ import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
+import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,7 @@ class ProductController {
 
     private final RetrieveProductsUseCase retrieveProductsUseCase;
     private final CreateProductUseCase createProductUseCase;
+    private final RemoveProductUseCase removeProductUseCase;
     private final ProductRequestMapper mapper;
 
     @GetMapping
@@ -40,5 +43,11 @@ class ProductController {
         var command = mapper.map(dto);
         Product product = createProductUseCase.createProduct(command);
         return mapper.map(product);
+    }
+
+    @DeleteMapping("/{id}")
+    void deleteProduct(@PathVariable String id){
+        var command = new RemoveProductCommand(Product.ProductId.from(id));
+        removeProductUseCase.removeProduct(command);
     }
 }

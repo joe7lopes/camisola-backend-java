@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
+import com.camisola10.camisolabackend.domain.product.ProductImage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.time.Duration;
+import java.util.List;
 
 import static com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -47,6 +49,14 @@ class S3BucketAdapter implements CloudStorage {
         log.info("Image {} uploaded successfully to {}", image.getName(), filePath);
         return String.format("https://%s.s3-%s.amazonaws.com/%s/%s",
                 bucketName, s3Properties.getRegion(), bucketPath, image.getName());
+    }
+
+    @Override
+    public void removeImages(List<ProductImage> images) {
+        var filePath = String.format("%s/%s", s3Properties.getBucketName(), s3Properties.getBucketPath());
+        images.stream()
+                .map(ProductImage::getName)
+                .forEach(key-> s3Client.deleteObject(filePath, key));
     }
 }
 

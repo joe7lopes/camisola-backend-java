@@ -26,8 +26,8 @@ public class Product {
     private List<ProductSize> sizes;
     @Setter(AccessLevel.NONE)
     private List<ProductImage> images;
-    boolean customizable;
-    Money defaultPrice;
+    private boolean customizable;
+    private Money defaultPrice;
 
     private Product(ProductId id, String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
         this.id = id;

@@ -3,8 +3,10 @@ package com.camisola10.camisolabackend.adapter.rest.product;
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
 import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
+import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
 import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,11 +21,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest(controllers = ProductController.class)
 @ActiveProfiles("local")
@@ -31,8 +39,13 @@ class ProductControllerTest {
 
     @MockBean
     private CreateProductUseCase createProductUseCase;
+
     @MockBean
     private RetrieveProductsUseCase retrieveProductsUseCase;
+
+    @MockBean
+    private RemoveProductUseCase removeProductUseCase;
+
     @MockBean
     private ProductRequestMapper mapper;
 
@@ -100,6 +113,7 @@ class ProductControllerTest {
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
+
     @Test
     public void shouldOnlyAllowAdminRoleToCreateProducts() throws Exception {
         var requestBody = createRequestBody();
@@ -114,6 +128,26 @@ class ProductControllerTest {
         mockMvc.perform(post(ApiUrl.PRODUCTS)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void shouldOnlyAllowAdminUserToDeleteProduct() throws Exception {
+        mockMvc.perform(delete(ApiUrl.PRODUCTS + "/123")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void shouldDeleteProductById() throws Exception {
+        var productId = Product.ProductId.create();
+
+        mockMvc.perform(delete(ApiUrl.PRODUCTS + "/" + productId.asString())
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(removeProductUseCase).removeProduct(any(RemoveProductCommand.class));
+        verifyNoMoreInteractions(removeProductUseCase);
     }
 
     private JSONObject createRequestBody() throws JSONException {

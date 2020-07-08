@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PACKAGE;
 class ProductResponseDto {
     private String id;
     private String name;
-    private List<ProductCategoryDto> categories;
+    private List<String> categories;
     private List<ProductSizeResponseDto> sizes;
     private boolean customizable;
     private List<ProductImage> images;

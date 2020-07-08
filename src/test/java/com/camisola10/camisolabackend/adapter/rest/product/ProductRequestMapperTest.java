@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProductRequestMapperTest {
 
-    private ProductRequestMapper mapper = Mappers.getMapper(ProductRequestMapper.class);
+    private final ProductRequestMapper mapper = Mappers.getMapper(ProductRequestMapper.class);
 
     @Test
     public void shouldMapToDTO() {
@@ -49,10 +49,10 @@ public class ProductRequestMapperTest {
         assertThat(dto.getSizes().get(1).getSize()).isEqualTo(product.getSizes().get(1).getSize().getValue());
         assertThat(dto.getSizes().get(1).getPrice()).isEqualTo(product.getSizes().get(1).getPrice().asString());
 
-        assertThat(dto.getCategories().get(0).getName()).isEqualTo(product.getCategories().get(0).getName());
-        assertThat(dto.getCategories().get(0).getName()).isEqualTo(product.getCategories().get(0).getName());
-        assertThat(dto.getCategories().get(1).getName()).isEqualTo(product.getCategories().get(1).getName());
-        assertThat(dto.getCategories().get(1).getName()).isEqualTo(product.getCategories().get(1).getName());
+        assertThat(dto.getCategories().get(0)).isEqualTo(product.getCategories().get(0).getName());
+        assertThat(dto.getCategories().get(0)).isEqualTo(product.getCategories().get(0).getName());
+        assertThat(dto.getCategories().get(1)).isEqualTo(product.getCategories().get(1).getName());
+        assertThat(dto.getCategories().get(1)).isEqualTo(product.getCategories().get(1).getName());
 
         assertThat(dto.isCustomizable()).isEqualTo(product.isCustomizable());
         assertThat(dto.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue().toPlainString());

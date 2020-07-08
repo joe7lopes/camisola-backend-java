@@ -12,9 +12,7 @@ import org.mapstruct.Mapping;
 
 import java.math.BigDecimal;
 import java.util.Base64;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 interface ProductRequestMapper {
@@ -24,15 +22,19 @@ interface ProductRequestMapper {
 
     ProductResponseDto map(Product product);
 
-    default List<ProductSize> toProductSize(List<ProductSizeDto> sizes) {
-        return sizes.stream()
-                .map(s -> new ProductSize(ProductSize.ProductSizeId.create(), new Size(s.getSize()), new Money(new BigDecimal(s.getPrice()))))
-                .collect(Collectors.toList());
+    default ProductSize toProductSize(ProductSizeDto size) {
+        return new ProductSize(
+                ProductSize.ProductSizeId.create(),
+                new Size(size.getSize()),
+                new Money(new BigDecimal(size.getPrice())));
     }
 
-    default List<ProductCategory> toProductCategory(List<String> categories) {
-        return categories.stream().map(ProductCategory::new)
-                .collect(Collectors.toList());
+    default ProductCategory toProductCategory(String categorie) {
+        return new ProductCategory(categorie);
+    }
+
+    default String fromProductCategory(ProductCategory category) {
+        return category.getName();
     }
 
     default ProductSizeResponseDto map(ProductSize size) {

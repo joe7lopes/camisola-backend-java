@@ -1,13 +1,9 @@
 package com.camisola10.camisolabackend.application.port.in.command.product;
 
 import com.camisola10.camisolabackend.domain.product.Product;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Value
 public class RemoveProductCommand {
-    private Product.ProductId productId;
+    Product.ProductId productId;
 }

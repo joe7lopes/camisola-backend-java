@@ -87,7 +87,7 @@ class ProductPersistenceAdapterTest {
 
         adapter.deleteById(pId);
 
-        verify(repository).deleteById(id);
+        verify(repository).deleteByProductId(id);
         verifyNoMoreInteractions(repository);
     }
 }
