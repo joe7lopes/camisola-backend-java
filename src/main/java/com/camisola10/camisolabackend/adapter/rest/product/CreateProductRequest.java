@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 class CreateProductRequest {
     public String name;
-    public List<ProductImageDto> images;
+    public List<String> imageIds;
     public List<ProductSizeDto> sizes;
     public List<String> categories;
     public String defaultPrice;

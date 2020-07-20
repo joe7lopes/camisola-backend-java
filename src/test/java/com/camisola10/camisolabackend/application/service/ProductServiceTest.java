@@ -1,12 +1,12 @@
 package com.camisola10.camisolabackend.application.service;
 
+import com.camisola10.camisolabackend.application.port.in.command.product.Base64Image;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
-import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand.Base64Image;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
+import com.camisola10.camisolabackend.domain.images.Image;
 import com.camisola10.camisolabackend.domain.product.Product;
-import com.camisola10.camisolabackend.domain.product.ProductImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,15 +78,21 @@ class ProductServiceTest {
 
     @Test
     public void shouldUploadImagesToCloudAndGetURL() {
-        var img1 = mock(Base64Image.class);
-        var img2 = mock(Base64Image.class);
+        var img1Id = mock(Image.ImageId.class);
+        var img2Id = mock(Image.ImageId.class);
+
+        var img1 = new Image(img1Id, "img1", "img1.com");
+        var img2 = new Image(img2Id, "img2", "img2.com");
+
+
         var command = mock(CreateProductCommand.class);
         var product = Product.builder()
                 .id(Product.ProductId.create())
                 .name("p1")
                 .build();
-        when(command.getImages()).thenReturn(List.of(img1, img2));
-        when(cloudStorage.store(any(Base64Image.class))).thenReturn("img1.com", "img2.com");
+
+        when(command.getImages()).thenReturn(List.of(img1Id, img2Id));
+        when(cloudStorage.store(any(Base64Image.class))).thenReturn(img1, img2);
         when(mapper.map(command)).thenReturn(product);
 
         Product expected = productService.createProduct(command);
@@ -94,8 +100,6 @@ class ProductServiceTest {
         assertThat(expected.getImages().get(0).getUrl()).isEqualTo("img1.com");
         assertThat(expected.getImages().get(1).getUrl()).isEqualTo("img2.com");
         verify(mapper).map(command);
-        verify(cloudStorage).store(img1);
-        verify(cloudStorage).store(img2);
         verifyNoMoreInteractions(cloudStorage);
         verifyNoMoreInteractions(mapper);
     }
@@ -105,15 +109,12 @@ class ProductServiceTest {
         var command = mock(RemoveProductCommand.class);
         var id = mock(Product.ProductId.class);
         var product = mock(Product.class);
-        var image = mock(ProductImage.class);
-        List<ProductImage> imagesMock = List.of(image);
+
         when(command.getProductId()).thenReturn(id);
         when(db.findById(id)).thenReturn(Optional.of(product));
-        when(product.getImages()).thenReturn(imagesMock);
 
         productService.removeProduct(command);
 
-        verify(cloudStorage).removeImages(imagesMock);
         verify(db).deleteById(id);
         verifyNoMoreInteractions(cloudStorage);
         verifyNoMoreInteractions(db);

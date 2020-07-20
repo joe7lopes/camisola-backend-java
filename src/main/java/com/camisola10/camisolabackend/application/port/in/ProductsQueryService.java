@@ -4,7 +4,6 @@ import com.camisola10.camisolabackend.domain.product.Product;
 
 import java.util.List;
 
-public interface RetrieveProductsUseCase {
-
+public interface ProductsQueryService {
     List<Product> getAll();
 }

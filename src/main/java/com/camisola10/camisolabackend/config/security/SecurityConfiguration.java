@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.http.HttpServletResponse;
 
+import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.IMAGES;
 import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.ORDERS;
 import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.PRODUCTS;
 import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.SIGN_IN;
@@ -47,6 +48,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(PUT, PRODUCTS+ "/{#productId}").hasRole(ADMIN.name())
                 .mvcMatchers(DELETE, PRODUCTS + "/{#productId}").hasRole(ADMIN.name())
                 .mvcMatchers(GET, PRODUCTS).permitAll()
+                .mvcMatchers(IMAGES).hasRole(ADMIN.name())
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
                 .anyRequest().denyAll()
                 .and()

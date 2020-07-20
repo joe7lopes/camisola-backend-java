@@ -2,11 +2,9 @@ package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
-import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
-import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
-import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
-import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase;
-import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase.UpdateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.ProductsCommandService;
+import com.camisola10.camisolabackend.application.port.in.ProductsCommandService.UpdateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.ProductsQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
@@ -41,16 +39,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     @MockBean
-    private CreateProductUseCase createProductUseCase;
+    private ProductsCommandService productsCommandService;
 
     @MockBean
-    private RetrieveProductsUseCase retrieveProductsUseCase;
-
-    @MockBean
-    private UpdateProductUseCase updateProductUseCase;
-
-    @MockBean
-    private RemoveProductUseCase removeProductUseCase;
+    private ProductsQueryService productsQueryService;
 
     @MockBean
     private ProductRequestMapper mapper;
@@ -70,7 +62,7 @@ class ProductControllerTest {
     @Test
     void shouldReturnListOfProducts() throws Exception {
         var product = mock(Product.class);
-        when(retrieveProductsUseCase.getAll()).thenReturn(List.of(product));
+        when(productsQueryService.getAll()).thenReturn(List.of(product));
         when(mapper.map(any(Product.class))).thenReturn(new ProductResponseDto("123", "p1", null, null, true, null, "23"));
 
         mockMvc.perform(get(ApiUrl.PRODUCTS))
@@ -81,7 +73,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].customizable").value(true))
                 .andExpect(jsonPath("$[0].defaultPrice").value("23"));
 
-        verify(retrieveProductsUseCase).getAll();
+        verify(productsQueryService).getAll();
         verify(mapper).map(any(Product.class));
     }
 
@@ -94,7 +86,7 @@ class ProductControllerTest {
         var commandMock = mock(CreateProductCommand.class);
         var productMock = mock(Product.class);
         when(mapper.map(any(CreateProductRequest.class))).thenReturn(commandMock);
-        when(createProductUseCase.createProduct(commandMock)).thenReturn(productMock);
+        when(productsCommandService.createProduct(commandMock)).thenReturn(productMock);
         var response = ProductResponseDto.builder()
                 .name("camisola slb")
                 .build();
@@ -109,7 +101,7 @@ class ProductControllerTest {
 
 
         verify(mapper).map(any(CreateProductRequest.class));
-        verify(createProductUseCase).createProduct(commandMock);
+        verify(productsCommandService).createProduct(commandMock);
     }
 
     @Test
@@ -150,7 +142,7 @@ class ProductControllerTest {
         var command = mock(UpdateProductCommand.class);
         var product = mock(Product.class);
         when(mapper.map(any(UpdateProductRequest.class))).thenReturn(command);
-        when(updateProductUseCase.updateProduct(command)).thenReturn(product);
+        when(productsCommandService.updateProduct(command)).thenReturn(product);
 
         mockMvc.perform(put(ApiUrl.PRODUCTS + "/123")
                 .contentType(APPLICATION_JSON)
@@ -158,10 +150,10 @@ class ProductControllerTest {
                 .andExpect(status().isOk());
 
         verify(mapper).map(any(UpdateProductRequest.class));
-        verify(updateProductUseCase).updateProduct(command);
+        verify(productsCommandService).updateProduct(command);
         verify(mapper).map(product);
         verifyNoMoreInteractions(mapper);
-        verifyNoMoreInteractions(updateProductUseCase);
+        verifyNoMoreInteractions(productsCommandService);
     }
 
     @Test
@@ -180,8 +172,8 @@ class ProductControllerTest {
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(removeProductUseCase).removeProduct(any(RemoveProductCommand.class));
-        verifyNoMoreInteractions(removeProductUseCase);
+        verify(productsCommandService).removeProduct(any(RemoveProductCommand.class));
+        verifyNoMoreInteractions(productsCommandService);
     }
 
     private JSONObject createRequestBody() throws JSONException {

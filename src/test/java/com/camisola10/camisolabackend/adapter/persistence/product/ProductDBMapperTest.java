@@ -1,9 +1,9 @@
 package com.camisola10.camisolabackend.adapter.persistence.product;
 
 import com.camisola10.camisolabackend.domain.Money;
+import com.camisola10.camisolabackend.domain.images.Image;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
-import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class ProductDBMapperTest {
 
         var sizes = getProductSizes();
         var categories = getProductCategories();
-        var images = getProductImages();
+        var images = getImages();
 
         Product product = Product.builder()
                 .id(Product.ProductId.create())
@@ -52,7 +52,7 @@ class ProductDBMapperTest {
     public void shouldMapFromDBToProduct() {
         var sizes = getProductSizes();
         var categories = getProductCategories();
-        var images = getProductImages();
+        var images = getImages();
 
         var id = UUID.randomUUID().toString();
         var productDb = ProductDb.builder()
@@ -90,10 +90,10 @@ class ProductDBMapperTest {
         );
     }
 
-    private List<ProductImage> getProductImages() {
+    private List<Image> getImages() {
         return List.of(
-                new ProductImage("img1", "data1", true),
-                new ProductImage("img2", "data2", true)
+                new Image(Image.ImageId.create(), "data1", "http://img1"),
+                new Image(Image.ImageId.create(), "data2", "http://img2")
         );
     }
 }

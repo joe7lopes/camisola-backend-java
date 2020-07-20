@@ -1,6 +1,5 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
-import com.camisola10.camisolabackend.domain.product.ProductImage;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +21,7 @@ class ProductResponseDto {
     private List<String> categories;
     private List<ProductSizeResponseDto> sizes;
     private boolean customizable;
-    private List<ProductImage> images;
+    private List<String> imagesUrl;
     private String defaultPrice;
 
 }

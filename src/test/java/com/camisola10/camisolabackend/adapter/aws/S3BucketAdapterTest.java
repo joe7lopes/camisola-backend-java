@@ -2,12 +2,12 @@ package com.camisola10.camisolabackend.adapter.aws;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.command.product.Base64Image;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
-import com.camisola10.camisolabackend.domain.product.ProductImage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -18,7 +18,7 @@ import static org.apache.http.entity.ContentType.IMAGE_PNG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,29 +40,36 @@ class S3BucketAdapterTest {
     public void shouldStoreImageAndReturnUrl() {
         var bucketName = "bucketName";
         var region = "region";
-        var image = new CreateProductCommand.Base64Image("img1", new byte[]{}, IMAGE_PNG, false);
+        var image = Base64Image.builder()
+                .name("img1")
+                .file(new byte[]{})
+                .contentType(IMAGE_PNG)
+                .build();
         when(properties.getBucketName()).thenReturn(bucketName);
         when(properties.getRegion()).thenReturn(region);
         when(properties.getBucketPath()).thenReturn("images");
 
-        var url = adapter.store(image);
+        var response = adapter.store(image);
 
-        verify(s3Client).putObject(eq(bucketName + "/images"), eq("img1"), any(InputStream.class), any(ObjectMetadata.class));
-        assertThat(url).isEqualTo("https://bucketName.s3-region.amazonaws.com/images/img1");
+        verify(s3Client).putObject(eq(bucketName + "/images"), any(String.class), any(InputStream.class), any(ObjectMetadata.class));
+        assertThat(response.getUrl()).isEqualTo("https://bucketName.s3-region.amazonaws.com/images/" + response.getImageId().asString());
+
     }
 
     @Test
     public void shouldRemoveImages() {
         var bucketName = "bucketName";
-        var imageName = "imageName";
-        var productImage = mock(ProductImage.class);
+        var id1 = com.camisola10.camisolabackend.domain.images.Image.ImageId.create();
+        var id2 = com.camisola10.camisolabackend.domain.images.Image.ImageId.create();
+        var id3 = com.camisola10.camisolabackend.domain.images.Image.ImageId.create();
+        var imageIds = List.of(id1, id2, id3);
         when(properties.getBucketName()).thenReturn(bucketName);
-        when(properties.getBucketPath()).thenReturn("images");
-        when(productImage.getName()).thenReturn(imageName);
 
-        adapter.removeImages(List.of(productImage));
+        adapter.deleteImages(imageIds);
 
-        verify(s3Client).deleteObject(bucketName + "/images", imageName);
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        verify(s3Client, times(3)).deleteObject(eq(bucketName), captor.capture());
+        assertThat(captor.getAllValues()).containsExactly(id1.asString(), id2.asString(), id3.asString());
     }
 
 }

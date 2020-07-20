@@ -1,5 +1,7 @@
 package com.camisola10.camisolabackend.application.port.in;
 
+import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
+import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
@@ -9,8 +11,10 @@ import lombok.Value;
 
 import java.util.List;
 
-public interface UpdateProductUseCase {
+public interface ProductsCommandService {
 
+    Product createProduct(CreateProductCommand command);
+    void removeProduct(RemoveProductCommand command);
     Product updateProduct(UpdateProductCommand command);
 
     @Value
@@ -23,4 +27,5 @@ public interface UpdateProductUseCase {
         Money defaultPrice;
         boolean customizable;
     }
+
 }

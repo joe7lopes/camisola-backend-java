@@ -1,14 +1,12 @@
-package com.camisola10.camisolabackend.adapter.rest.product;
+package com.camisola10.camisolabackend.adapter.rest.images;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @AllArgsConstructor
 @Data
-class ProductImageDto {
+class UploadImageRequest {
     private String name;
     //base 64
     private String file;
-    private boolean isDefault;
-
 }

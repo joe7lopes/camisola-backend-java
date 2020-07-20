@@ -1,10 +1,8 @@
 package com.camisola10.camisolabackend.adapter.rest.product;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
-import com.camisola10.camisolabackend.application.port.in.CreateProductUseCase;
-import com.camisola10.camisolabackend.application.port.in.RemoveProductUseCase;
-import com.camisola10.camisolabackend.application.port.in.RetrieveProductsUseCase;
-import com.camisola10.camisolabackend.application.port.in.UpdateProductUseCase;
+import com.camisola10.camisolabackend.application.port.in.ProductsCommandService;
+import com.camisola10.camisolabackend.application.port.in.ProductsQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
 import lombok.RequiredArgsConstructor;
@@ -27,15 +25,13 @@ import java.util.stream.Collectors;
 @RequestMapping(ApiUrl.PRODUCTS)
 class ProductController {
 
-    private final RetrieveProductsUseCase retrieveProductsUseCase;
-    private final CreateProductUseCase createProductUseCase;
-    private final RemoveProductUseCase removeProductUseCase;
-    private final UpdateProductUseCase updateProductUseCase;
+    private final ProductsQueryService productsQueryService;
+    private final ProductsCommandService productsCommandService;
     private final ProductRequestMapper mapper;
 
     @GetMapping
     List<ProductResponseDto> findAll() {
-        List<Product> products = retrieveProductsUseCase.getAll();
+        List<Product> products = productsQueryService.getAll();
         return products.stream().map(mapper::map)
                 .collect(Collectors.toList());
     }
@@ -44,20 +40,20 @@ class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     ProductResponseDto createProduct(@RequestBody CreateProductRequest dto) {
         var command = mapper.map(dto);
-        Product product = createProductUseCase.createProduct(command);
+        Product product = productsCommandService.createProduct(command);
         return mapper.map(product);
     }
 
     @PutMapping("/{id}")
     ProductResponseDto updateProduct(@RequestBody UpdateProductRequest dto) {
         var command = mapper.map(dto);
-        var product = updateProductUseCase.updateProduct(command);
+        var product = productsCommandService.updateProduct(command);
         return mapper.map(product);
     }
 
     @DeleteMapping("/{id}")
     void deleteProduct(@PathVariable String id){
         var command = new RemoveProductCommand(Product.ProductId.from(id));
-        removeProductUseCase.removeProduct(command);
+        productsCommandService.removeProduct(command);
     }
 }

@@ -1,13 +1,18 @@
 package com.camisola10.camisolabackend.application.port.out;
 
-import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand.Base64Image;
-import com.camisola10.camisolabackend.domain.product.ProductImage;
+import com.camisola10.camisolabackend.application.port.in.command.product.Base64Image;
+import com.camisola10.camisolabackend.domain.images.Image;
+import com.camisola10.camisolabackend.domain.images.Image.ImageId;
 
 import java.util.List;
 
 public interface CloudStorage {
 
-    String store(Base64Image image);
+    List<Image> getAllImages();
 
-    void removeImages(List<ProductImage> images);
+    Image store(Base64Image image);
+
+    List<Image> store(List<Base64Image> images);
+
+    void deleteImages(List<ImageId> imagesKeys);
 }

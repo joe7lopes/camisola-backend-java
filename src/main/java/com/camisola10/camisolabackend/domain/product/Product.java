@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.domain.product;
 
 import com.camisola10.camisolabackend.domain.Money;
+import com.camisola10.camisolabackend.domain.images.Image;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import lombok.Value;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,11 +27,11 @@ public class Product {
     @Setter(AccessLevel.NONE)
     private List<ProductSize> sizes;
     @Setter(AccessLevel.NONE)
-    private List<ProductImage> images;
+    private List<Image> images;
     private boolean customizable;
     private Money defaultPrice;
 
-    private Product(ProductId id, String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
+    private Product(ProductId id, String name, List<ProductCategory> categories, List<ProductSize> sizes, List<Image> images, boolean customizable, Money defaultPrice) {
         this.id = id;
         this.name = name;
         this.categories = categories;
@@ -40,7 +42,7 @@ public class Product {
         validate();
     }
 
-    public static Product createWithId(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<ProductImage> images, boolean customizable, Money defaultPrice) {
+    public static Product createWithId(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<Image> images, boolean customizable, Money defaultPrice) {
         return new Product(
                 new ProductId(UUID.randomUUID()),
                 name,
@@ -52,16 +54,16 @@ public class Product {
         );
     }
 
-    public void addImage(ProductImage image) {
+    public void addImage(Image image) {
         if (images == null) {
             this.images = new ArrayList<>();
         }
         this.images.add(image);
     }
 
-    public List<ProductImage> getImages() {
+    public List<Image> getImages() {
         if (images == null){
-            return List.of(ProductImage.createDefault());
+            return Collections.emptyList();
         }
         return images;
     }

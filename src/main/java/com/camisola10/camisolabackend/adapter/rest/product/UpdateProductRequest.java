@@ -12,7 +12,7 @@ import java.util.List;
 class UpdateProductRequest {
     public String id;
     public String name;
-    public List<ProductImageDto> images;
+    public List<String> imagesIds;
     public List<ProductSizeDto> sizes;
     public List<String> categories;
     public String defaultPrice;
