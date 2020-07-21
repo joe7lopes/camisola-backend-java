@@ -6,6 +6,7 @@ import com.camisola10.camisolabackend.application.port.in.command.image.DeleteIm
 import com.camisola10.camisolabackend.application.port.in.command.image.UploadImagesCommand;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.domain.images.Image;
+import com.camisola10.camisolabackend.domain.images.Image.ImageId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,9 @@ class ImageService implements ImagesCommandService, ImagesQueryService {
         cloudStorage.deleteImages(command.getImagesIds());
     }
 
+    @Override
+    public List<Image> findImagesById(List<ImageId> imageIds) {
+        return cloudStorage.getImagesByIds(imageIds);
+    }
 
 }

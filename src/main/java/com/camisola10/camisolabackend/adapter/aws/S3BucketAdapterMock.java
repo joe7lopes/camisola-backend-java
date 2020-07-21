@@ -20,6 +20,11 @@ class S3BucketAdapterMock implements CloudStorage {
     }
 
     @Override
+    public List<Image> getImagesByIds(List<Image.ImageId> imageIds) {
+        return List.of(MOCK_IMAGE);
+    }
+
+    @Override
     public Image store(Base64Image image) {
         return MOCK_IMAGE;
     }

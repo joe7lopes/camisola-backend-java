@@ -5,7 +5,6 @@ import com.camisola10.camisolabackend.application.port.in.ImagesCommandService;
 import com.camisola10.camisolabackend.application.port.in.ImagesQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.image.DeleteImagesCommand;
 import com.camisola10.camisolabackend.application.port.in.command.image.UploadImagesCommand;
-import com.camisola10.camisolabackend.domain.images.Image;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,14 +26,18 @@ class ImagesController {
     private final ImagesMapper mapper;
 
     @GetMapping
-    List<Image> getImages(){
-        return imagesQueryService.getAll();
+    List<ImageResponse> getImages(){
+        return imagesQueryService.getAll().stream()
+                .map(ImageResponse::new)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
-    List<Image> uploadImages(@RequestBody List<UploadImageRequest> uploadImageRequests){
+    List<ImageResponse> uploadImages(@RequestBody List<UploadImageRequest> uploadImageRequests){
         UploadImagesCommand command = mapper.map(uploadImageRequests);
-        return imagesCommandService.uploadImages(command);
+        return imagesCommandService.uploadImages(command).stream()
+                .map(ImageResponse::new)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping

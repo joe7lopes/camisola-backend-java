@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Value
 public class Image {
-    ImageId ImageId;
+    ImageId id;
     String name;
     String url;
 

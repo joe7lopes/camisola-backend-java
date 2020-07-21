@@ -11,24 +11,19 @@ import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 interface ProductRequestMapper {
 
     @Mapping(target = "customizable", source = "isCustomizable")
-    @Mapping(target = "images", source = "imageIds")
     CreateProductCommand map(CreateProductRequest request);
 
     @Mapping(target = "customizable", source = "isCustomizable")
     UpdateProductCommand map(UpdateProductRequest request);
 
-    @Mapping(target = "imagesUrl", source = "images", qualifiedByName = "mapImageUrl")
     ProductResponseDto map(Product product);
 
     default ImageId map(String imageId){
@@ -70,8 +65,7 @@ interface ProductRequestMapper {
         return new Product.ProductId(UUID.fromString(id));
     }
 
-    @Named("mapImageUrl")
-    default List<String> mapImageUrl(List<Image> images) {
-        return images.stream().map(Image::getUrl).collect(Collectors.toList());
+    default ProductResponseDto.ProductImageResponse mapImageUrl(Image image) {
+        return new ProductResponseDto.ProductImageResponse(image.getId().asString(), image.getName(), image.getUrl());
     }
 }

@@ -21,7 +21,16 @@ class ProductResponseDto {
     private List<String> categories;
     private List<ProductSizeResponseDto> sizes;
     private boolean customizable;
-    private List<String> imagesUrl;
+    private List<ProductImageResponse> images;
     private String defaultPrice;
 
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    static class ProductImageResponse {
+        String id;
+        String name;
+        String url;
+    }
 }

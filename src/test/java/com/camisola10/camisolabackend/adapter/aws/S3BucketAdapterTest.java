@@ -52,7 +52,7 @@ class S3BucketAdapterTest {
         var response = adapter.store(image);
 
         verify(s3Client).putObject(eq(bucketName + "/images"), any(String.class), any(InputStream.class), any(ObjectMetadata.class));
-        assertThat(response.getUrl()).isEqualTo("https://bucketName.s3-region.amazonaws.com/images/" + response.getImageId().asString());
+        assertThat(response.getUrl()).isEqualTo("https://bucketName.s3-region.amazonaws.com/images/" + response.getId().asString());
 
     }
 

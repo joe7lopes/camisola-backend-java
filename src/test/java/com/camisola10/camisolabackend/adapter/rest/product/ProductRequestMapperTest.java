@@ -68,7 +68,7 @@ public class ProductRequestMapperTest {
         var request = CreateProductRequest.builder()
                 .name("p1")
                 .sizes(sizes)
-                .imageIds(imageIds)
+                .images(imageIds)
                 .categories(categories)
                 .isCustomizable(true)
                 .defaultPrice("23")

@@ -1,10 +1,10 @@
 package com.camisola10.camisolabackend.application.service;
 
+import com.camisola10.camisolabackend.application.port.in.ImagesQueryService;
 import com.camisola10.camisolabackend.application.port.in.ProductsCommandService;
 import com.camisola10.camisolabackend.application.port.in.ProductsQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.product.CreateProductCommand;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
-import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
@@ -20,8 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 class ProductService implements ProductsCommandService, ProductsQueryService {
 
-    private final CloudStorage cloudStorage;
-    private final CommandMapper mapper;
+    private final ImagesQueryService imagesQueryService;
     private final ProductDB db;
 
     @Override
@@ -31,7 +30,17 @@ class ProductService implements ProductsCommandService, ProductsQueryService {
 
     @Override
     public Product createProduct(CreateProductCommand command) {
-        var newProduct = mapper.map(command);
+        var images = imagesQueryService.findImagesById(command.getImages());
+        var newProduct =  Product.builder()
+                .id(ProductId.create())
+                .name(command.getName())
+                .images(images)
+                .categories(command.getCategories())
+                .sizes(command.getSizes())
+                .customizable(command.isCustomizable())
+                .defaultPrice(command.getDefaultPrice())
+                .build();
+
         db.save(newProduct);
         log.info("Product created: {}", newProduct);
         return newProduct;
@@ -43,12 +52,13 @@ class ProductService implements ProductsCommandService, ProductsQueryService {
         Product product = db.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("unable to find product with id: " + command.getId()));
 
+        var images = imagesQueryService.findImagesById(command.getImageIds());
         var newProduct = Product.builder()
                 .id(product.getId())
                 .name(command.getName())
                 .categories(command.getCategories())
                 .sizes(command.getSizes())
-                .images(product.getImages())
+                .images(images)
                 .customizable(command.isCustomizable())
                 .defaultPrice(command.getDefaultPrice())
                 .build();

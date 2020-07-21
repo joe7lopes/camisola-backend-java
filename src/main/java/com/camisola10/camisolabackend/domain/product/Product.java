@@ -22,7 +22,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class Product {
     private ProductId id;
     private String name;
-    @Setter(AccessLevel.NONE)
     private List<ProductCategory> categories;
     @Setter(AccessLevel.NONE)
     private List<ProductSize> sizes;

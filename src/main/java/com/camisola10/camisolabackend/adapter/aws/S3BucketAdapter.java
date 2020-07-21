@@ -34,7 +34,6 @@ class S3BucketAdapter implements CloudStorage {
 
     @Override
     public List<Image> getAllImages() {
-        //TODO: find out how to list images in folder
         var request = new ListObjectsRequest()
                 .withBucketName(s3Properties.getBucketName())
                 .withPrefix(s3Properties.getBucketPath()+"/")
@@ -46,6 +45,14 @@ class S3BucketAdapter implements CloudStorage {
                 .map(key-> key.replace(s3Properties.getBucketPath() + "/", ""))
                 .map(key ->
                         new Image(ImageId.createFrom(key), key, String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), key)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Image> getImagesByIds(List<ImageId> imageIds) {
+        return imageIds.stream()
+                .map(key ->
+                        new Image(key, key.asString(), String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), key.asString())))
                 .collect(Collectors.toList());
     }
 

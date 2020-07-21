@@ -10,9 +10,12 @@ public interface CloudStorage {
 
     List<Image> getAllImages();
 
+    List<Image> getImagesByIds(List<ImageId> imageIds);
+
     Image store(Base64Image image);
 
     List<Image> store(List<Base64Image> images);
 
     void deleteImages(List<ImageId> imagesKeys);
+
 }
