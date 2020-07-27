@@ -1,7 +1,11 @@
 package com.camisola10.camisolabackend.config.security;
 
 import com.camisola10.camisolabackend.config.JwtProperties;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,16 +28,7 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "scopes";
 
     public String getUsernameFromToken(String token) {
-        try {
-            return getClaimFromToken(token, Claims::getSubject);
-        } catch (ExpiredJwtException e) {
-            log.warn("Token is expired and not valid anymore", e);
-        } catch (SignatureException e) {
-            log.warn("Authentication Failed. Username or Password not valid.", e);
-        } catch (Exception e) {
-            log.error("Something went wrong with jwt", e);
-        }
-        return null;
+        return getClaimFromToken(token, Claims::getSubject);
     }
 
 

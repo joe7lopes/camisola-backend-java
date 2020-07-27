@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Value;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -51,13 +50,6 @@ public class Product {
                 customizable,
                 defaultPrice
         );
-    }
-
-    public void addImage(Image image) {
-        if (images == null) {
-            this.images = new ArrayList<>();
-        }
-        this.images.add(image);
     }
 
     public List<Image> getImages() {

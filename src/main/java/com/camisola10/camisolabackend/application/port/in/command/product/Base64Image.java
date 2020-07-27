@@ -18,4 +18,8 @@ public class Base64Image {
                 .contentType(contentType)
                 .build();
     }
+
+    public String getNameAsUTF8() {
+        return name.replaceAll("\\P{InBasic_Latin}", "");
+    }
 }

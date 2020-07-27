@@ -1,6 +1,9 @@
 package com.camisola10.camisolabackend.config.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +19,7 @@ import java.io.IOException;
 
 
 @RequiredArgsConstructor
+@Slf4j
 class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String HEADER_STRING = "Authorization";
@@ -32,12 +36,22 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (hasBearerHeader(header)) {
             authToken = header.replace(TOKEN_PREFIX, "");
-            username = tokenProvider.getUsernameFromToken(authToken);
+            try {
+                username = tokenProvider.getUsernameFromToken(authToken);
+            } catch (ExpiredJwtException e) {
+                log.warn("Token is expired and not valid anymore", e);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+            } catch (SignatureException e) {
+                log.warn("Authentication Failed. Username or Password not valid.", e);
+            } catch (Exception e) {
+                log.error("Something went wrong with jwt", e);
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
 
             if (tokenProvider.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = tokenProvider.getAuthentication(authToken, SecurityContextHolder.getContext().getAuthentication(), userDetails);

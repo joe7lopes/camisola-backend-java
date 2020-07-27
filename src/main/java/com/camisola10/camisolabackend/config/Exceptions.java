@@ -11,6 +11,7 @@ import org.springframework.hateoas.mediatype.vnderrors.VndErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @ControllerAdvice
 @RequestMapping(produces = "application/vnd.error+json")
@@ -48,6 +50,12 @@ public class Exceptions {
     ResponseEntity<VndErrors> handleEmptyBodyRequestException(Exception ex) {
         log.error("Empty request body ", ex);
         return error(ex, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    ResponseEntity<VndErrors> handleBadCredentialsException(Exception ex) {
+        log.info("Wrong credentials", ex);
+        return error(ex, UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)

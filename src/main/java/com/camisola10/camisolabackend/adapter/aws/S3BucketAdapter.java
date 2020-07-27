@@ -62,19 +62,7 @@ class S3BucketAdapter implements CloudStorage {
         var imageIdStr = imageId.asString();
         var content = image.getFile();
         var fis = new ByteArrayInputStream(content);
-        var metadata = new ObjectMetadata();
-        var userMetaData = Map.of(
-                "id",imageIdStr,
-                "name", image.getName()
-        );
-        metadata.setUserMetadata(userMetaData);
-        metadata.setContentLength(content.length);
-        metadata.setContentType(image.getContentType().getMimeType());
-        metadata.setCacheControl(
-                CacheControl.maxAge(Duration.of(30, DAYS))
-                        .cachePublic()
-                        .getHeaderValue()
-        );
+        var metadata = getObjectMetadata(image, imageIdStr, content);
 
         var bucketName = s3Properties.getBucketName();
         var bucketPath = s3Properties.getBucketPath();
@@ -99,6 +87,20 @@ class S3BucketAdapter implements CloudStorage {
         imagesKeys.forEach(key-> s3Client.deleteObject(
                         s3Properties.getBucketName(),
                         s3Properties.getBucketPath()+"/"+key.asString()));
+    }
+
+    private ObjectMetadata getObjectMetadata(Base64Image image, String imageIdStr, byte[] content) {
+        Map<String, String> userMetaData = Map.of("id",imageIdStr, "name", image.getNameAsUTF8());
+        var metadata = new ObjectMetadata();
+        metadata.setUserMetadata(userMetaData);
+        metadata.setContentLength(content.length);
+        metadata.setContentType(image.getContentType().getMimeType());
+        metadata.setCacheControl(
+                CacheControl.maxAge(Duration.of(30, DAYS))
+                        .cachePublic()
+                        .getHeaderValue()
+        );
+        return metadata;
     }
 
 }
