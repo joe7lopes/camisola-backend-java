@@ -59,17 +59,19 @@ class S3BucketAdapterTest {
     @Test
     public void shouldRemoveImages() {
         var bucketName = "bucketName";
+        var bucketPath = "images";
         var id1 = com.camisola10.camisolabackend.domain.images.Image.ImageId.create();
         var id2 = com.camisola10.camisolabackend.domain.images.Image.ImageId.create();
         var id3 = com.camisola10.camisolabackend.domain.images.Image.ImageId.create();
         var imageIds = List.of(id1, id2, id3);
         when(properties.getBucketName()).thenReturn(bucketName);
+        when(properties.getBucketPath()).thenReturn(bucketPath);
 
         adapter.deleteImages(imageIds);
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         verify(s3Client, times(3)).deleteObject(eq(bucketName), captor.capture());
-        assertThat(captor.getAllValues()).containsExactly(id1.asString(), id2.asString(), id3.asString());
+        assertThat(captor.getAllValues()).containsExactly("images/"+id1.asString(), "images/"+id2.asString(), "images/"+id3.asString());
     }
 
 }
