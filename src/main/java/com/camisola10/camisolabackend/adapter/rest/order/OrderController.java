@@ -1,14 +1,13 @@
 package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
-import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
-import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
+import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
+import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.order.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +26,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 class OrderController {
 
-    private final CreateOrderUseCase createOrderUseCase;
-    private final FetchOrdersUseCase fetchOrdersUseCase;
+    private final OrderCommandService orderCommandService;
+    private final OrdersQueryService ordersQueryService;
     private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
     private final OrderRequestMapper mapper;
 
@@ -36,8 +35,8 @@ class OrderController {
     FetchOrdersResponse fetchOrders(@RequestParam Optional<String> status) {
         List<Order> orders = new ArrayList<>();
         status.map(mapper::mapStatus)
-                .ifPresentOrElse(command -> orders.addAll(fetchOrdersUseCase.fetchOrders(command)),
-                        () -> orders.addAll(fetchOrdersUseCase.fetchOrders()));
+                .ifPresentOrElse(command -> orders.addAll(ordersQueryService.fetchOrders(command)),
+                        () -> orders.addAll(ordersQueryService.fetchOrders()));
 
         return mapper.map(orders);
     }
@@ -46,7 +45,7 @@ class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     CreateOrderResponse createOrder(@RequestBody CreateOrderRequest dto) {
         var command = mapper.map(dto);
-        var orderId = createOrderUseCase.createOrder(command);
+        var orderId = orderCommandService.createOrder(command);
         return new CreateOrderResponse(orderId.asString());
     }
 

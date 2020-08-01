@@ -2,8 +2,8 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
-import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
-import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
+import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
+import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
@@ -22,11 +22,16 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ControllerTest(controllers = OrderController.class)
 @ActiveProfiles("local")
@@ -39,13 +44,13 @@ class OrderControllerTest {
     OrderRequestMapper mapper;
 
     @MockBean
-    CreateOrderUseCase service;
+    OrderCommandService service;
 
     @MockBean
     UpdateOrderStatusUseCase updateOrderStatusUseCase;
 
     @MockBean
-    FetchOrdersUseCase fetchOrdersUseCase;
+    OrdersQueryService ordersQueryService;
 
     @Test
     public void shouldCreateNewOrder() throws Exception {
@@ -107,16 +112,16 @@ class OrderControllerTest {
         var orderMock = mock(Order.class);
         var orders = List.of(orderMock);
         FetchOrdersResponse fetchOrdersResponse = mock(FetchOrdersResponse.class);
-        when(fetchOrdersUseCase.fetchOrders()).thenReturn(orders);
+        when(ordersQueryService.fetchOrders()).thenReturn(orders);
         when(mapper.map(orders)).thenReturn(fetchOrdersResponse);
 
         mockMvc.perform(get(ApiUrl.ORDERS)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(fetchOrdersUseCase).fetchOrders();
+        verify(ordersQueryService).fetchOrders();
         verify(mapper).map(orders);
-        verifyNoMoreInteractions(fetchOrdersUseCase);
+        verifyNoMoreInteractions(ordersQueryService);
         verifyNoMoreInteractions(mapper);
     }
 

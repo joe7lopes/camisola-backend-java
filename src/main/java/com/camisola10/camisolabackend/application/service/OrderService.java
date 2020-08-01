@@ -1,7 +1,7 @@
 package com.camisola10.camisolabackend.application.service;
 
-import com.camisola10.camisolabackend.application.port.in.CreateOrderUseCase;
-import com.camisola10.camisolabackend.application.port.in.FetchOrdersUseCase;
+import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
+import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
@@ -25,7 +25,7 @@ import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 
 @Service
 @RequiredArgsConstructor
-class OrderService implements CreateOrderUseCase, UpdateOrderStatusUseCase, FetchOrdersUseCase {
+class OrderService implements OrderCommandService, UpdateOrderStatusUseCase, OrdersQueryService {
 
     private final ProductService productService;
     private final OrderDB db;

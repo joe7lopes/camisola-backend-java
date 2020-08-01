@@ -5,7 +5,7 @@ import com.camisola10.camisolabackend.domain.order.Order;
 
 import java.util.List;
 
-public interface FetchOrdersUseCase {
+public interface OrdersQueryService {
 
     List<Order> fetchOrders();
     List<Order> fetchOrders(FetchOrdersCommand command);

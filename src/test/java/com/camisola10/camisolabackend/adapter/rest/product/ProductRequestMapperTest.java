@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,7 +64,9 @@ public class ProductRequestMapperTest {
     public void shouldMapFromDtoToCreateCommand() {
         List<ProductSizeDto> sizes = createSizes();
         List<String> categories = createCategories();
-        var imageIds = List.of("1", "2", "3");
+        var imageIds = List.of(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString());
 
         var request = CreateProductRequest.builder()
                 .name("p1")
