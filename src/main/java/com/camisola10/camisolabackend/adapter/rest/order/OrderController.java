@@ -3,7 +3,6 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
-import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.order.Order;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ class OrderController {
 
     private final OrderCommandService orderCommandService;
     private final OrdersQueryService ordersQueryService;
-    private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
     private final OrderRequestMapper mapper;
 
     @GetMapping
@@ -52,7 +50,7 @@ class OrderController {
     @PostMapping("/{orderId}")
     void updateOrderStatus(@PathVariable String orderId, @RequestBody UpdateOrderStatusRequest request) {
         UpdateOrderStatusCommand command = mapper.map(orderId, request);
-        updateOrderStatusUseCase.updateOrderStatus(command);
+        orderCommandService.updateOrderStatus(command);
     }
 
 }

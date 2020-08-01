@@ -4,7 +4,6 @@ import com.camisola10.camisolabackend.adapter.rest.ApiUrl;
 import com.camisola10.camisolabackend.adapter.rest.ControllerTest;
 import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
-import com.camisola10.camisolabackend.application.port.in.UpdateOrderStatusUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.order.Order;
@@ -45,9 +44,6 @@ class OrderControllerTest {
 
     @MockBean
     OrderCommandService service;
-
-    @MockBean
-    UpdateOrderStatusUseCase updateOrderStatusUseCase;
 
     @MockBean
     OrdersQueryService ordersQueryService;
@@ -101,7 +97,7 @@ class OrderControllerTest {
                 .andExpect(status().isOk());
 
         verify(mapper).map(eq("1"), any(UpdateOrderStatusRequest.class));
-        verify(updateOrderStatusUseCase).updateOrderStatus(any(UpdateOrderStatusCommand.class));
+        verify(service).updateOrderStatus(any(UpdateOrderStatusCommand.class));
         verifyNoMoreInteractions(mapper);
         verifyNoMoreInteractions(service);
     }

@@ -1,9 +1,12 @@
 package com.camisola10.camisolabackend.adapter.persistence.order;
 
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.math.BigDecimal;
 
 @Mapper(componentModel = "spring")
 interface OrderDBMapper {
@@ -22,5 +25,9 @@ interface OrderDBMapper {
 
     default OrderId map(String orderId){
         return OrderId.from(orderId);
+    }
+
+    default BigDecimal from(Money value) {
+        return value.getValue();
     }
 }

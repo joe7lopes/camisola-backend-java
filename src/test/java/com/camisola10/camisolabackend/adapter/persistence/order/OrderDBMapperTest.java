@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.adapter.persistence.order;
 
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
@@ -16,6 +17,7 @@ import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSIN
 import static com.camisola10.camisolabackend.domain.order.Order.Status.SHIPPED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class OrderDBMapperTest {
 
@@ -26,7 +28,8 @@ class OrderDBMapperTest {
         var productMock = mock(Product.class);
         var productSizeMock = mock(ProductSize.class);
         var shippingAddressMock = mock(ShippingAddress.class);
-        var items = List.of(new OrderItem(productMock, productSizeMock, "brian", "12"));
+        var orderItem = new OrderItem(productMock, productSizeMock, "brian", "12");
+        var items = List.of(orderItem);
         var order = Order.builder()
                 .id(OrderId.create())
                 .items(items)
@@ -35,6 +38,8 @@ class OrderDBMapperTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
+        when(productSizeMock.getPrice()).thenReturn(Money.from(23));
+
         OrderDb orderDb = mapper.map(order);
 
         assertThat(orderDb.getOrderId()).isEqualTo(order.getId().asString());
@@ -42,6 +47,7 @@ class OrderDBMapperTest {
         assertThat(orderDb.getShippingAddress()).isEqualTo(order.getShippingAddress());
         assertThat(orderDb.getStatus()).isEqualTo(order.getStatus());
         assertThat(orderDb.getCreatedAt()).isEqualTo(order.getCreatedAt());
+        assertThat(orderDb.getTotal()).isEqualTo(order.getTotal().getValue());
     }
 
     @Test

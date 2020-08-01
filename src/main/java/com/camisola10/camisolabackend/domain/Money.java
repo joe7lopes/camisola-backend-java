@@ -23,6 +23,7 @@ public class Money {
     public Money add(Money other){
         return new Money(value.add(other.value));
     }
+
     public String asString(){
         return value.toPlainString();
     }
