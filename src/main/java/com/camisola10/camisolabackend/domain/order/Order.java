@@ -14,7 +14,7 @@ import static java.util.Objects.isNull;
 @Builder
 @Value
 public class Order {
-
+    static final Money shippingCost = Money.from("5");
     OrderId id;
     ShippingAddress shippingAddress;
     List<OrderItem> items;
@@ -32,8 +32,9 @@ public class Order {
 
     public Money getTotal() {
         return items.stream()
-                .map(i -> i.getSize().getPrice())
-                .reduce(Money.from(ZERO), Money::add);
+                .map(OrderItem::getPrice)
+                .reduce(Money.from(ZERO), Money::add)
+                .add(shippingCost);
     }
 
     private void validate() {

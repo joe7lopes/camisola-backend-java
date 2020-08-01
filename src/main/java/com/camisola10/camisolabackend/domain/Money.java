@@ -12,6 +12,10 @@ public class Money {
         return new Money(new BigDecimal(value));
     }
 
+    public static Money from(int value) {
+        return new Money(new BigDecimal(value));
+    }
+
     public static Money from(BigDecimal value){
         return new Money(value);
     }

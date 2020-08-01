@@ -11,7 +11,9 @@ import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSIN
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class OrderTest {
 
@@ -72,12 +74,11 @@ class OrderTest {
     }
 
     @Test
-    public void shouldCalculateOrderTotal() {
-        assertTotal("0", "0", "0");
-        assertTotal("-1", "-22", "-23");
-        assertTotal("53", "99.99", "152.99");
-        assertTotal("0", "10023.099", "10023.099");
-        assertTotal("0.74", "53.67771", "54.41771");
+    public void shouldCalculateOrderTotalWithShippingCost() {
+        assertTotal("0", "0", "5");
+        assertTotal("53", "99.99", "157.99");
+        assertTotal("0", "10023.099", "10028.099");
+        assertTotal("0.74", "53.67771", "59.41771");
     }
 
     private void assertTotal(String item1Value, String item2Value, String total){
@@ -92,8 +93,8 @@ class OrderTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        when(item1.getSize().getPrice()).thenReturn(Money.from(item1Value));
-        when(item2.getSize().getPrice()).thenReturn(Money.from(item2Value));
+        when(item1.getPrice()).thenReturn(Money.from(item1Value));
+        when(item2.getPrice()).thenReturn(Money.from(item2Value));
 
         assertThat(order1.getTotal()).isEqualTo(Money.from(total));
     }
