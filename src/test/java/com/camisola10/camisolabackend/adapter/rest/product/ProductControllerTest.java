@@ -63,7 +63,7 @@ class ProductControllerTest {
     void shouldReturnListOfProducts() throws Exception {
         var product = mock(Product.class);
         when(productsQueryService.getAll()).thenReturn(List.of(product));
-        when(mapper.map(any(Product.class))).thenReturn(new ProductResponseDto("123", "p1", null, null, true, null, "23"));
+        when(mapper.map(any(Product.class))).thenReturn(new ProductResponse("123", "p1", null, null, true, null, "23", ""));
 
         mockMvc.perform(get(ApiUrl.PRODUCTS))
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ class ProductControllerTest {
         var productMock = mock(Product.class);
         when(mapper.map(any(CreateProductRequest.class))).thenReturn(commandMock);
         when(productsCommandService.createProduct(commandMock)).thenReturn(productMock);
-        var response = ProductResponseDto.builder()
+        var response = ProductResponse.builder()
                 .name("camisola slb")
                 .build();
         when(mapper.map(productMock)).thenReturn(response);

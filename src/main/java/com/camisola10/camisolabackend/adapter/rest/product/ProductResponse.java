@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PACKAGE;
 @Builder
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class ProductResponseDto {
+class ProductResponse {
     private String id;
     private String name;
     private List<String> categories;
@@ -23,6 +23,7 @@ class ProductResponseDto {
     private boolean customizable;
     private List<ProductImageResponse> images;
     private String defaultPrice;
+    private String description;
 
 
     @AllArgsConstructor

@@ -16,4 +16,5 @@ class CreateProductRequest {
     public List<String> categories;
     public String defaultPrice;
     public boolean isCustomizable;
+    public String description;
 }

@@ -24,7 +24,7 @@ interface ProductRequestMapper {
     @Mapping(target = "customizable", source = "isCustomizable")
     UpdateProductCommand map(UpdateProductRequest request);
 
-    ProductResponseDto map(Product product);
+    ProductResponse map(Product product);
 
     default ImageId map(String imageId){
         return ImageId.createFrom(imageId);
@@ -65,7 +65,7 @@ interface ProductRequestMapper {
         return new Product.ProductId(UUID.fromString(id));
     }
 
-    default ProductResponseDto.ProductImageResponse mapImageUrl(Image image) {
-        return new ProductResponseDto.ProductImageResponse(image.getId().asString(), image.getName(), image.getUrl());
+    default ProductResponse.ProductImageResponse mapImageUrl(Image image) {
+        return new ProductResponse.ProductImageResponse(image.getId().asString(), image.getName(), image.getUrl());
     }
 }

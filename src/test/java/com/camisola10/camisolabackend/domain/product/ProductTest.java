@@ -38,13 +38,6 @@ class ProductTest {
     }
 
     @Test
-    public void shouldCreateProductWithUniqueID() {
-        Product product = Product.createWithId("p1", null, null, null,false, null);
-
-        assertThat(product.getId().getValue().toString()).isNotBlank();
-    }
-
-    @Test
     public void shouldValidateUsingBuilder() {
         Assertions.assertThrows(Product.InvalidProductNameException.class, () -> Product.builder().customizable(true).build());
     }

@@ -30,7 +30,7 @@ class ProductController {
     private final ProductRequestMapper mapper;
 
     @GetMapping
-    List<ProductResponseDto> findAll() {
+    List<ProductResponse> findAll() {
         List<Product> products = productsQueryService.getAll();
         return products.stream().map(mapper::map)
                 .collect(Collectors.toList());
@@ -38,14 +38,14 @@ class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ProductResponseDto createProduct(@RequestBody CreateProductRequest dto) {
+    ProductResponse createProduct(@RequestBody CreateProductRequest dto) {
         var command = mapper.map(dto);
         Product product = productsCommandService.createProduct(command);
         return mapper.map(product);
     }
 
     @PutMapping("/{id}")
-    ProductResponseDto updateProduct(@RequestBody UpdateProductRequest dto) {
+    ProductResponse updateProduct(@RequestBody UpdateProductRequest dto) {
         var command = mapper.map(dto);
         var product = productsCommandService.updateProduct(command);
         return mapper.map(product);

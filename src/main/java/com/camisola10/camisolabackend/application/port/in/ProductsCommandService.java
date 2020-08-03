@@ -30,6 +30,7 @@ public interface ProductsCommandService {
         List<ImageId> imageIds;
         Money defaultPrice;
         boolean customizable;
+        String description;
     }
 
 }

@@ -34,6 +34,7 @@ class ProductDBMapperTest {
                 .images(images)
                 .customizable(false)
                 .defaultPrice(Money.from("12"))
+                .description("description")
                 .build();
 
         ProductDb productDb = mapper.map(product);
@@ -46,6 +47,7 @@ class ProductDBMapperTest {
         assertThat(productDb.getSizes()).containsAll(sizes);
         assertThat(productDb.getCategories()).containsAll(categories);
         assertThat(productDb.getImages()).containsAll(images);
+        assertThat(productDb.getDescription()).isEqualTo(product.getDescription());
     }
 
     @Test
@@ -63,6 +65,7 @@ class ProductDBMapperTest {
                 .images(images)
                 .defaultPrice(new BigDecimal("70"))
                 .customizable(true)
+                .description("description")
                 .build();
 
         var product = mapper.map(productDb);
@@ -74,6 +77,7 @@ class ProductDBMapperTest {
         assertThat(product.getImages()).containsAll(productDb.getImages());
         assertThat(product.isCustomizable()).isEqualTo(productDb.isCustomizable());
         assertThat(product.getDefaultPrice().getValue()).isEqualTo(productDb.getDefaultPrice());
+        assertThat(product.getDescription()).isEqualTo(productDb.getDescription());
     }
 
     private List<ProductSize> getProductSizes() {

@@ -39,6 +39,7 @@ class ProductService implements ProductsCommandService, ProductsQueryService {
                 .sizes(command.getSizes())
                 .customizable(command.isCustomizable())
                 .defaultPrice(command.getDefaultPrice())
+                .description(command.getDescription())
                 .build();
 
         db.save(newProduct);
@@ -61,6 +62,7 @@ class ProductService implements ProductsCommandService, ProductsQueryService {
                 .images(images)
                 .customizable(command.isCustomizable())
                 .defaultPrice(command.getDefaultPrice())
+                .description(command.getDescription())
                 .build();
 
         db.save(newProduct);

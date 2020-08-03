@@ -22,5 +22,6 @@ public class CreateProductCommand {
     private List<ProductCategory> categories;
     private Money defaultPrice;
     private boolean customizable;
+    private String description;
 
 }

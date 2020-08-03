@@ -28,8 +28,16 @@ public class Product {
     private List<Image> images;
     private boolean customizable;
     private Money defaultPrice;
+    private String description;
 
-    private Product(ProductId id, String name, List<ProductCategory> categories, List<ProductSize> sizes, List<Image> images, boolean customizable, Money defaultPrice) {
+    private Product(
+            ProductId id, String name,
+            List<ProductCategory> categories,
+            List<ProductSize> sizes,
+            List<Image> images,
+            boolean customizable,
+            Money defaultPrice,
+            String description) {
         this.id = id;
         this.name = name;
         this.categories = categories;
@@ -37,19 +45,8 @@ public class Product {
         this.images = images;
         this.customizable = customizable;
         this.defaultPrice = defaultPrice;
+        this.description = description;
         validate();
-    }
-
-    public static Product createWithId(String name, List<ProductCategory> categories, List<ProductSize> sizes, List<Image> images, boolean customizable, Money defaultPrice) {
-        return new Product(
-                new ProductId(UUID.randomUUID()),
-                name,
-                categories,
-                sizes,
-                images,
-                customizable,
-                defaultPrice
-        );
     }
 
     public List<Image> getImages() {
@@ -69,7 +66,6 @@ public class Product {
         }
 
     }
-
 
     @Value
     public static class ProductId {

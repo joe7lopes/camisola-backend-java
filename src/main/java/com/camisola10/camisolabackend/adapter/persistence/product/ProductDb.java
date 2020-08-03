@@ -28,4 +28,5 @@ class ProductDb {
     private List<Image> images;
     private boolean customizable;
     private BigDecimal defaultPrice;
+    private String description;
 }
