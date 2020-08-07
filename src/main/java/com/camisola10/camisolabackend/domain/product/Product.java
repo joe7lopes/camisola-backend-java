@@ -2,33 +2,26 @@ package com.camisola10.camisolabackend.domain.product;
 
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.images.Image;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.Value;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@NoArgsConstructor
+@Value
 @Builder
-@Data
 public class Product {
-    private ProductId id;
-    private String name;
-    private List<ProductCategory> categories;
-    @Setter(AccessLevel.NONE)
-    private List<ProductSize> sizes;
-    @Setter(AccessLevel.NONE)
-    private List<Image> images;
-    private boolean customizable;
-    private Money defaultPrice;
-    private String description;
+     ProductId id;
+     String name;
+     List<ProductCategory> categories;
+     List<ProductSize> sizes;
+     List<Image> images;
+     boolean customizable;
+     Money defaultPrice;
+     String description;
 
     private Product(
             ProductId id, String name,
@@ -49,22 +42,14 @@ public class Product {
         validate();
     }
 
-    public List<Image> getImages() {
-        if (images == null){
-            return Collections.emptyList();
-        }
-        return images;
-    }
-
     private void validate() {
-        if (isBlank(name)) {
-            throw new InvalidProductNameException("Product Name Cannot be empty");
-        }
-
-        if (isBlank(id.value.toString())) {
+        if (isNull(id)) {
             throw new InvalidProductIdException("Invalid Product id");
         }
 
+        if (isBlank(name)) {
+            throw new InvalidProductNameException("Product Name Cannot be empty");
+        }
     }
 
     @Value

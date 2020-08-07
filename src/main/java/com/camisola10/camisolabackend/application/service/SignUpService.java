@@ -3,23 +3,22 @@ package com.camisola10.camisolabackend.application.service;
 import com.camisola10.camisolabackend.application.port.in.SignUpUseCase;
 import com.camisola10.camisolabackend.application.port.in.command.user.RegisterUserCommand;
 import com.camisola10.camisolabackend.application.port.out.UserDB;
-import com.camisola10.camisolabackend.domain.user.Role;
 import com.camisola10.camisolabackend.domain.user.User;
 import com.camisola10.camisolabackend.domain.user.UserId;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static com.camisola10.camisolabackend.domain.user.Role.*;
+import static com.camisola10.camisolabackend.domain.user.Role.USER;
 
 @Service
 @RequiredArgsConstructor
 class SignUpService implements SignUpUseCase {
 
     private final UserDB userDB;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void signUp(RegisterUserCommand command) {

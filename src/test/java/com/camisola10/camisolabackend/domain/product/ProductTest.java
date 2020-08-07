@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 class ProductTest {
 
     @Test
@@ -39,7 +37,21 @@ class ProductTest {
 
     @Test
     public void shouldValidateUsingBuilder() {
-        Assertions.assertThrows(Product.InvalidProductNameException.class, () -> Product.builder().customizable(true).build());
+        Assertions.assertThrows(Product.InvalidProductNameException.class, () ->
+                Product.builder()
+                        .id(Product.ProductId.create())
+                        .customizable(true)
+                        .build()
+        );
+    }
+
+    @Test
+    public void shouldThowExceptionWhenCreatingProductUsingBuilder() {
+        Assertions.assertThrows(Product.InvalidProductIdException.class, () ->
+                Product.builder()
+                        .name("prod 1")
+                        .customizable(true).build()
+        );
     }
 
 }
