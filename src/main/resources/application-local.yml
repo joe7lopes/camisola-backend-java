@@ -13,7 +13,6 @@ spring:
 #    org:
 #      springframework:
 #        security: DEBUG
-
 jwt:
   secret: SecretKeyToGenJWTs
   expiration-time: 864000000 # 10 days
