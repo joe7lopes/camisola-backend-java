@@ -1,91 +1,30 @@
 # Java Gradle CircleCI 2.0 configuration file
 #
 version: 2
-executors:
-  docker-publisher:
-    environment:
-      IMAGE_NAME: joe7lopes/camisola10
-      JVM_OPTS: -XX:MaxRAM=300m
-    docker:
-      - image: openjdk:11
+#executors:
+#  docker-publisher:
+#    environment:
+#      IMAGE_NAME: joe7lopes/camisola10
+#      JVM_OPTS: -XX:MaxRAM=300m
+
 jobs:
   build:
-    executor: docker-publisher
+    docker:
+      - image: openjdk:11
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Build Docker image
+          name: Run Tests
+          command: gradle clean build
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build and push Docker image
           command: |
-            docker build -t $IMAGE_NAME:latest .
+            docker build -t $DOCKER_LOGIN/$IMAGE_NAME:$TAG .
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker push $DOCKER_LOGIN/$IMAGE_NAME:$TAG
       - run:
-          name: Archive Docker image
-          command: docker save -o image.tar $IMAGE_NAME
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image.tar
-  publish-latest:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Publish Docker Image to Docker Hub
+          name: Deploy app to Linode Producrion Server via Docker
           command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
-            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
-            docker push $IMAGE_NAME:latest
-            docker push $IMAGE_NAME:$IMAGE_TAG
-  publish-tag:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            IMAGE_TAG=${CIRCLE_TAG/v/''}
-            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
-            docker push $IMAGE_NAME:latest
-            docker push $IMAGE_NAME:$IMAGE_TAG
-workflows:
-  version: 2
-  build-master:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: master
-      - publish-latest:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
-  build-tags:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-      - publish-tag:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
+            echo "ssh to digital ocean"
