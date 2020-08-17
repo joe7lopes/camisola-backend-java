@@ -10,7 +10,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: openjdk:11
+      - image: gradle:jdk11
     steps:
       - checkout
       - run:
