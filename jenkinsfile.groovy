@@ -1,5 +1,5 @@
 pipeline {
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -24,6 +24,8 @@ pipeline {
         // }
     }
     post {
-        echo "finito"
+        script{
+            echo "finito2"
+        }
     }
 }
