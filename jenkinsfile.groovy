@@ -23,9 +23,5 @@ pipeline {
         //     }
         // }
     }
-    post {
-        script{
-            echo "finito2"
-        }
-    }
+    
 }
