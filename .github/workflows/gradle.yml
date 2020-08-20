@@ -32,10 +32,10 @@ jobs:
         repository: joe7lopes/camisola10
         tags: latest
     - name: Executing remote  command
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          USERNAME: ${{ secrets.USERNAME }}
-          PORT: 22
-          KEY: ${{ secrets.SSH_KEY }}
-          script: touch bla & date >> bla
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: 22
+        KEY: ${{ secrets.SSH_KEY }}
+        script: touch bla & date >> bla
