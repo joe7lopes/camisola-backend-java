@@ -30,7 +30,7 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: joe7lopes/camisola10
-        tags: latest
+        tags: api
     - name: Executing remote  command
       uses: appleboy/ssh-action@master
       with:
@@ -39,4 +39,4 @@ jobs:
         PORT: 22
         KEY: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
-        script: touch bla & date >> bla
+        script: ./deploy.sh
