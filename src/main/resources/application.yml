@@ -2,5 +2,4 @@ server:
   port: 3001
 logging:
   file:
-    name: app.log
-    path: ./log
+    name: ./logs/app.log
