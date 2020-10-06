@@ -31,3 +31,4 @@ src/main/generated/
 
 ### VS Code ###
 .vscode/
+/log.log
