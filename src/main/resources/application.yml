@@ -3,3 +3,10 @@ server:
 logging:
   file:
     name: ./logs/app.log
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      database: camisola10
+      port: 27017
