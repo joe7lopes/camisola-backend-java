@@ -4,6 +4,13 @@
 #      springframework:
 #        security: DEBUG
 
+spring:
+  data:
+    mongodb:
+      host: localhost
+      database: camisola10
+      port: 27017
+
 jwt:
   secret: SecretKeyToGenJWTs
   expiration-time: 864000000 # 10 days

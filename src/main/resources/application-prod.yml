@@ -10,6 +10,13 @@ aws:
 #    mongodb:
 #      uri: mongodb://${DB_USER}:${DB_PASSWORD}@ds151247.mlab.com:51247/camisola10?retryWrites=false
 
+spring:
+  data:
+    mongodb:
+      host: mongo
+      database: camisola10
+      port: 27017
+
 jwt:
   secret: ${JWT_SECRET}
   expiration-time: 864000000 # 10 days
