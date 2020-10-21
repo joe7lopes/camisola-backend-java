@@ -32,4 +32,4 @@ src/main/generated/
 ### VS Code ###
 .vscode/
 /app.log
-/log.log
+logs/*

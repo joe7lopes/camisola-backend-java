@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -58,6 +59,12 @@ public class Exceptions {
         return error(ex, UNAUTHORIZED);
     }
 
+    @ExceptionHandler(UsernameNotFoundException.class)
+    void handleUserNameNotFoundException(UsernameNotFoundException ex) {
+        String id = createUniqueId();
+        log.info("{} - User name not found", id, ex);
+    }
+
     @ExceptionHandler(Exception.class)
     ResponseEntity<VndErrors> handleException(Exception ex) {
         log.error("Server error", ex);
@@ -65,9 +72,15 @@ public class Exceptions {
     }
 
     private ResponseEntity<VndErrors> error(Exception exception, HttpStatus httpStatus) {
-        String logref = UUID.randomUUID().toString();
+        String logref = createUniqueId();
         var message = Optional.of(exception.getMessage()).orElse(exception.getClass().getSimpleName());
         return new ResponseEntity<>(new VndErrors(logref, message), httpStatus);
     }
+
+    private String createUniqueId() {
+        return UUID.randomUUID().toString();
+    }
+
+
 }
 
