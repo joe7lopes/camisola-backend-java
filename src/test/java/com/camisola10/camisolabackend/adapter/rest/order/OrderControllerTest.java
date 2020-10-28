@@ -65,7 +65,7 @@ class OrderControllerTest {
         String requestBody = convertToJsonString(request);
 
         var command = mock(CreateOrderCommand.class);
-        OrderId orderId = OrderId.create();
+        OrderId orderId = OrderId.create("1234");
         when(mapper.map(request)).thenReturn(command);
         when(service.createOrder(command)).thenReturn(orderId);
 

@@ -27,6 +27,7 @@ import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 class OrderService implements OrderCommandService, OrdersQueryService {
 
     private final ProductService productService;
+    private final RandomIdGenerator randomIdGenerator;
     private final OrderDB db;
 
     @Override
@@ -36,8 +37,9 @@ class OrderService implements OrderCommandService, OrdersQueryService {
                 .map(this::mapItems)
                 .collect(Collectors.toList());
 
+        var orderId = randomIdGenerator.base36WithDate();
         var order = Order.builder()
-                .id(OrderId.create())
+                .id(OrderId.create(orderId))
                 .items(items)
                 .shippingAddress(command.getShippingAddress())
                 .status(RECEIVED)

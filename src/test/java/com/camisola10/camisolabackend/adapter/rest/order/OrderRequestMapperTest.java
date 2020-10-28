@@ -2,8 +2,8 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
-import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderRequestMapperTest {
 
-    private OrderRequestMapper mapper = Mappers.getMapper(OrderRequestMapper.class);
+    private final OrderRequestMapper mapper = Mappers.getMapper(OrderRequestMapper.class);
 
     @Test
     void shouldMapFromRequestToCommand() {
@@ -158,7 +158,7 @@ class OrderRequestMapperTest {
         );
 
         return Order.builder()
-                .id(Order.OrderId.create())
+                .id(Order.OrderId.create("1234"))
                 .createdAt(LocalDateTime.of(2020, 2, 5, 2, 2))
                 .status(SHIPPED)
                 .shippingAddress(shippingAddress)

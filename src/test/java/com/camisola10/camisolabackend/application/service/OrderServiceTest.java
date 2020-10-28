@@ -35,13 +35,15 @@ class OrderServiceTest {
     @Mock
     private ProductService productService;
     @Mock
+    private RandomIdGenerator randomIdGenerator;
+    @Mock
     private OrderDB db;
 
     private OrderService service;
 
     @BeforeEach
     public void setUp() {
-        service = new OrderService(productService, db);
+        service = new OrderService(productService, randomIdGenerator, db);
     }
 
     @Test
@@ -121,7 +123,7 @@ class OrderServiceTest {
     @Test
     public void shouldUpdateOrderStatus() {
         var command = UpdateOrderStatusCommand.builder()
-                .orderId(OrderId.create())
+                .orderId(OrderId.create("1234"))
                 .status(PROCESSING)
                 .build();
 

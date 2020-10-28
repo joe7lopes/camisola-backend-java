@@ -31,7 +31,7 @@ class OrderDBMapperTest {
         var orderItem = new OrderItem(productMock, productSizeMock, "brian", "12");
         var items = List.of(orderItem);
         var order = Order.builder()
-                .id(OrderId.create())
+                .id(OrderId.create("1234"))
                 .items(items)
                 .shippingAddress(shippingAddressMock)
                 .status(PROCESSING)
@@ -52,7 +52,7 @@ class OrderDBMapperTest {
 
     @Test
     public void shouldMapToOrder() {
-        var orderId = OrderId.create().asString();
+        var orderId = OrderId.create("1234").asString();
         var product = mock(Product.class);
         var productSize = mock(ProductSize.class);
         var items = List.of(new OrderItem(product, productSize, "name", "number"));

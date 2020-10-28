@@ -1,8 +1,10 @@
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        transaction:
+          interceptor: TRACE
 
 spring:
   data:

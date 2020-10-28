@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import java.util.List;
 class OrderDb {
     @Id
     private String id;
+    @Indexed(name = "orderId_index",unique = true)
     private String orderId;
     private ShippingAddress shippingAddress;
     private List<OrderItem> items;

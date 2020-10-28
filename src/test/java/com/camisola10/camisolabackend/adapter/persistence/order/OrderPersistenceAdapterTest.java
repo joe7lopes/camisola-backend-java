@@ -50,14 +50,14 @@ class OrderPersistenceAdapterTest {
 
     @Test
     public void shouldThrowExceptionForNonExistingOrder() {
-        var orderId = create();
+        var orderId = create("1234");
         assertThrows(OrderNotFoundException.class,
                 () -> adapter.updateOrderStatus(orderId, PROCESSING));
     }
 
     @Test
     public void shouldUpdateOrderToNewStatusAndSave() {
-        var orderId = create();
+        var orderId = create("1234");
         var item1 = mock(OrderItem.class);
         var order = OrderDb.builder()
                 .orderId(orderId.asString())

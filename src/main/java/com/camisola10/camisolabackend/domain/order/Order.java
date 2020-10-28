@@ -6,10 +6,10 @@ import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Builder
 @Value
@@ -68,31 +68,27 @@ public class Order {
 
     @Value
     public static class OrderId {
-        UUID value;
+        String value;
 
-        private OrderId(UUID value) {
+        private OrderId(String value) {
             this.value = value;
             validate();
         }
 
-        public static OrderId create() {
-            return new OrderId(UUID.randomUUID());
+        public static OrderId create(String orderId) {
+            return new OrderId(orderId);
         }
 
         public static OrderId from(String orderId) {
-            try {
-                return new OrderId(UUID.fromString(orderId));
-            }catch (Exception e){
-                throw new InvalidOrderIdException("Order Id cannot be empty");
-            }
+            return new OrderId(orderId);
         }
 
         public String asString() {
-            return value.toString();
+            return value;
         }
 
         private void validate() {
-            if (isNull(value)) {
+            if (isNull(value) || isBlank(value)) {
                 throw new InvalidOrderIdException("Order Id cannot be empty");
             }
         }
