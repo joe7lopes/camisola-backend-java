@@ -62,6 +62,7 @@ class OrderServiceTest {
                 .id(productId)
                 .build();
         when(productService.findProductById(productId)).thenReturn(Optional.of(product));
+        when(randomIdGenerator.base36WithDate()).thenReturn("2020-10-28-xbbn6kg");
 
         //when
         OrderId orderId = service.createOrder(command);

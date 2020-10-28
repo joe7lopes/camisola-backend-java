@@ -8,57 +8,47 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ShippingAddressTest {
 
     @Test
-    public void shouldThrowForNullEmailOrPhoneNumber() {
-        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> {
-            ShippingAddress.builder()
-                    .build();
-        });
+    public void shouldThrowForNullPhoneNumber() {
+        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> ShippingAddress.builder()
+                .build());
 
-        assertThat(exception.getMessage()).isEqualTo("Email or Phone number cannot be null");
+        assertThat(exception.getMessage()).isEqualTo("Phone number cannot be empty");
     }
 
     @Test
     public void shouldThrowForEmptyPhoneNumber() {
-        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> {
-            ShippingAddress.builder()
-                    .phone("")
-                    .build();
-        });
+        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> ShippingAddress.builder()
+                .phone("")
+                .build());
 
         assertThat(exception.getMessage()).isEqualTo("Phone number cannot be empty");
     }
 
     @Test
     public void shouldThrowForEmptyOrNullAddress() {
-        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> {
-            ShippingAddress.builder()
-                    .phone("233")
-                    .build();
-        });
+        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> ShippingAddress.builder()
+                .phone("233")
+                .build());
 
         assertThat(exception.getMessage()).isEqualTo("Address or city or post code cannot be empty");
     }
 
     @Test
     public void shouldThrowForEmptyOrNullPostCode() {
-        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> {
-            ShippingAddress.builder()
-                    .phone("233")
-                    .postCode("")
-                    .build();
-        });
+        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> ShippingAddress.builder()
+                .phone("233")
+                .postCode("")
+                .build());
 
         assertThat(exception.getMessage()).isEqualTo("Address or city or post code cannot be empty");
     }
 
     @Test
     public void shouldThrowForEmptyOrNullCity() {
-        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> {
-            ShippingAddress.builder()
-                    .phone("233")
-                    .city("")
-                    .build();
-        });
+        ShippingAddress.InvalidShippingAddress exception = assertThrows(ShippingAddress.InvalidShippingAddress.class, () -> ShippingAddress.builder()
+                .phone("233")
+                .city("")
+                .build());
 
         assertThat(exception.getMessage()).isEqualTo("Address or city or post code cannot be empty");
     }
