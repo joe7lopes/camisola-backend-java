@@ -1,69 +1,93 @@
 package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
-import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.Email;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
-import com.camisola10.camisolabackend.domain.order.OrderItem;
-import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.order.ShippingAddress;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-interface OrderRequestMapper {
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
-    CreateOrderCommand map(CreateOrderRequest dto);
+@Component
+class OrderRequestMapper {
 
-    UpdateOrderStatusCommand map(String orderId, UpdateOrderStatusRequest request);
+    public CreateOrderCommand map(CreateOrderRequest dto) {
 
-    default FetchOrdersCommand mapStatus(String status) {
-        return new FetchOrdersCommand(Order.Status.valueOf(status.toUpperCase()));
+        List<OrderItemCommand> orderItems = dto.getItems().stream()
+                .map(this::toOrderItemCommand)
+                .collect(toList());
+
+        String emailStr = dto.getShippingAddress().getEmail();
+        Email email = isBlank(emailStr) ? null : Email.from(emailStr);
+
+        ShippingAddress shippingAddress = ShippingAddress.builder()
+                .firstName(dto.getShippingAddress().getFirstName())
+                .lastName(dto.getShippingAddress().getLastName())
+                .email(email)
+                .phone(dto.getShippingAddress().getPhone())
+                .address(dto.getShippingAddress().getAddress())
+                .city(dto.getShippingAddress().city)
+                .postCode(dto.getShippingAddress().postCode)
+                .build();
+        return new CreateOrderCommand(orderItems, shippingAddress);
     }
 
-    default FetchOrdersResponse map(List<Order> orders) {
+    public UpdateOrderStatusCommand map(String orderId, UpdateOrderStatusRequest request) {
+        return new UpdateOrderStatusCommand(OrderId.from(orderId), Order.Status.valueOf(request.getStatus()));
+    }
+
+
+    public FetchOrdersResponse map(List<Order> orders) {
         List<FetchOrdersResponse.OrderDto> ordersDto = orders.stream()
-                .map(this::map)
+                .map(this::toOrderDto)
                 .collect(Collectors.toList());
         return new FetchOrdersResponse(ordersDto);
     }
 
-    @Mapping(target = "total", source = "total")
-    @Mapping(target = "createdAt", source = "createdAt", dateFormat = "dd/MM/yyyy HH:mm")
-    FetchOrdersResponse.OrderDto map(Order order);
-
-    @Mapping(target = "size", source = "size.size.value")
-    @Mapping(target = "productId", source = "product.id")
-    @Mapping(target = "productName", source = "product.name")
-    FetchOrdersResponse.OrderItemDto map(OrderItem orderItem);
-
-    default Email map(String email) {
-        return new Email(email);
+    public FetchOrdersCommand mapStatus(String status) {
+        return new FetchOrdersCommand(Order.Status.valueOf(status.toUpperCase()));
     }
 
-    default String mapEmail(Email email) {
-        return email.asString();
+    private FetchOrdersResponse.OrderDto toOrderDto(Order order) {
+
+        List<FetchOrdersResponse.OrderItemDto> items = order.getItems().stream()
+                .map(item -> new FetchOrdersResponse.OrderItemDto(
+                        item.getProduct().getId().asString(),
+                        item.getProduct().getName(),
+                        item.getSize().getSize().asString(),
+                        item.getStampingName(),
+                        item.getStampingNumber()
+                ))
+                .collect(toList());
+
+        var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return FetchOrdersResponse.OrderDto.builder()
+                .id(order.getId().asString())
+                .items(items)
+                .shippingAddress(new ShippingAddressDto(order.getShippingAddress()))
+                .status(order.getStatus().name())
+                .total(order.getTotal().asString())
+                .createdAt(order.getCreatedAt().format(formatter))
+                .build();
     }
 
-    default OrderId mapOrderId(String orderId) {
-        return OrderId.from(orderId);
+    private OrderItemCommand toOrderItemCommand(OrderItemDto dto) {
+        return OrderItemCommand.builder()
+                .productId(dto.getProductId())
+                .sizeId(dto.getSizeId())
+                .stampingName(dto.getStampingName())
+                .stampingNumber(dto.getStampingNumber())
+                .build();
     }
-
-    default String mapProductId(Product.ProductId productId) {
-        return productId.asString();
-    }
-
-    default String mapMoney(Money money) {
-        return money.asString();
-    }
-
-    default String map(OrderId orderId) {
-        return orderId.asString();
-    }
-
 }

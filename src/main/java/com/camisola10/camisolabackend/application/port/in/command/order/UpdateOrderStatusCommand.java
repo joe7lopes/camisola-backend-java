@@ -9,7 +9,7 @@ import lombok.Value;
 import static lombok.AccessLevel.PRIVATE;
 
 @Value
-@AllArgsConstructor(access = PRIVATE)
+@AllArgsConstructor
 @Builder
 public class UpdateOrderStatusCommand {
     OrderId orderId;

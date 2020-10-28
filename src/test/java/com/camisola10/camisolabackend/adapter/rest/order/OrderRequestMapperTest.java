@@ -10,6 +10,7 @@ import com.camisola10.camisolabackend.domain.order.ShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -25,7 +26,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderRequestMapperTest {
 
-    private final OrderRequestMapper mapper = Mappers.getMapper(OrderRequestMapper.class);
+    private OrderRequestMapper mapper;
+
+    @BeforeEach
+    void setUp() {
+        mapper = new OrderRequestMapper();
+    }
 
     @Test
     void shouldMapFromRequestToCommand() {
@@ -58,15 +64,6 @@ class OrderRequestMapperTest {
         assertThat(command.getShippingAddress().getPhone()).isEqualTo(dto.getShippingAddress().getPhone());
         assertThat(command.getShippingAddress().getPostCode()).isEqualTo(dto.getShippingAddress().getPostCode());
         assertThat(command.getShippingAddress().getEmail().asString()).isEqualTo(dto.getShippingAddress().getEmail());
-    }
-
-    @Test
-    void testMapStringToEmail() {
-        var email = "jj@ll.com";
-
-        Email result = mapper.map(email);
-
-        assertThat(result.asString()).isEqualTo(email);
     }
 
     @Test
@@ -110,7 +107,7 @@ class OrderRequestMapperTest {
         assertThat(actual.stampingNumber).isEqualTo(expected.getStampingNumber());
     }
 
-    private void assertShippingAddress(ShippingAddressDto actual, ShippingAddress expected){
+    private void assertShippingAddress(ShippingAddressDto actual, ShippingAddress expected) {
         assertThat(actual.firstName).isEqualTo(expected.getFirstName());
         assertThat(actual.lastName).isEqualTo(expected.getLastName());
         assertThat(actual.email).isEqualTo(expected.getEmail().asString());

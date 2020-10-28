@@ -1,6 +1,8 @@
 package com.camisola10.camisolabackend.adapter.rest.order;
 
+import com.camisola10.camisolabackend.domain.order.Order;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,7 @@ class FetchOrdersResponse {
 
     @AllArgsConstructor
     @NoArgsConstructor
+    @Builder
     @Data
     static class OrderDto {
         String id;

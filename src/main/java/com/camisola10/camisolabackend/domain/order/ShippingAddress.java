@@ -31,10 +31,6 @@ public class ShippingAddress {
     }
 
     private void validate() {
-        if (isNull(email) && isNull(phone)) {
-            throw new InvalidShippingAddress("Email or Phone number cannot be null");
-        }
-
         if (isBlank(phone)) {
             throw new InvalidShippingAddress("Phone number cannot be empty");
         }
