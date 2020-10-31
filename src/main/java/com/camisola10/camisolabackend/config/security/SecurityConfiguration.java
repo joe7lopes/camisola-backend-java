@@ -38,7 +38,6 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .mvcMatchers(GET, ORDERS).hasRole(ADMIN.name())
                 .mvcMatchers(POST, ORDERS+"/{#orderId}").hasRole(ADMIN.name())
@@ -50,8 +49,9 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(GET, PRODUCTS).permitAll()
                 .mvcMatchers(IMAGES).hasRole(ADMIN.name())
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
-                .anyRequest().denyAll()
+                .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
