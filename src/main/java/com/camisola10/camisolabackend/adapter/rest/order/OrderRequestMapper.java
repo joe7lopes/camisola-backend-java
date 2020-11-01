@@ -75,10 +75,23 @@ class OrderRequestMapper {
         return FetchOrdersResponse.OrderDto.builder()
                 .id(order.getId().asString())
                 .items(items)
-                .shippingAddress(new ShippingAddressDto(order.getShippingAddress()))
+                .shippingAddress(toShippingAddressDto(order.getShippingAddress()))
                 .status(order.getStatus().name())
                 .total(order.getTotal().asString())
                 .createdAt(order.getCreatedAt().format(formatter))
+                .build();
+    }
+
+    private ShippingAddressDto toShippingAddressDto(ShippingAddress shippingAddress) {
+        var email = shippingAddress.getEmail() == null ? null : shippingAddress.getEmail().asString();
+        return ShippingAddressDto.builder()
+                .firstName(shippingAddress.getFirstName())
+                .lastName( shippingAddress.getLastName())
+                .email(email)
+                .phone( shippingAddress.getPhone())
+                .address( shippingAddress.getAddress())
+                .city( shippingAddress.getCity())
+                .postCode( shippingAddress.getPostCode())
                 .build();
     }
 
