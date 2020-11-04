@@ -12,6 +12,7 @@ spring:
       host: localhost
       database: camisola10
       port: 27017
+      auto-index-creation: false
 
 jwt:
   secret: SecretKeyToGenJWTs
