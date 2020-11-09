@@ -1,33 +1,32 @@
 package com.camisola10.camisolabackend.adapter.persistence.order;
 
-import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+@Component
+class OrderDBMapper {
 
-@Mapper(componentModel = "spring")
-interface OrderDBMapper {
-
-    @Mapping(target="orderId", source="id")
-    @Mapping(target="lastModified", ignore = true)
-    @Mapping(target="id", ignore = true)
-    OrderDb map(Order order);
-
-    default String map(OrderId orderId){
-        return orderId.asString();
+    public OrderDb map(Order order) {
+        return OrderDb.builder()
+                .orderId(order.getId().asString())
+                .items(order.getItems())
+                .shippingAddress(order.getShippingAddress())
+                .status(order.getStatus())
+                .total(order.getTotal().getValue())
+                .createdAt(order.getCreatedAt())
+                .build();
     }
 
-    @Mapping(target = "id", source = "orderId")
-    Order map(OrderDb orderDb);
-
-    default OrderId map(String orderId){
-        return OrderId.from(orderId);
+    public Page<Order> map(Page<OrderDb> orderDb) {
+        return orderDb.map(o -> Order.builder()
+                .id(OrderId.from(o.getOrderId()))
+                .items(o.getItems())
+                .shippingAddress(o.getShippingAddress())
+                .createdAt(o.getCreatedAt())
+                .status(o.getStatus())
+                .build());
     }
 
-    default BigDecimal from(Money value) {
-        return value.getValue();
-    }
 }

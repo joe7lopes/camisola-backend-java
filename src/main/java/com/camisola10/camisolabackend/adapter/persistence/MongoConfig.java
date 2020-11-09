@@ -6,9 +6,5 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 @Configuration
 @EnableMongoAuditing
 class MongoConfig {
-
-//    @Bean
-//    MongoTransactionManager transactionManager(MongoDbFactory mongoDbFactory) {
-//        return new MongoTransactionManager(mongoDbFactory);
-//    }
+    
 }

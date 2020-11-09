@@ -4,7 +4,7 @@ import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
 import com.camisola10.camisolabackend.domain.order.Order;
@@ -14,6 +14,8 @@ import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -56,12 +58,12 @@ class OrderService implements OrderCommandService, OrdersQueryService {
     }
 
     @Override
-    public List<Order> fetchOrders() {
-        return db.findAll();
+    public Page<Order> fetchOrders(Pageable pageable) {
+        return db.findAll(pageable);
     }
 
     @Override
-    public List<Order> fetchOrders(FetchOrdersCommand command) {
+    public List<Order> fetchOrdersByStatus(FetchOrdersByStatusCommand command) {
         Status status = command.getStatus();
         return db.findOrdersByStatus(status);
     }

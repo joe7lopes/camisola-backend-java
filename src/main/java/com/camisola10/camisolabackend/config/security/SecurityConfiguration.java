@@ -51,6 +51,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint())
+                .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
@@ -68,7 +70,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
-        return (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        return (request, response, authException) -> response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 
 }

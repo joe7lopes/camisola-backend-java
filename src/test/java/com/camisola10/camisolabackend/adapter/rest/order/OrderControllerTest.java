@@ -13,6 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -104,19 +107,22 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
+    @SuppressWarnings("unchecked")
     public void shouldFetchOrders() throws Exception {
         var orderMock = mock(Order.class);
         var orders = List.of(orderMock);
-        FetchOrdersResponse fetchOrdersResponse = mock(FetchOrdersResponse.class);
-        when(ordersQueryService.fetchOrders()).thenReturn(orders);
-        when(mapper.map(orders)).thenReturn(fetchOrdersResponse);
+        var ordersPageable = new PageImpl<>(orders);
+        Page<OrderDto> response =  mock(Page.class);
+        when(ordersQueryService.fetchOrders(any(Pageable.class))).thenReturn(ordersPageable);
+        when(mapper.map(ordersPageable)).thenReturn(response);
 
+        //WHEN
         mockMvc.perform(get(ApiUrl.ORDERS)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
-
-        verify(ordersQueryService).fetchOrders();
-        verify(mapper).map(orders);
+        //THEN
+        verify(ordersQueryService).fetchOrders(any(Pageable.class));
+        verify(mapper).map(ordersPageable);
         verifyNoMoreInteractions(ordersQueryService);
         verifyNoMoreInteractions(mapper);
     }
@@ -129,7 +135,7 @@ class OrderControllerTest {
     }
 
     @Test
-    public void shouldReturn403WhenUpdatingOrderStatus() throws Exception {
+    public void shouldReturn401WhenUpdatingOrderStatus() throws Exception {
         var payload = "{\"status\":\"PROCESSING\"}";
         mockMvc.perform(post(ApiUrl.ORDERS + "/1")
                 .contentType(APPLICATION_JSON)

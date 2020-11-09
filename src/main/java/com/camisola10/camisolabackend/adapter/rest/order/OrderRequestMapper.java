@@ -2,19 +2,17 @@ package com.camisola10.camisolabackend.adapter.rest.order;
 
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.Email;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -47,22 +45,19 @@ class OrderRequestMapper {
         return new UpdateOrderStatusCommand(OrderId.from(orderId), Order.Status.valueOf(request.getStatus()));
     }
 
-
-    public FetchOrdersResponse map(List<Order> orders) {
-        List<FetchOrdersResponse.OrderDto> ordersDto = orders.stream()
-                .map(this::toOrderDto)
-                .collect(Collectors.toList());
-        return new FetchOrdersResponse(ordersDto);
+    public Page<OrderDto> map(Page<Order> order) {
+        return order.map(this::toOrderDto);
     }
 
-    public FetchOrdersCommand mapStatus(String status) {
-        return new FetchOrdersCommand(Order.Status.valueOf(status.toUpperCase()));
+
+    public FetchOrdersByStatusCommand mapStatus(String status) {
+        return new FetchOrdersByStatusCommand(Order.Status.valueOf(status.toUpperCase()));
     }
 
-    private FetchOrdersResponse.OrderDto toOrderDto(Order order) {
+    private OrderDto toOrderDto(Order order) {
 
-        List<FetchOrdersResponse.OrderItemDto> items = order.getItems().stream()
-                .map(item -> new FetchOrdersResponse.OrderItemDto(
+        List<OrderDto.OrderItemDto> items = order.getItems().stream()
+                .map(item -> new OrderDto.OrderItemDto(
                         item.getProduct().getId().asString(),
                         item.getProduct().getName(),
                         item.getSize().getSize().asString(),
@@ -72,7 +67,7 @@ class OrderRequestMapper {
                 .collect(toList());
 
         var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        return FetchOrdersResponse.OrderDto.builder()
+        return OrderDto.builder()
                 .id(order.getId().asString())
                 .items(items)
                 .shippingAddress(toShippingAddressDto(order.getShippingAddress()))
@@ -86,16 +81,16 @@ class OrderRequestMapper {
         var email = shippingAddress.getEmail() == null ? null : shippingAddress.getEmail().asString();
         return ShippingAddressDto.builder()
                 .firstName(shippingAddress.getFirstName())
-                .lastName( shippingAddress.getLastName())
+                .lastName(shippingAddress.getLastName())
                 .email(email)
-                .phone( shippingAddress.getPhone())
-                .address( shippingAddress.getAddress())
-                .city( shippingAddress.getCity())
-                .postCode( shippingAddress.getPostCode())
+                .phone(shippingAddress.getPhone())
+                .address(shippingAddress.getAddress())
+                .city(shippingAddress.getCity())
+                .postCode(shippingAddress.getPostCode())
                 .build();
     }
 
-    private OrderItemCommand toOrderItemCommand(OrderItemDto dto) {
+    private OrderItemCommand toOrderItemCommand(CreateOrderRequest.OrderItem dto) {
         return OrderItemCommand.builder()
                 .productId(dto.getProductId())
                 .sizeId(dto.getSizeId())

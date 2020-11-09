@@ -39,10 +39,9 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = tokenProvider.getUsernameFromToken(authToken);
             } catch (ExpiredJwtException e) {
-                log.warn("Token is expired and not valid anymore", e);
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+                log.info("Token is expired and not valid anymore", e);
             } catch (SignatureException e) {
-                log.warn("Authentication Failed. Username or Password not valid.", e);
+                log.info("Authentication Failed. Username or Password not valid.", e);
             } catch (Exception e) {
                 log.error("Something went wrong with jwt", e);
             }

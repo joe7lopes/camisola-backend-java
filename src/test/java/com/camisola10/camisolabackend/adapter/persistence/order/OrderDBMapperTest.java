@@ -7,10 +7,12 @@ import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSING;
@@ -21,7 +23,12 @@ import static org.mockito.Mockito.when;
 
 class OrderDBMapperTest {
 
-    private OrderDBMapper mapper = Mappers.getMapper(OrderDBMapper.class);
+    private OrderDBMapper mapper;
+
+    @BeforeEach
+    void setUp() {
+        mapper = new OrderDBMapper();
+    }
 
     @Test
     void shouldMapOrderToOrderDb() {
@@ -51,7 +58,7 @@ class OrderDBMapperTest {
     }
 
     @Test
-    public void shouldMapToOrder() {
+    public void shouldMapFromPageableOrderDBToPageableOrder() {
         var orderId = OrderId.create("1234").asString();
         var product = mock(Product.class);
         var productSize = mock(ProductSize.class);
@@ -68,8 +75,13 @@ class OrderDBMapperTest {
                 .lastModified(dateNow)
                 .build();
 
-        Order order = mapper.map(orderDb);
+        var orderDbPageable = new PageImpl<>(Collections.singletonList(orderDb));
 
+        //WHEN
+        var result = mapper.map(orderDbPageable);
+
+        //THEN
+        var order = result.getContent().get(0);
         assertThat(order.getId().asString()).isEqualTo(orderDb.getOrderId());
         assertThat(order.getItems()).hasSize(1);
         assertThat(order.getCreatedAt()).isEqualTo(dateNow);

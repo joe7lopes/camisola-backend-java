@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Data
 @Value
-public class FetchOrdersCommand {
+public class FetchOrdersByStatusCommand {
     Status status;
 
 }

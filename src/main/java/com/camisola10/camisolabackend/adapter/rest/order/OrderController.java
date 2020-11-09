@@ -6,19 +6,16 @@ import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.order.Order;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(ApiUrl.ORDERS)
@@ -29,13 +26,16 @@ class OrderController {
     private final OrdersQueryService ordersQueryService;
     private final OrderRequestMapper mapper;
 
-    @GetMapping
-    FetchOrdersResponse fetchOrders(@RequestParam Optional<String> status) {
-        List<Order> orders = new ArrayList<>();
-        status.map(mapper::mapStatus)
-                .ifPresentOrElse(command -> orders.addAll(ordersQueryService.fetchOrders(command)),
-                        () -> orders.addAll(ordersQueryService.fetchOrders()));
+//    @GetMapping
+//    FetchOrdersResponse fetchOrders(@RequestParam String status) {
+//        var command = mapper.mapStatus(status);
+//        List<Order> orders = ordersQueryService.fetchOrdersByStatus(command);
+//        return  mapper.map(orders);
+//    }
 
+    @GetMapping
+    Page<OrderDto> fetchOrders(Pageable pageable) {
+        Page<Order> orders = ordersQueryService.fetchOrders(pageable);
         return mapper.map(orders);
     }
 

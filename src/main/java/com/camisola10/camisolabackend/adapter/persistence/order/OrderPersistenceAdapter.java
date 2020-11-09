@@ -5,6 +5,8 @@ import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.Order.Status;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,10 +20,9 @@ class OrderPersistenceAdapter implements OrderDB {
     private final OrderDBMapper mapper;
 
     @Override
-    public List<Order> findAll() {
-        return repository.findAllByOrderByCreatedAtDesc().stream()
-                .map(mapper::map)
-                .collect(Collectors.toList());
+    public Page<Order> findAll(Pageable pageable) {
+        Page<OrderDb> orders = repository.findAllByOrderByCreatedAtDesc(pageable);
+        return mapper.map(orders);
     }
 
     @Override

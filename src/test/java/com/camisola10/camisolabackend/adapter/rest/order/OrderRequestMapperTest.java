@@ -1,6 +1,6 @@
 package com.camisola10.camisolabackend.adapter.rest.order;
 
-import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.domain.Email;
 import com.camisola10.camisolabackend.domain.Money;
@@ -12,7 +12,8 @@ import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -46,9 +47,9 @@ class OrderRequestMapperTest {
                 .build();
 
         var items = List.of(
-                new OrderItemDto("1", "1", "sergio", "mendonca"),
-                new OrderItemDto("2", "12"),
-                new OrderItemDto("1", "2")
+                new CreateOrderRequest.OrderItem("1", "1", "sergio", "mendonca"),
+                new CreateOrderRequest.OrderItem("2", "12"),
+                new CreateOrderRequest.OrderItem("1", "2")
         );
 
         var dto = new CreateOrderRequest(items, shippingAddress);
@@ -80,26 +81,29 @@ class OrderRequestMapperTest {
     @Test
     public void shouldMapToFetchOrdersCommand() {
 
-        FetchOrdersCommand command = mapper.mapStatus("processing");
+        FetchOrdersByStatusCommand command = mapper.mapStatus("processing");
 
         assertThat(command.getStatus()).isEqualTo(PROCESSING);
     }
 
     @Test
-    public void shouldMapFromOrderToFetchOrdersResponse() {
+    public void shouldMapFromOrderToResponseDto() {
         var order = createOrder();
+        Page<Order> pageableOrder = new PageImpl<>(Collections.singletonList(order));
 
-        FetchOrdersResponse response = mapper.map(Collections.singletonList(order));
+        //WHEN
+        var response = mapper.map(pageableOrder);
 
-        FetchOrdersResponse.OrderDto actual = response.getOrders().get(0);
+        //THEN
+        var actual = response.getContent().get(0);
         assertThat(actual.getItems().get(0).productId).isEqualTo(order.getItems().get(0).getProduct().getId().asString());
         assertShippingAddress(actual.shippingAddress, order.getShippingAddress());
-        assertItems(actual.items.get(0), order.getItems().get(0));
+        assertItems(actual.getItems().get(0), order.getItems().get(0));
         assertThat(actual.getCreatedAt()).isEqualTo("05/02/2020 02:02");
         assertThat(actual.getStatus()).isEqualTo(order.getStatus().name());
     }
 
-    private void assertItems(FetchOrdersResponse.OrderItemDto actual, OrderItem expected) {
+    private void assertItems(OrderDto.OrderItemDto actual, OrderItem expected) {
         assertThat(actual.productId).isEqualTo(expected.getProduct().getId().asString());
         assertThat(actual.productName).isEqualTo(expected.getProduct().getName());
         assertThat(actual.size).isEqualTo(expected.getSize().getSize().asString());
