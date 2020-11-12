@@ -17,4 +17,4 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration-time: 864000000 # 10 days
+  expiration-time: 28800 # 8 hours
