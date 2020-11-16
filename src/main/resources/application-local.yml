@@ -16,4 +16,4 @@ spring:
 
 jwt:
   secret: SecretKeyToGenJWTs
-  expiration-time: 864000000 # 10 days
+  expiration-time: 180000 # 3min
