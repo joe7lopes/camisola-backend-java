@@ -15,12 +15,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.http.HttpServletResponse;
 
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.IMAGES;
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.ORDERS;
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.PRODUCTS;
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.SIGN_IN;
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.SIGN_UP;
-import static com.camisola10.camisolabackend.adapter.rest.ApiUrl.USERS;
+import static com.camisola10.camisolabackend.rest.ApiUrl.IMAGES;
+import static com.camisola10.camisolabackend.rest.ApiUrl.ORDERS;
+import static com.camisola10.camisolabackend.rest.ApiUrl.PRODUCTS;
+import static com.camisola10.camisolabackend.rest.ApiUrl.SIGN_IN;
+import static com.camisola10.camisolabackend.rest.ApiUrl.SIGN_UP;
+import static com.camisola10.camisolabackend.rest.ApiUrl.USERS;
 import static com.camisola10.camisolabackend.domain.user.Role.ADMIN;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
