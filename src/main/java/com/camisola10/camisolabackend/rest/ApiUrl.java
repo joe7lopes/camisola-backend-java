@@ -8,5 +8,4 @@ public interface ApiUrl {
     String IMAGES = API + "/images";
     String SIGN_UP = "/sign-up";
     String SIGN_IN = "/sign-in";
-    String NOTIFICATIONS = API + "/notifications";
 }

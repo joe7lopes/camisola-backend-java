@@ -61,10 +61,6 @@ public class Order {
 
     }
 
-    public Order updateStatus(Status status) {
-        return new Order(id,shippingAddress,items,createdAt, status);
-    }
-
     public enum Status {
         RECEIVED,
         PROCESSING,
