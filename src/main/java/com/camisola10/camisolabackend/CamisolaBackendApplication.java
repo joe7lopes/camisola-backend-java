@@ -1,17 +1,19 @@
 package com.camisola10.camisolabackend;
 
-import com.camisola10.camisolabackend.adapter.aws.S3Properties;
+import com.camisola10.camisolabackend.aws.S3Properties;
 import com.camisola10.camisolabackend.config.JwtProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import javax.annotation.PostConstruct;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-@SpringBootApplication
 @EnableConfigurationProperties({S3Properties.class, JwtProperties.class})
+@EnableAsync
+@SpringBootApplication
 public class CamisolaBackendApplication {
 
     @PostConstruct

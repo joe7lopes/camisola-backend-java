@@ -1,6 +1,6 @@
 package com.camisola10.camisolabackend.application.port.in.command.user;
 
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,19 +12,19 @@ public class RegisterUserCommand {
 
     private final String firstName;
     private final String lastName;
-    private final Email email;
+    private final EmailAddress emailAddress;
     private final String password;
 
-    private RegisterUserCommand(String firstName, String lastName, Email email, String password) {
+    private RegisterUserCommand(String firstName, String lastName, EmailAddress emailAddress, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.emailAddress = emailAddress;
         this.password = password;
         validate();
     }
 
     private void validate() {
-        if (isNull(firstName) || isNull(lastName) || isNull(email) || isNull(password)) {
+        if (isNull(firstName) || isNull(lastName) || isNull(emailAddress) || isNull(password)) {
             throw new InvalidUserCommand(this);
         }
     }

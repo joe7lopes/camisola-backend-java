@@ -5,6 +5,4 @@ public interface SignInUseCase {
 
     String signIn(String email, String password);
 
-    class SignInCommand {
-    }
 }

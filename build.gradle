@@ -24,11 +24,10 @@ repositories {
 }
 
 dependencies {
-	compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-	implementation( group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
-	implementation( group: 'org.springframework.cloud', name: 'spring-cloud-aws-context', version: '2.2.1.RELEASE')
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -37,14 +36,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	implementation 'org.projectlombok:lombok:1.18.12'
+	implementation( group: 'org.apache.commons', name: 'commons-lang3', version: '3.0')
+	implementation( group: 'org.springframework.cloud', name: 'spring-cloud-aws-context', version: '2.2.1.RELEASE')
+	implementation group: 'org.apache.velocity', name: 'velocity', version: '1.7'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-
-
 	implementation "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
-
-	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

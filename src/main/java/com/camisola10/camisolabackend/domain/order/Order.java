@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.domain.order;
 
 import com.camisola10.camisolabackend.domain.Money;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Value;
 
 import java.time.LocalDateTime;

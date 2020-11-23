@@ -1,6 +1,6 @@
 package com.camisola10.camisolabackend.domain.user;
 
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import lombok.Builder;
 import lombok.Value;
 
@@ -15,15 +15,15 @@ public class User {
     UserId id;
     String firstName;
     String lastName;
-    Email email;
+    EmailAddress emailAddress;
     String password;
     Set<Role> roles;
 
-    private User(UserId id, String firstName, String lastName, Email email, String password, Set<Role> roles) {
+    private User(UserId id, String firstName, String lastName, EmailAddress emailAddress, String password, Set<Role> roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.emailAddress = emailAddress;
         this.password = password;
         this.roles = roles;
         validate();
@@ -34,7 +34,7 @@ public class User {
                 isNull(id) ||
                         isBlank(firstName) ||
                         isBlank(lastName) ||
-                        isNull(email) ||
+                        isNull(emailAddress) ||
                         isNull(password) ||
                         isNull(roles) ||
                         roles.size() <= 0;

@@ -12,9 +12,9 @@ public interface OrderDB {
 
     Page<Order> findAll(Pageable pageable);
 
-    List<Order> findOrdersByStatus(Status status);
+    Order findById(OrderId orderId);
 
     void save(Order order);
 
-    void updateOrderStatus(OrderId orderId, Status newStatus);
+    Order updateOrderStatus(OrderId orderId, Status newStatus);
 }

@@ -2,7 +2,7 @@ package com.camisola10.camisolabackend.config;
 
 import com.camisola10.camisolabackend.application.service.ProductNotFoundException;
 import com.camisola10.camisolabackend.application.service.ProductSizeNotFoundException;
-import com.camisola10.camisolabackend.domain.Email.InvalidEmailException;
+import com.camisola10.camisolabackend.domain.EmailAddress.InvalidEmailAddressException;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress.InvalidShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
@@ -40,7 +40,7 @@ public class Exceptions {
             ProductCategory.InvalidCategoryNameException.class,
             ProductNotFoundException.class,
             ProductSizeNotFoundException.class,
-            InvalidEmailException.class,
+            InvalidEmailAddressException.class,
             InvalidShippingAddress.class})
     ResponseEntity<VndErrors> handleProductExceptions(Exception e) {
         log.warn("invalid request", e);
