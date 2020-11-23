@@ -38,7 +38,7 @@ class EmailNotifierImpl implements EmailNotifier {
         }
 
         emailSender.send(message);
-        log.info("Sent notification email {}", message);
+        log.info("Sent notification email {}", email);
 
     }
 

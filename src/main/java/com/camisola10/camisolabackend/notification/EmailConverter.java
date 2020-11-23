@@ -38,7 +38,7 @@ class EmailConverter implements Converter<OrderCreatedEvent, Email> {
                 formatAddress() +
                 formatDeliveryTime() +
                 formatDisclaimer() +
-                "<p>Obrigado,</p>" +
+                "<p style=\"margin-top: 2rem;\">Obrigado,</p>" +
                 "<p>Camisola10</p>" +
                 "</body>" +
                 "</html>";

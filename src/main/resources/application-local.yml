@@ -7,8 +7,6 @@ logging:
           interceptor: TRACE
 
 spring:
-#  profiles:
-#    include: email
   data:
     mongodb:
       host: localhost
