@@ -3,18 +3,22 @@ package com.camisola10.camisolabackend.application.service;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
+import com.camisola10.camisolabackend.domain.events.OrderCreatedEvent;
+import com.camisola10.camisolabackend.domain.events.OrderStatusUpdatedEvent;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.ProductSize.ProductSizeId;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,16 +42,18 @@ class OrderServiceTest {
     private RandomIdGenerator randomIdGenerator;
     @Mock
     private OrderDB db;
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     private OrderService service;
 
     @BeforeEach
     public void setUp() {
-        service = new OrderService(productService, randomIdGenerator, db);
+        service = new OrderService(productService, randomIdGenerator, db, eventPublisher);
     }
 
     @Test
-    void shouldCreateOrder() {
+    void shouldCreateOrderAndNotifyUser() {
         var productId = Product.ProductId.from("e8d948e2-e896-4c03-9af1-23da0ff3036b");
         var productSizeId = ProductSizeId.create();
         var item1 = CreateOrderCommand.OrderItemCommand.builder()
@@ -64,13 +70,14 @@ class OrderServiceTest {
         when(productService.findProductById(productId)).thenReturn(Optional.of(product));
         when(randomIdGenerator.base36WithDate()).thenReturn("2020-10-28-xbbn6kg");
 
-        //when
+        //WHEN
         OrderId orderId = service.createOrder(command);
 
-        //Then
+        //THEN
         verify(productService).findProductById(productId);
 
         var orderCapture = ArgumentCaptor.forClass(Order.class);
+        var eventCapture = ArgumentCaptor.forClass(OrderCreatedEvent.class);
         verify(db).save(orderCapture.capture());
         Order order = orderCapture.getValue();
         assertThat(order.getId()).isNotNull();
@@ -79,8 +86,14 @@ class OrderServiceTest {
         assertThat(order.getStatus()).isEqualTo(RECEIVED);
         assertThat(order.getCreatedAt()).isInstanceOf(LocalDateTime.class);
         assertThat(orderId).isEqualTo(order.getId());
+
+        verify(eventPublisher).publishEvent(eventCapture.capture());
+        var event = eventCapture.getValue();
+        assertThat(event.getOrder()).isEqualTo(order);
+
         verifyNoMoreInteractions(productService);
         verifyNoMoreInteractions(db);
+        verifyNoMoreInteractions(eventPublisher);
     }
 
     @Test
@@ -122,16 +135,26 @@ class OrderServiceTest {
     }
 
     @Test
-    public void shouldUpdateOrderStatus() {
+    public void shouldUpdateOrderStatusAndPublishEvent() {
+        OrderId orderId = OrderId.create("1234");
+        Order.Status status = PROCESSING;
         var command = UpdateOrderStatusCommand.builder()
-                .orderId(OrderId.create("1234"))
-                .status(PROCESSING)
+                .orderId(orderId)
+                .status(status)
                 .build();
-
+        var updatedOrder = mock(Order.class);
+        when(db.updateOrderStatus(orderId,status)).thenReturn(updatedOrder);
+        //WHEN
         service.updateOrderStatus(command);
 
-        verify(db).updateOrderStatus(command.getOrderId(), command.getStatus());
+        //THEN
+        verify(db).updateOrderStatus(orderId, status);
+        var eventCapture = ArgumentCaptor.forClass(OrderStatusUpdatedEvent.class);
+        verify(eventPublisher).publishEvent(eventCapture.capture());
+        var event = eventCapture.getValue();
+        assertThat(event.getOrder()).isEqualTo(updatedOrder);
         verifyNoMoreInteractions(db);
+        verifyNoMoreInteractions(eventPublisher);
     }
 
 }

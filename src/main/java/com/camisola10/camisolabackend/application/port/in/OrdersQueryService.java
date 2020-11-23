@@ -10,5 +10,4 @@ import java.util.List;
 public interface OrdersQueryService {
 
     Page<Order> fetchOrders(Pageable pageable);
-    List<Order> fetchOrdersByStatus(FetchOrdersByStatusCommand command);
 }

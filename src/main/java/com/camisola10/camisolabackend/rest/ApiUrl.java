@@ -6,7 +6,7 @@ public interface ApiUrl {
     String ORDERS = API + "/orders";
     String USERS = API + "/users";
     String IMAGES = API + "/images";
-
     String SIGN_UP = "/sign-up";
     String SIGN_IN = "/sign-in";
+    String NOTIFICATIONS = API + "/notifications";
 }

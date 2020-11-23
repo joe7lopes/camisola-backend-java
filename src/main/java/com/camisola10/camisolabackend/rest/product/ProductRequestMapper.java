@@ -13,7 +13,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 interface ProductRequestMapper {
@@ -59,10 +58,6 @@ interface ProductRequestMapper {
 
     default String fromProductId(Product.ProductId productId) {
         return productId.getValue().toString();
-    }
-
-    default Product.ProductId toProductId(String id) {
-        return new Product.ProductId(UUID.fromString(id));
     }
 
     default ProductResponse.ProductImageResponse mapImageUrl(Image image) {

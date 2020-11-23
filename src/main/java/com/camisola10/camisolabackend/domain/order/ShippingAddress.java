@@ -1,10 +1,9 @@
 package com.camisola10.camisolabackend.domain.order;
 
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import lombok.Builder;
 import lombok.Data;
 
-import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Builder
@@ -13,16 +12,16 @@ public class ShippingAddress {
 
     String firstName;
     String lastName;
-    Email email;
+    EmailAddress emailAddress;
     String phone;
     String address;
     String city;
     String postCode;
 
-    public ShippingAddress(String firstName, String lastName, Email email, String phone, String address, String city, String postCode) {
+    public ShippingAddress(String firstName, String lastName, EmailAddress emailAddress, String phone, String address, String city, String postCode) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.emailAddress = emailAddress;
         this.phone = phone;
         this.address = address;
         this.postCode = postCode;

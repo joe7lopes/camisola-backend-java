@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.domain.order;
 
 import com.camisola10.camisolabackend.domain.Money;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Value;
 
 import java.time.LocalDateTime;
@@ -58,6 +59,10 @@ public class Order {
             throw new InvalidOrderException("An order should have a shipping address");
         }
 
+    }
+
+    public Order updateStatus(Status status) {
+        return new Order(id,shippingAddress,items,createdAt, status);
     }
 
     public enum Status {

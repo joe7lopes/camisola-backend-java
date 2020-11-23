@@ -7,6 +7,8 @@ logging:
           interceptor: TRACE
 
 spring:
+#  profiles:
+#    include: email
   data:
     mongodb:
       host: localhost
@@ -16,4 +18,4 @@ spring:
 
 jwt:
   secret: SecretKeyToGenJWTs
-  expiration-time: 180000 # 3min
+  expiration-time: 3600000 # 1h

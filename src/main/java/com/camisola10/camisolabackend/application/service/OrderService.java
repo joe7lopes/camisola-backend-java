@@ -7,6 +7,8 @@ import com.camisola10.camisolabackend.application.port.in.command.order.CreateOr
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
+import com.camisola10.camisolabackend.domain.events.OrderCreatedEvent;
+import com.camisola10.camisolabackend.domain.events.OrderStatusUpdatedEvent;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.Order.Status;
@@ -14,6 +16,7 @@ import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
+import static java.time.LocalDateTime.now;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -31,13 +36,14 @@ class OrderService implements OrderCommandService, OrdersQueryService {
     private final ProductService productService;
     private final RandomIdGenerator randomIdGenerator;
     private final OrderDB db;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public OrderId createOrder(CreateOrderCommand command) {
 
         var items = command.getItems().stream()
                 .map(this::mapItems)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         var orderId = randomIdGenerator.base36WithDate();
         var order = Order.builder()
@@ -45,27 +51,23 @@ class OrderService implements OrderCommandService, OrdersQueryService {
                 .items(items)
                 .shippingAddress(command.getShippingAddress())
                 .status(RECEIVED)
-                .createdAt(LocalDateTime.now())
+                .createdAt(now())
                 .build();
 
         db.save(order);
+        eventPublisher.publishEvent(new OrderCreatedEvent(order));
         return order.getId();
     }
 
     @Override
     public void updateOrderStatus(UpdateOrderStatusCommand command) {
-        db.updateOrderStatus(command.getOrderId(), command.getStatus());
+        Order order = db.updateOrderStatus(command.getOrderId(), command.getStatus());
+        eventPublisher.publishEvent(new OrderStatusUpdatedEvent(order));
     }
 
     @Override
     public Page<Order> fetchOrders(Pageable pageable) {
         return db.findAll(pageable);
-    }
-
-    @Override
-    public List<Order> fetchOrdersByStatus(FetchOrdersByStatusCommand command) {
-        Status status = command.getStatus();
-        return db.findOrdersByStatus(status);
     }
 
     private OrderItem mapItems(OrderItemCommand item) {

@@ -25,22 +25,25 @@ class OrderPersistenceAdapter implements OrderDB {
     }
 
     @Override
-    public List<Order> findOrdersByStatus(Status status) {
-        //TODO: needs implementation
-        return null;
+    public Order findById(OrderId orderId) {
+        return repository.findByOrderId(orderId.asString())
+                .map(mapper::map)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
     }
 
     @Override
     public void save(Order order) {
         OrderDb orderDb = mapper.map(order);
         repository.save(orderDb);
+
     }
 
     @Override
-    public void updateOrderStatus(OrderId orderId, Status newStatus) {
+    public Order updateOrderStatus(OrderId orderId, Status newStatus) {
         OrderDb order = repository.findByOrderId(orderId.asString())
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
         order.setStatus(newStatus);
         repository.save(order);
+        return mapper.map(order);
     }
 }

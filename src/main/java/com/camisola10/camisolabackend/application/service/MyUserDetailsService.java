@@ -1,7 +1,7 @@
 package com.camisola10.camisolabackend.application.service;
 
 import com.camisola10.camisolabackend.application.port.out.UserDB;
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -26,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var email = Email.from(username);
+        var email = EmailAddress.from(username);
         var applicationUser = userDB.findByEmail(email)
                 .orElseThrow(() -> {
                     throw new UsernameNotFoundException(username);

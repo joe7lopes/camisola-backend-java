@@ -19,6 +19,16 @@ class OrderDBMapper {
                 .build();
     }
 
+    public Order map(OrderDb db) {
+        return Order.builder()
+                .id(OrderId.from(db.getOrderId()))
+                .items(db.getItems())
+                .shippingAddress(db.getShippingAddress())
+                .status(db.getStatus())
+                .createdAt(db.getCreatedAt())
+                .build();
+    }
+
     public Page<Order> map(Page<OrderDb> orderDb) {
         return orderDb.map(o -> Order.builder()
                 .id(OrderId.from(o.getOrderId()))

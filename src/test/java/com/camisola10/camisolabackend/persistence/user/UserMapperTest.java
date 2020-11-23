@@ -1,6 +1,6 @@
 package com.camisola10.camisolabackend.persistence.user;
 
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.user.User;
 import com.camisola10.camisolabackend.domain.user.UserId;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ class UserMapperTest {
                 .id(UserId.create())
                 .firstName("firstName")
                 .lastName("lastName")
-                .email(Email.from("asd@dd.com"))
+                .emailAddress(EmailAddress.from("asd@dd.com"))
                 .password("sssdsd")
                 .roles(Set.of(ADMIN, SHOP_MANAGER))
                 .build();
@@ -33,7 +33,7 @@ class UserMapperTest {
         assertThat(userDb.getUserId()).isEqualTo(user.getId().asString());
         assertThat(userDb.getFirstName()).isEqualTo(user.getFirstName());
         assertThat(userDb.getLastName()).isEqualTo(user.getLastName());
-        assertThat(userDb.getEmail()).isEqualTo(user.getEmail().asString());
+        assertThat(userDb.getEmail()).isEqualTo(user.getEmailAddress().asString());
         assertThat(userDb.getPassword()).isEqualTo(user.getPassword());
         assertThat(userDb.getRoles()).containsAll(Set.of(ADMIN.name(), SHOP_MANAGER.name()));
     }
@@ -55,7 +55,7 @@ class UserMapperTest {
         assertThat(user.getId().asString()).isEqualTo(userDb.getUserId());
         assertThat(user.getFirstName()).isEqualTo(userDb.getFirstName());
         assertThat(user.getLastName()).isEqualTo(userDb.getLastName());
-        assertThat(user.getEmail().asString()).isEqualTo(userDb.getEmail());
+        assertThat(user.getEmailAddress().asString()).isEqualTo(userDb.getEmail());
         assertThat(user.getPassword()).isEqualTo(userDb.getPassword());
         assertThat(user.getRoles()).containsAll(Set.of(ADMIN, SHOP_MANAGER));
     }

@@ -1,7 +1,7 @@
 package com.camisola10.camisolabackend.persistence.user;
 
 import com.camisola10.camisolabackend.application.port.out.UserDB;
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,15 +16,9 @@ public class UserPersistenceAdapter implements UserDB {
     private final UserMapper mapper;
 
     @Override
-    public Optional<User> findByEmail(Email email) {
-        return repository.findByEmail(email.asString())
+    public Optional<User> findByEmail(EmailAddress emailAddress) {
+        return repository.findByEmail(emailAddress.asString())
                 .map(mapper::map);
-    }
-
-    @Override
-    public void save(User user) {
-        var userDb = mapper.map(user);
-        repository.save(userDb);
     }
 
 }

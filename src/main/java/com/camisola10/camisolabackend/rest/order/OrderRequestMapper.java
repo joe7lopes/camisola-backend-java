@@ -4,7 +4,7 @@ import com.camisola10.camisolabackend.application.port.in.command.order.CreateOr
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
@@ -27,12 +27,12 @@ class OrderRequestMapper {
                 .collect(toList());
 
         String emailStr = dto.getShippingAddress().getEmail();
-        Email email = isBlank(emailStr) ? null : Email.from(emailStr);
+        EmailAddress emailAddress = isBlank(emailStr) ? null : EmailAddress.from(emailStr);
 
         ShippingAddress shippingAddress = ShippingAddress.builder()
                 .firstName(dto.getShippingAddress().getFirstName())
                 .lastName(dto.getShippingAddress().getLastName())
-                .email(email)
+                .emailAddress(emailAddress)
                 .phone(dto.getShippingAddress().getPhone())
                 .address(dto.getShippingAddress().getAddress())
                 .city(dto.getShippingAddress().city)
@@ -78,7 +78,7 @@ class OrderRequestMapper {
     }
 
     private ShippingAddressDto toShippingAddressDto(ShippingAddress shippingAddress) {
-        var email = shippingAddress.getEmail() == null ? null : shippingAddress.getEmail().asString();
+        var email = shippingAddress.getEmailAddress() == null ? null : shippingAddress.getEmailAddress().asString();
         return ShippingAddressDto.builder()
                 .firstName(shippingAddress.getFirstName())
                 .lastName(shippingAddress.getLastName())

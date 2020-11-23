@@ -2,7 +2,7 @@ package com.camisola10.camisolabackend.rest.order;
 
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
-import com.camisola10.camisolabackend.domain.Email;
+import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
@@ -64,7 +64,7 @@ class OrderRequestMapperTest {
         assertThat(command.getShippingAddress().getCity()).isEqualTo(dto.getShippingAddress().getCity());
         assertThat(command.getShippingAddress().getPhone()).isEqualTo(dto.getShippingAddress().getPhone());
         assertThat(command.getShippingAddress().getPostCode()).isEqualTo(dto.getShippingAddress().getPostCode());
-        assertThat(command.getShippingAddress().getEmail().asString()).isEqualTo(dto.getShippingAddress().getEmail());
+        assertThat(command.getShippingAddress().getEmailAddress().asString()).isEqualTo(dto.getShippingAddress().getEmail());
     }
 
     @Test
@@ -114,7 +114,7 @@ class OrderRequestMapperTest {
     private void assertShippingAddress(ShippingAddressDto actual, ShippingAddress expected) {
         assertThat(actual.firstName).isEqualTo(expected.getFirstName());
         assertThat(actual.lastName).isEqualTo(expected.getLastName());
-        assertThat(actual.email).isEqualTo(expected.getEmail().asString());
+        assertThat(actual.email).isEqualTo(expected.getEmailAddress().asString());
         assertThat(actual.phone).isEqualTo(expected.getPhone());
         assertThat(actual.address).isEqualTo(expected.getAddress());
         assertThat(actual.city).isEqualTo(expected.getCity());
@@ -128,7 +128,7 @@ class OrderRequestMapperTest {
                 .lastName("macEnin")
                 .address("asdasd.")
                 .city("LA")
-                .email(Email.from("asdad@asd.com"))
+                .emailAddress(EmailAddress.from("asdad@asd.com"))
                 .phone("123")
                 .postCode("123")
                 .build();
