@@ -65,6 +65,7 @@ public class Order {
         RECEIVED,
         PROCESSING,
         SHIPPED,
+        CANCELLED
     }
 
     @Value

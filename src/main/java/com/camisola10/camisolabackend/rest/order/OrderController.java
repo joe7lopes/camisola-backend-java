@@ -26,13 +26,6 @@ class OrderController {
     private final OrdersQueryService ordersQueryService;
     private final OrderRequestMapper mapper;
 
-//    @GetMapping
-//    FetchOrdersResponse fetchOrders(@RequestParam String status) {
-//        var command = mapper.mapStatus(status);
-//        List<Order> orders = ordersQueryService.fetchOrdersByStatus(command);
-//        return  mapper.map(orders);
-//    }
-
     @GetMapping
     Page<OrderDto> fetchOrders(Pageable pageable) {
         Page<Order> orders = ordersQueryService.fetchOrders(pageable);
