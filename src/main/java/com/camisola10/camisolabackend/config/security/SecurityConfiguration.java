@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import static com.camisola10.camisolabackend.rest.ApiUrl.IMAGES;
 import static com.camisola10.camisolabackend.rest.ApiUrl.ORDERS;
 import static com.camisola10.camisolabackend.rest.ApiUrl.PRODUCTS;
+import static com.camisola10.camisolabackend.rest.ApiUrl.SETTINGS;
 import static com.camisola10.camisolabackend.rest.ApiUrl.SIGN_IN;
 import static com.camisola10.camisolabackend.rest.ApiUrl.SIGN_UP;
 import static com.camisola10.camisolabackend.rest.ApiUrl.USERS;
@@ -47,6 +48,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(PUT, PRODUCTS + "/{#productId}").hasRole(ADMIN.name())
                 .mvcMatchers(DELETE, PRODUCTS + "/{#productId}").hasRole(ADMIN.name())
                 .mvcMatchers(GET, PRODUCTS).permitAll()
+                .mvcMatchers(GET, SETTINGS).permitAll()
+                .mvcMatchers(POST, SETTINGS).hasRole(ADMIN.name())
                 .mvcMatchers(IMAGES).hasRole(ADMIN.name())
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
                 .anyRequest().authenticated()
