@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 class OrderPersistenceAdapter implements OrderDB {
@@ -20,7 +18,7 @@ class OrderPersistenceAdapter implements OrderDB {
 
     @Override
     public Page<Order> findAll(Pageable pageable) {
-        Page<OrderDb> orders = repository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<OrderDb> orders = repository.findAll(pageable);
         return mapper.map(orders);
     }
 
