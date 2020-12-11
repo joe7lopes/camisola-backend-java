@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +29,14 @@ class OrderPersistenceAdapterTest {
     private OrderRepository repository;
     @Mock
     private OrderDBMapper mapper;
+    @Mock
+    private MongoTemplate mongoTemplate;
 
     private OrderDB adapter;
 
     @BeforeEach
     public void setUp() {
-        adapter = new OrderPersistenceAdapter(repository, mapper);
+        adapter = new OrderPersistenceAdapter(repository, mapper, mongoTemplate);
     }
 
     @Test

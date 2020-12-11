@@ -2,7 +2,11 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG
+#        security: DEBUG
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
         transaction:
           interceptor: TRACE
 

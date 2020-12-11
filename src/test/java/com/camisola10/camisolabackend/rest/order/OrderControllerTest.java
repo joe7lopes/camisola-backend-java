@@ -4,6 +4,7 @@ import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.service.FetchOrdersCriteria;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.rest.ApiUrl;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -113,7 +113,7 @@ class OrderControllerTest {
         var orders = List.of(orderMock);
         var ordersPageable = new PageImpl<>(orders);
         Page<OrderDto> response =  mock(Page.class);
-        when(ordersQueryService.fetchOrders(any(Pageable.class))).thenReturn(ordersPageable);
+        when(ordersQueryService.fetchOrders(any(FetchOrdersCriteria.class))).thenReturn(ordersPageable);
         when(mapper.map(ordersPageable)).thenReturn(response);
 
         //WHEN
@@ -121,7 +121,7 @@ class OrderControllerTest {
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
         //THEN
-        verify(ordersQueryService).fetchOrders(any(Pageable.class));
+        verify(ordersQueryService).fetchOrders(any(FetchOrdersCriteria.class));
         verify(mapper).map(ordersPageable);
         verifyNoMoreInteractions(ordersQueryService);
         verifyNoMoreInteractions(mapper);

@@ -4,26 +4,19 @@ import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
 import com.camisola10.camisolabackend.domain.events.OrderCreatedEvent;
 import com.camisola10.camisolabackend.domain.events.OrderStatusUpdatedEvent;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
-import com.camisola10.camisolabackend.domain.order.Order.Status;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 import static java.time.LocalDateTime.now;
@@ -66,8 +59,8 @@ class OrderService implements OrderCommandService, OrdersQueryService {
     }
 
     @Override
-    public Page<Order> fetchOrders(Pageable pageable) {
-        return db.findAll(pageable);
+    public Page<Order> fetchOrders(FetchOrdersCriteria criteria) {
+        return db.findByCriteria(criteria);
     }
 
     private OrderItem mapItems(OrderItemCommand item) {

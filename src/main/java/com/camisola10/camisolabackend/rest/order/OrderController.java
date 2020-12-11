@@ -3,12 +3,11 @@ package com.camisola10.camisolabackend.rest.order;
 import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.service.FetchOrdersCriteria;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.rest.ApiUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +31,22 @@ class OrderController {
     Page<OrderDto> fetchOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int pageSize,
-            @RequestParam(defaultValue = "createdAt") String sortBy) {
-        var pageRequest = PageRequest.of(page, pageSize, Sort.by(sortBy).descending());
-        Page<Order> orders = ordersQueryService.fetchOrders(pageRequest);
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(required = false) String orderId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String createdAt
+    ) {
+
+        var criteria = FetchOrdersCriteria.builder()
+                .page(page)
+                .pageSize(pageSize)
+                .sortBy(sortBy)
+                .orderId(orderId)
+                .name(name)
+                .createdAt(createdAt)
+                .build();
+
+        Page<Order> orders = ordersQueryService.fetchOrders(criteria);
         return mapper.map(orders);
     }
 
