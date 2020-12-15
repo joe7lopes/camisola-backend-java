@@ -34,6 +34,7 @@ class OrderController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(required = false) String orderId,
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String phone,
             @RequestParam(required = false) String createdAt
     ) {
 
@@ -43,6 +44,7 @@ class OrderController {
                 .sortBy(sortBy)
                 .orderId(orderId)
                 .name(name)
+                .phone(phone)
                 .createdAt(createdAt)
                 .build();
 

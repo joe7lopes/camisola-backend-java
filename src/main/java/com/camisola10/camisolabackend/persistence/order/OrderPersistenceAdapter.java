@@ -70,10 +70,17 @@ class OrderPersistenceAdapter implements OrderDB {
     private Criteria createCriteria(FetchOrdersCriteria criteria) {
         var orderId = criteria.getOrderId();
         var name = criteria.getName();
+        var phone = criteria.getPhone();
         var createdAt = criteria.getCreatedAt();
         var queryCriteria = new Criteria();
+
+
         if (Objects.nonNull(orderId)) {
             queryCriteria.and("orderId").is(orderId);
+        }
+
+        if (Objects.nonNull(phone)) {
+            queryCriteria.and("shippingAddress.phone").is(phone);
         }
 
         if (Objects.nonNull(createdAt)) {
@@ -85,6 +92,7 @@ class OrderPersistenceAdapter implements OrderDB {
             queryCriteria.orOperator(Criteria.where("shippingAddress.firstName").regex(name, "i"),
                     Criteria.where("shippingAddress.lastName").regex(name, "i"));
         }
+
         return queryCriteria;
     }
 }

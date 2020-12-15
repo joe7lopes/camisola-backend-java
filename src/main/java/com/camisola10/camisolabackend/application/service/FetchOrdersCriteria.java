@@ -11,5 +11,6 @@ public class FetchOrdersCriteria {
     String sortBy;
     String orderId;
     String name;
+    String phone;
     String createdAt;
 }
