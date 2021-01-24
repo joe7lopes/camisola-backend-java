@@ -14,5 +14,5 @@ public interface OrderDB {
 
     void save(Order order);
 
-    Order updateOrderStatus(OrderId orderId, Status newStatus);
+    Order updateOrder(OrderId orderId, Status newStatus, String privateNote);
 }

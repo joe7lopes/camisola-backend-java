@@ -11,7 +11,8 @@ import static lombok.AccessLevel.PRIVATE;
 @Value
 @AllArgsConstructor
 @Builder
-public class UpdateOrderStatusCommand {
+public class UpdateOrderCommand {
     OrderId orderId;
     Order.Status status;
+    String privateNote;
 }

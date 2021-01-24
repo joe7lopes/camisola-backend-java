@@ -1,7 +1,7 @@
 package com.camisola10.camisolabackend.application.service;
 
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
 import com.camisola10.camisolabackend.domain.events.OrderCreatedEvent;
 import com.camisola10.camisolabackend.domain.events.OrderStatusUpdatedEvent;
@@ -11,7 +11,6 @@ import com.camisola10.camisolabackend.domain.order.ShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.ProductSize.ProductSizeId;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -138,17 +137,18 @@ class OrderServiceTest {
     public void shouldUpdateOrderStatusAndPublishEvent() {
         OrderId orderId = OrderId.create("1234");
         Order.Status status = PROCESSING;
-        var command = UpdateOrderStatusCommand.builder()
+        var command = UpdateOrderCommand.builder()
                 .orderId(orderId)
                 .status(status)
+                .privateNote("")
                 .build();
         var updatedOrder = mock(Order.class);
-        when(db.updateOrderStatus(orderId,status)).thenReturn(updatedOrder);
+        when(db.updateOrder(orderId,status, "")).thenReturn(updatedOrder);
         //WHEN
-        service.updateOrderStatus(command);
+        service.updateOrder(command);
 
         //THEN
-        verify(db).updateOrderStatus(orderId, status);
+        verify(db).updateOrder(orderId, status, "");
         var eventCapture = ArgumentCaptor.forClass(OrderStatusUpdatedEvent.class);
         verify(eventPublisher).publishEvent(eventCapture.capture());
         var event = eventCapture.getValue();

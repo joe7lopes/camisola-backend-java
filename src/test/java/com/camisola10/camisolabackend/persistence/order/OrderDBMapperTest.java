@@ -44,6 +44,7 @@ class OrderDBMapperTest {
                 .shippingAddress(shippingAddressMock)
                 .status(PROCESSING)
                 .createdAt(LocalDateTime.now())
+                .privateNote("note1")
                 .build();
 
         when(productSizeMock.getPrice()).thenReturn(Money.from(23));
@@ -56,6 +57,7 @@ class OrderDBMapperTest {
         assertThat(orderDb.getStatus()).isEqualTo(order.getStatus());
         assertThat(orderDb.getCreatedAt()).isEqualTo(order.getCreatedAt());
         assertThat(orderDb.getTotal()).isEqualTo(order.getTotal().getValue());
+        assertThat(orderDb.getPrivateNote()).isEqualTo(order.getPrivateNote());
     }
 
     @Test

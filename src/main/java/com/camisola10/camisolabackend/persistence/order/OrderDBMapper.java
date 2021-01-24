@@ -16,6 +16,7 @@ class OrderDBMapper {
                 .status(order.getStatus())
                 .total(order.getTotal().getValue())
                 .createdAt(order.getCreatedAt())
+                .privateNote(order.getPrivateNote())
                 .build();
     }
 
@@ -26,6 +27,7 @@ class OrderDBMapper {
                 .shippingAddress(db.getShippingAddress())
                 .status(db.getStatus())
                 .createdAt(db.getCreatedAt())
+                .privateNote(db.getPrivateNote())
                 .build();
     }
 

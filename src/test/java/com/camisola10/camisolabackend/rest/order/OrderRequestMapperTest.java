@@ -1,7 +1,7 @@
 package com.camisola10.camisolabackend.rest.order;
 
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
 import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
@@ -68,14 +68,15 @@ class OrderRequestMapperTest {
     }
 
     @Test
-    public void shouldMapToUpdateStatusCommand() {
+    public void shouldMapToUpdateOrderCommand() {
         var orderId = UUID.randomUUID().toString();
-        var request = new UpdateOrderStatusRequest("PROCESSING");
+        var request = new UpdateOrderRequest(orderId, "PROCESSING", "bla");
 
-        UpdateOrderStatusCommand command = mapper.map(orderId, request);
+        UpdateOrderCommand command = mapper.map(orderId, request);
 
         assertThat(command.getOrderId().asString()).isEqualTo(orderId);
         assertThat(command.getStatus()).isEqualTo(PROCESSING);
+        assertThat(command.getPrivateNote()).isEqualTo("bla");
     }
 
     @Test
@@ -101,6 +102,7 @@ class OrderRequestMapperTest {
         assertItems(actual.getItems().get(0), order.getItems().get(0));
         assertThat(actual.getCreatedAt()).isEqualTo("05/02/2020 02:02");
         assertThat(actual.getStatus()).isEqualTo(order.getStatus().name());
+        assertThat(actual.getPrivateNote()).isEqualTo(order.getPrivateNote());
     }
 
     private void assertItems(OrderDto.OrderItemDto actual, OrderItem expected) {

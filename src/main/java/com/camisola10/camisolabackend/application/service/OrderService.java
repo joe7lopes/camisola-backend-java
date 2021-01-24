@@ -4,7 +4,7 @@ import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
 import com.camisola10.camisolabackend.application.port.out.OrderDB;
 import com.camisola10.camisolabackend.domain.events.OrderCreatedEvent;
 import com.camisola10.camisolabackend.domain.events.OrderStatusUpdatedEvent;
@@ -53,8 +53,12 @@ class OrderService implements OrderCommandService, OrdersQueryService {
     }
 
     @Override
-    public void updateOrderStatus(UpdateOrderStatusCommand command) {
-        Order order = db.updateOrderStatus(command.getOrderId(), command.getStatus());
+    public void updateOrder(UpdateOrderCommand command) {
+        Order order = db.updateOrder(
+                command.getOrderId(),
+                command.getStatus(),
+                command.getPrivateNote());
+
         eventPublisher.publishEvent(new OrderStatusUpdatedEvent(order));
     }
 

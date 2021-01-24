@@ -55,7 +55,7 @@ class OrderPersistenceAdapterTest {
     public void shouldThrowExceptionForNonExistingOrder() {
         var orderId = create("1234");
         assertThrows(OrderNotFoundException.class,
-                () -> adapter.updateOrderStatus(orderId, PROCESSING));
+                () -> adapter.updateOrder(orderId, PROCESSING, ""));
     }
 
     @Test
@@ -68,7 +68,7 @@ class OrderPersistenceAdapterTest {
                 .build();
         when(repository.findByOrderId(orderId.asString())).thenReturn(Optional.of(order));
 
-        adapter.updateOrderStatus(orderId, PROCESSING);
+        adapter.updateOrder(orderId, PROCESSING, "");
 
         assertThat(order.getOrderId()).isEqualTo(orderId.asString());
         assertThat(order.getStatus()).isEqualTo(PROCESSING);
@@ -76,4 +76,6 @@ class OrderPersistenceAdapterTest {
         verify(repository).save(order);
         verifyNoMoreInteractions(repository);
     }
+
+
 }

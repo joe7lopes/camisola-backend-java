@@ -21,13 +21,15 @@ public class Order {
     List<OrderItem> items;
     LocalDateTime createdAt;
     Status status;
+    String privateNote;
 
-    public Order(OrderId id, ShippingAddress shippingAddress, List<OrderItem> items, LocalDateTime createdAt, Status status) {
+    public Order(OrderId id, ShippingAddress shippingAddress, List<OrderItem> items, LocalDateTime createdAt, Status status, String privateNote) {
         this.id = id;
         this.shippingAddress = shippingAddress;
         this.items = items;
         this.createdAt = createdAt;
         this.status = status;
+        this.privateNote = privateNote;
         validate();
     }
 

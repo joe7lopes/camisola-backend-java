@@ -3,7 +3,7 @@ package com.camisola10.camisolabackend.rest.order;
 import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
 import com.camisola10.camisolabackend.application.service.FetchOrdersCriteria;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
@@ -29,8 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -90,17 +89,17 @@ class OrderControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     public void shouldUpdateOrderStatusToProcessing() throws Exception {
-        var payload = "{\"status\":\"PROCESSING\"}";
-        var command = mock(UpdateOrderStatusCommand.class);
-        when(mapper.map(eq("1"), any(UpdateOrderStatusRequest.class))).thenReturn(command);
+        var payload = "{\"status\":\"PROCESSING\", \"privateNote\": \"bla\"}";
+        var command = mock(UpdateOrderCommand.class);
+        when(mapper.map(eq("1"), any(UpdateOrderRequest.class))).thenReturn(command);
 
-        mockMvc.perform(post(ApiUrl.ORDERS + "/1")
+        mockMvc.perform(put(ApiUrl.ORDERS + "/1")
                 .contentType(APPLICATION_JSON)
                 .content(payload))
                 .andExpect(status().isOk());
 
-        verify(mapper).map(eq("1"), any(UpdateOrderStatusRequest.class));
-        verify(service).updateOrderStatus(any(UpdateOrderStatusCommand.class));
+        verify(mapper).map(eq("1"), any(UpdateOrderRequest.class));
+        verify(service).updateOrder(any(UpdateOrderCommand.class));
         verifyNoMoreInteractions(mapper);
         verifyNoMoreInteractions(service);
     }

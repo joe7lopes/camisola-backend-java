@@ -16,6 +16,7 @@ class OrderDto {
     ShippingAddressDto shippingAddress;
     List<OrderItemDto> items;
     String createdAt;
+    String privateNote;
     String status;
     String total;
 

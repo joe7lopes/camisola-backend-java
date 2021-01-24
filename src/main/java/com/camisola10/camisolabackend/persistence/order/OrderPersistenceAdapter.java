@@ -59,10 +59,11 @@ class OrderPersistenceAdapter implements OrderDB {
     }
 
     @Override
-    public Order updateOrderStatus(OrderId orderId, Status newStatus) {
+    public Order updateOrder(OrderId orderId, Status newStatus, String privateNote) {
         OrderDb order = repository.findByOrderId(orderId.asString())
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
         order.setStatus(newStatus);
+        order.setPrivateNote(privateNote);
         repository.save(order);
         return mapper.map(order);
     }

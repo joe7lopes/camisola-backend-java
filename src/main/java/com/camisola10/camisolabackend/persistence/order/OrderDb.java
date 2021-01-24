@@ -31,6 +31,7 @@ class OrderDb {
     private List<OrderItem> items;
     private Order.Status status;
     private BigDecimal total;
+    private String privateNote;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate

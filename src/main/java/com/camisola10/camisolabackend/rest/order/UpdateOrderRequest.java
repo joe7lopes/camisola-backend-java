@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-class UpdateOrderStatusRequest {
+class UpdateOrderRequest {
+    private String orderId;
     private String status;
-
+    private String privateNote;
 }

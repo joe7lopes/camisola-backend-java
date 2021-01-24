@@ -19,34 +19,34 @@ class OrderTest {
 
     @Test
     public void shouldThrowForNullId() {
-        assertThrows(InvalidOrderIdException.class, () -> new Order(null, null, null, null, null));
+        assertThrows(InvalidOrderIdException.class, () -> new Order(null, null, null, null, null, null));
     }
 
     @Test
     public void shouldThrowForEmptyId() {
-        assertThrows(InvalidOrderIdException.class, () -> new Order(OrderId.from(null), null, null, null, null));
+        assertThrows(InvalidOrderIdException.class, () -> new Order(OrderId.from(null), null, null, null, null, null));
     }
 
     @Test
     public void shouldThrowForNullItems() {
-        assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, null, null, null));
+        assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, null, null, null, null));
     }
 
     @Test
     public void shouldThrowForEmptyItems() {
-        assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, emptyList(), null, null));
+        assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, emptyList(), null, null, null));
     }
 
     @Test
     public void shouldHaveCreatedDateTime() {
         var item = mock(OrderItem.class);
-        assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, List.of(item) , null, null));
+        assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, List.of(item) , null, null, null));
     }
 
     @Test
     public void shouldHaveStatus() {
         var item = mock(OrderItem.class);
-        InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, List.of(item), LocalDateTime.now(), null));
+        InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, List.of(item), LocalDateTime.now(), null, null));
 
         assertThat(exception.getMessage()).isEqualTo("An order should have status");
     }
@@ -54,7 +54,7 @@ class OrderTest {
     @Test
     public void shouldHaveShippingAddress() {
         var item = mock(OrderItem.class);
-        InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, List.of(item), LocalDateTime.now(), PROCESSING));
+        InvalidOrderException exception = assertThrows(InvalidOrderException.class, () -> new Order(OrderId.create("1234"), null, List.of(item), LocalDateTime.now(), PROCESSING, null));
 
         assertThat(exception.getMessage()).isEqualTo("An order should have a shipping address");
     }

@@ -3,7 +3,7 @@ package com.camisola10.camisolabackend.rest.order;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.FetchOrdersByStatusCommand;
-import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderStatusCommand;
+import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
 import com.camisola10.camisolabackend.domain.EmailAddress;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
@@ -41,8 +41,11 @@ class OrderRequestMapper {
         return new CreateOrderCommand(orderItems, shippingAddress);
     }
 
-    public UpdateOrderStatusCommand map(String orderId, UpdateOrderStatusRequest request) {
-        return new UpdateOrderStatusCommand(OrderId.from(orderId), Order.Status.valueOf(request.getStatus()));
+    public UpdateOrderCommand map(String orderId, UpdateOrderRequest request) {
+        return new UpdateOrderCommand(
+                OrderId.from(orderId),
+                Order.Status.valueOf(request.getStatus()),
+                request.getPrivateNote());
     }
 
     public Page<OrderDto> map(Page<Order> order) {
@@ -73,6 +76,7 @@ class OrderRequestMapper {
                 .shippingAddress(toShippingAddressDto(order.getShippingAddress()))
                 .status(order.getStatus().name())
                 .total(order.getTotal().asString())
+                .privateNote(order.getPrivateNote())
                 .createdAt(order.getCreatedAt().format(formatter))
                 .build();
     }
