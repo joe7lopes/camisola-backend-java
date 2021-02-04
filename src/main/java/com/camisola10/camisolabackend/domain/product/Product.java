@@ -14,25 +14,25 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Value
 @Builder
 public class Product {
-     ProductId id;
-     String name;
-     List<ProductCategory> categories;
-     List<ProductSize> sizes;
-     List<Image> images;
-     boolean customizable;
-     Money defaultPrice;
-     String description;
-     boolean visible;
+    ProductId id;
+    String name;
+    List<ProductCategory> categories;
+    List<ProductSize> sizes;
+    List<Image> images;
+    Money defaultPrice;
+    String description;
+    boolean customizable;
+    boolean visible;
 
     private Product(
             ProductId id, String name,
             List<ProductCategory> categories,
             List<ProductSize> sizes,
             List<Image> images,
-            boolean customizable,
-            boolean visible,
             Money defaultPrice,
-            String description) {
+            String description,
+            boolean customizable,
+            boolean visible) {
         this.id = id;
         this.name = name;
         this.categories = categories;

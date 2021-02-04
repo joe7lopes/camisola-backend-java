@@ -28,6 +28,7 @@ class ProductDb {
     private List<Image> images;
     private boolean customizable;
     //TODO: DB migration tool needed.
+    @Builder.Default
     private boolean visible = true;
     private BigDecimal defaultPrice;
     private String description;
