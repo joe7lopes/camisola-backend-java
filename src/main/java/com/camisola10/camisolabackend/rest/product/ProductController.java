@@ -1,10 +1,10 @@
 package com.camisola10.camisolabackend.rest.product;
 
-import com.camisola10.camisolabackend.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.ProductsCommandService;
 import com.camisola10.camisolabackend.application.port.in.ProductsQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.rest.ApiUrl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ class ProductController {
     List<ProductResponse> findAll() {
         List<Product> products = productsQueryService.getAll();
         return products.stream().map(mapper::map)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @PostMapping

@@ -22,6 +22,7 @@ public class Product {
      boolean customizable;
      Money defaultPrice;
      String description;
+     boolean visible;
 
     private Product(
             ProductId id, String name,
@@ -29,6 +30,7 @@ public class Product {
             List<ProductSize> sizes,
             List<Image> images,
             boolean customizable,
+            boolean visible,
             Money defaultPrice,
             String description) {
         this.id = id;
@@ -37,6 +39,7 @@ public class Product {
         this.sizes = sizes;
         this.images = images;
         this.customizable = customizable;
+        this.visible = visible;
         this.defaultPrice = defaultPrice;
         this.description = description;
         validate();

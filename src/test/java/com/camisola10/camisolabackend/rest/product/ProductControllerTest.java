@@ -63,7 +63,7 @@ class ProductControllerTest {
     void shouldReturnListOfProducts() throws Exception {
         var product = mock(Product.class);
         when(productsQueryService.getAll()).thenReturn(List.of(product));
-        when(mapper.map(any(Product.class))).thenReturn(new ProductResponse("123", "p1", null, null, true, null, "23", ""));
+        when(mapper.map(any(Product.class))).thenReturn(new ProductResponse("123", "p1", null, null, true, true,null, "23", ""));
 
         mockMvc.perform(get(ApiUrl.PRODUCTS))
                 .andExpect(status().isOk())
@@ -71,6 +71,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].id").value("123"))
                 .andExpect(jsonPath("$[0].name").value("p1"))
                 .andExpect(jsonPath("$[0].customizable").value(true))
+                .andExpect(jsonPath("$[0].visible").value(true))
                 .andExpect(jsonPath("$[0].defaultPrice").value("23"));
 
         verify(productsQueryService).getAll();

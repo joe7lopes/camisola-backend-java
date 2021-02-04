@@ -23,5 +23,6 @@ public class CreateProductCommand {
     private Money defaultPrice;
     private boolean customizable;
     private String description;
+    private boolean visible;
 
 }

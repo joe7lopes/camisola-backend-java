@@ -39,6 +39,7 @@ public class ProductRequestMapperTest {
                 .categories(categories)
                 .customizable(true)
                 .defaultPrice(Money.from("23"))
+                .visible(true)
                 .build();
 
         ProductResponse dto = mapper.map(product);
@@ -57,6 +58,7 @@ public class ProductRequestMapperTest {
         assertThat(dto.getCategories().get(1)).isEqualTo(product.getCategories().get(1).getName());
 
         assertThat(dto.isCustomizable()).isEqualTo(product.isCustomizable());
+        assertThat(dto.isVisible()).isEqualTo(product.isVisible());
         assertThat(dto.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue().toPlainString());
         assertThat(dto.getDescription()).isEqualTo(product.getDescription());
 
@@ -109,6 +111,7 @@ public class ProductRequestMapperTest {
                 .sizes(createSizes())
                 .defaultPrice("445")
                 .isCustomizable(true)
+                .isVisible(true)
                 .build();
 
         UpdateProductCommand command = mapper.map(request);
@@ -119,6 +122,7 @@ public class ProductRequestMapperTest {
         assertThat(command.getSizes()).hasSize(2);
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("445"));
         assertThat(command.isCustomizable()).isEqualTo(true);
+        assertThat(command.isVisible()).isEqualTo(true);
     }
 
     private List<ProductSizeDto> createSizes() {

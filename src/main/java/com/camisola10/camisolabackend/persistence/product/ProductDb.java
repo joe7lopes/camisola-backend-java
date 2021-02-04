@@ -27,6 +27,8 @@ class ProductDb {
     private List<ProductSize> sizes;
     private List<Image> images;
     private boolean customizable;
+    //TODO: DB migration tool needed.
+    private boolean visible = true;
     private BigDecimal defaultPrice;
     private String description;
 }

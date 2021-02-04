@@ -17,5 +17,6 @@ class UpdateProductRequest {
     public List<String> categories;
     public String defaultPrice;
     public boolean isCustomizable;
+    public boolean isVisible;
     public String description;
 }

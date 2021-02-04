@@ -21,6 +21,7 @@ class ProductResponse {
     private List<String> categories;
     private List<ProductSizeResponseDto> sizes;
     private boolean customizable;
+    private boolean visible;
     private List<ProductImageResponse> images;
     private String defaultPrice;
     private String description;

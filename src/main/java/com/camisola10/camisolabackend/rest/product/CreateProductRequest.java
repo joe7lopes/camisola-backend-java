@@ -17,4 +17,5 @@ class CreateProductRequest {
     public String defaultPrice;
     public boolean isCustomizable;
     public String description;
+    public boolean visible;
 }
