@@ -62,6 +62,7 @@ class ProductService implements ProductsCommandService, ProductsQueryService {
                 .sizes(command.getSizes())
                 .images(images)
                 .customizable(command.isCustomizable())
+                .visible(command.isVisible())
                 .defaultPrice(command.getDefaultPrice())
                 .description(command.getDescription())
                 .build();
