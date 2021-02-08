@@ -21,6 +21,7 @@ public class Settings {
     @Id
     private Long id = 1L;
     private HomePageLayout homePageLayout;
+    private String fbToken;
     @LastModifiedDate
     private LocalDateTime lastModified;
 
