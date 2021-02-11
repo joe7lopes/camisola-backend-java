@@ -32,7 +32,8 @@ public class Exceptions {
 
     @ExceptionHandler({HttpMediaTypeNotSupportedException.class})
     ResponseEntity<VndErrors> handleMediaTypeNotSupported(Exception e) {
-        return error(e, BAD_REQUEST);
+        String logRef = createUniqueId();
+        return error(e, BAD_REQUEST, logRef);
     }
 
     @ExceptionHandler({
@@ -43,20 +44,23 @@ public class Exceptions {
             InvalidEmailAddressException.class,
             InvalidShippingAddress.class})
     ResponseEntity<VndErrors> handleProductExceptions(Exception e) {
-        log.warn("invalid request", e);
-        return error(e, BAD_REQUEST);
+        String logRef = createUniqueId();
+        log.warn("invalid request {}", logRef, e);
+        return error(e, BAD_REQUEST,  logRef);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<VndErrors> handleEmptyBodyRequestException(Exception ex) {
-        log.error("Empty request body ", ex);
-        return error(ex, BAD_REQUEST);
+        String logRef = createUniqueId();
+        log.error("Empty request body {}", logRef, ex);
+        return error(ex, BAD_REQUEST, logRef);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     ResponseEntity<VndErrors> handleBadCredentialsException(Exception ex) {
-        log.info("Wrong credentials", ex);
-        return error(ex, UNAUTHORIZED);
+        String logRef = createUniqueId();
+        log.info("Wrong credentials {}",logRef, ex);
+        return error(ex, UNAUTHORIZED, logRef);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
@@ -67,20 +71,19 @@ public class Exceptions {
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<VndErrors> handleException(Exception ex) {
-        log.error("Server error", ex);
-        return error(ex, INTERNAL_SERVER_ERROR);
+        String logRef = createUniqueId();
+        log.error("Server error {}", logRef, ex);
+        return error(ex, INTERNAL_SERVER_ERROR, logRef);
     }
 
-    private ResponseEntity<VndErrors> error(Exception exception, HttpStatus httpStatus) {
-        String logref = createUniqueId();
+    private ResponseEntity<VndErrors> error(Exception exception, HttpStatus httpStatus, String logRef) {
         var message = Optional.of(exception.getMessage()).orElse(exception.getClass().getSimpleName());
-        return new ResponseEntity<>(new VndErrors(logref, message), httpStatus);
+        return new ResponseEntity<>(new VndErrors(logRef, message), httpStatus);
     }
 
     private String createUniqueId() {
         return UUID.randomUUID().toString();
     }
-
 
 }
 
