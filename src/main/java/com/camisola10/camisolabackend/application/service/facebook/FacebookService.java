@@ -1,30 +1,48 @@
 package com.camisola10.camisolabackend.application.service.facebook;
 
 import com.camisola10.camisolabackend.application.port.out.FacebookMedia;
+import com.camisola10.camisolabackend.application.port.out.FacebookRepository;
 import com.camisola10.camisolabackend.domain.facebook.FacebookPageReviews;
-import com.camisola10.camisolabackend.domain.settings.Settings;
-import com.camisola10.camisolabackend.persistence.settings.SettingsRepository;
+import com.camisola10.camisolabackend.domain.facebook.FacebookSettings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Service;
+
+import java.time.Period;
+
+import static java.time.LocalDateTime.now;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FacebookService {
 
-    private final SettingsRepository settingsRepository;
+    private final FacebookRepository facebookRepository;
     private final FacebookMedia facebookMedia;
+    private static final Period LONG_LIVE_TOKEN_EXPIRATION = Period.ofDays(60);
 
     public void storeToken(String userToken) {
-        Settings settings = settingsRepository.getSettings();
-        settings.setFbToken(userToken);
-        settingsRepository.save(settings);
+
+        val longLivedToken = facebookMedia.exchangeUserTokenToLongLivedToken(userToken);
+        val longLivedPageToken = facebookMedia.exchangeLongLivedTokenToLongLivedPageToken(longLivedToken);
+
+        facebookRepository.save(FacebookSettings.of(longLivedPageToken, now()));
     }
 
     public FacebookPageReviews getPageReviews() {
-        Settings settings = settingsRepository.getSettings();
-        return facebookMedia.getFacebookPageReviews(settings.getFbToken());
+        val settings = facebookRepository.getSettings();
+        val pageAccessTokenIssueDate = settings
+                .flatMap(FacebookSettings::getLongLivedPageAccessTokenIssuedAt)
+                .orElse(now().plus(LONG_LIVE_TOKEN_EXPIRATION));
+
+        if (pageAccessTokenIssueDate.plus(LONG_LIVE_TOKEN_EXPIRATION).isAfter(now())) {
+            return settings.flatMap(FacebookSettings::getLongLivedPageAccessToken)
+                    .map(facebookMedia::getFacebookPageReviews)
+                    .orElse(FacebookPageReviews.EMPTY);
+        }
+
+        return FacebookPageReviews.EMPTY;
     }
 
 }

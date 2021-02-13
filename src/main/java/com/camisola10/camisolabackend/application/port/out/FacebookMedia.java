@@ -4,6 +4,9 @@ import com.camisola10.camisolabackend.domain.facebook.FacebookPageReviews;
 
 public interface FacebookMedia {
 
-    FacebookPageReviews getFacebookPageReviews(String userToken);
+    String exchangeUserTokenToLongLivedToken(String userToken);
 
+    String exchangeLongLivedTokenToLongLivedPageToken(String userLongLivedToken);
+
+    FacebookPageReviews getFacebookPageReviews(String longLivedPageAccessToken);
 }
