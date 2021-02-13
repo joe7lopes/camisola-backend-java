@@ -36,13 +36,13 @@ public class FacebookService {
                 .flatMap(FacebookSettings::getLongLivedPageAccessTokenIssuedAt)
                 .orElse(now().plus(LONG_LIVE_TOKEN_EXPIRATION));
 
-        if (pageAccessTokenIssueDate.plus(LONG_LIVE_TOKEN_EXPIRATION).isAfter(now())) {
-            return settings.flatMap(FacebookSettings::getLongLivedPageAccessToken)
-                    .map(facebookMedia::getFacebookPageReviews)
-                    .orElse(FacebookPageReviews.EMPTY);
+        if (pageAccessTokenIssueDate.plus(LONG_LIVE_TOKEN_EXPIRATION).isBefore(now())) {
+            return FacebookPageReviews.EMPTY;
         }
 
-        return FacebookPageReviews.EMPTY;
+        return settings.flatMap(FacebookSettings::getLongLivedPageAccessToken)
+                .map(facebookMedia::getFacebookPageReviews)
+                .orElse(FacebookPageReviews.EMPTY);
     }
 
 }
