@@ -49,7 +49,7 @@ class FacebookAdapter implements FacebookMedia {
     @Override
     public FacebookPageReviews getFacebookPageReviews(String longLivedPageAccessToken) throws RestClientException {
         val fbRatingsUri = UriComponentsBuilder
-                .fromHttpUrl(facebookProperties.getApi() + "/" + facebookProperties.getPageId() + "/ratings")
+                .fromHttpUrl(facebookProperties.getApi() + "/" + facebookProperties.getPageId() + "/ratings?limit=10")
                 .queryParam("access_token", longLivedPageAccessToken);
 
         return facebookClient.getForObject(fbRatingsUri.toUriString(), FacebookPageReviews.class);
