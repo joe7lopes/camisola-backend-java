@@ -42,7 +42,6 @@ class FacebookControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void shouldReturnPageReviews() throws Exception {
         mockMvc.perform(get(ApiUrl.FB + "/reviews"))
                 .andExpect(status().isOk());
@@ -54,14 +53,6 @@ class FacebookControllerTest {
     void shouldReturn403WhenSaveToken() throws Exception {
         val requestBody = "{ \"userToken\" : \"1233\" }";
         mockMvc.perform(post(ApiUrl.FB).content(requestBody))
-                .andExpect(status().isForbidden());
-
-        verifyNoInteractions(facebookService);
-    }
-
-    @Test
-    void shouldReturn403PageReviews() throws Exception {
-        mockMvc.perform(get(ApiUrl.FB + "/reviews"))
                 .andExpect(status().isForbidden());
 
         verifyNoInteractions(facebookService);
