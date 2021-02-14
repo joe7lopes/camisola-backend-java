@@ -43,7 +43,7 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (SignatureException e) {
                 log.info("Authentication Failed. Username or Password not valid.", e);
             } catch (Exception e) {
-                log.error("Something went wrong with jwt", e);
+                log.info("Something went wrong with jwt", e);
             }
         }
 

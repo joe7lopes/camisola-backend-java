@@ -15,14 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.http.HttpServletResponse;
 
-import static com.camisola10.camisolabackend.rest.ApiUrl.IMAGES;
-import static com.camisola10.camisolabackend.rest.ApiUrl.ORDERS;
-import static com.camisola10.camisolabackend.rest.ApiUrl.PRODUCTS;
-import static com.camisola10.camisolabackend.rest.ApiUrl.SETTINGS;
-import static com.camisola10.camisolabackend.rest.ApiUrl.SIGN_IN;
-import static com.camisola10.camisolabackend.rest.ApiUrl.SIGN_UP;
-import static com.camisola10.camisolabackend.rest.ApiUrl.USERS;
 import static com.camisola10.camisolabackend.domain.user.Role.ADMIN;
+import static com.camisola10.camisolabackend.rest.ApiUrl.*;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -51,6 +45,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(GET, SETTINGS).permitAll()
                 .mvcMatchers(POST, SETTINGS).hasRole(ADMIN.name())
                 .mvcMatchers(IMAGES).hasRole(ADMIN.name())
+                .mvcMatchers(POST, FB).hasRole(ADMIN.name())
+                .mvcMatchers(GET, FB_REVIEWS).permitAll()
                 .mvcMatchers(USERS + SIGN_IN, USERS + SIGN_UP).permitAll()
                 .anyRequest().authenticated()
                 .and()

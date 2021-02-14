@@ -1,5 +1,18 @@
 server:
   port: 3001
 logging:
+  level:
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
   file:
     name: ./logs/app.log
+fb:
+  api: https://graph.facebook.com/v9.0
+  pageId: 105428654698416
+  appId: 712092559490695
+  userId: 721769448700702
+  appSecret: 8457e84e5af40e0efbaa504fba05787c
+

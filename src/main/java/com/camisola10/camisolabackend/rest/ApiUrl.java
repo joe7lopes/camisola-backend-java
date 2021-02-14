@@ -9,4 +9,6 @@ public interface ApiUrl {
     String SIGN_UP = "/sign-up";
     String SIGN_IN = "/sign-in";
     String SETTINGS = API + "/settings";
+    String FB = API + "/fb";
+    String FB_REVIEWS = API + "/fb/reviews";
 }
