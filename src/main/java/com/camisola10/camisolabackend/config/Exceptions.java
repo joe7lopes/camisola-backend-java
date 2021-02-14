@@ -6,7 +6,6 @@ import com.camisola10.camisolabackend.domain.EmailAddress.InvalidEmailAddressExc
 import com.camisola10.camisolabackend.domain.order.ShippingAddress.InvalidShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
-import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.mediatype.vnderrors.VndErrors;
 import org.springframework.http.HttpStatus;
@@ -68,11 +67,6 @@ public class Exceptions {
     void handleUserNameNotFoundException(UsernameNotFoundException ex) {
         String id = createUniqueId();
         log.info("{} - User name not found", id, ex);
-    }
-
-    @ExceptionHandler(JwtException.class)
-    void handleJwtException(JwtException ex){
-        log.info("JWT exception", ex);
     }
 
     @ExceptionHandler(Exception.class)

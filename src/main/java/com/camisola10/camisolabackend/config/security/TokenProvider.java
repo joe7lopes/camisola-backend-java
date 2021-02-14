@@ -78,10 +78,10 @@ public class TokenProvider {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(properties.getSecret())
-                .parseClaimsJws(token)
-                .getBody();
+            return Jwts.parser()
+                    .setSigningKey(properties.getSecret())
+                    .parseClaimsJws(token)
+                    .getBody();
     }
 
     private Boolean isTokenExpired(String token) {
