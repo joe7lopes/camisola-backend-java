@@ -23,7 +23,7 @@ class OrderController {
     @GetMapping
     Page<OrderDto> fetchOrders(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int pageSize,
+            @RequestParam(defaultValue = "50") int pageSize,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(required = false) String orderId,
             @RequestParam(required = false) String name,
