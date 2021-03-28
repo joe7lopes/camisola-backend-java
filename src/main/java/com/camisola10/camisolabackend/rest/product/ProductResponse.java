@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.rest.product;
 
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +21,7 @@ class ProductResponse {
     private String name;
     private List<String> categories;
     private List<ProductSizeResponseDto> sizes;
+    private List<Badge> badges;
     private boolean customizable;
     private boolean visible;
     private List<ProductImageResponse> images;

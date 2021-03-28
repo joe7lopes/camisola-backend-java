@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -60,13 +61,17 @@ class OrderRequestMapper {
     private OrderDto toOrderDto(Order order) {
 
         List<OrderDto.OrderItemDto> items = order.getItems().stream()
-                .map(item -> new OrderDto.OrderItemDto(
-                        item.getProduct().getId().asString(),
-                        item.getProduct().getName(),
-                        item.getSize().getSize().asString(),
-                        item.getStampingName(),
-                        item.getStampingNumber()
-                ))
+                .map(item -> {
+                    var badges = item.getBadges().orElse(emptyList());
+                    return OrderDto.OrderItemDto.builder()
+                            .productId(item.getProduct().getId().asString())
+                            .productName(item.getProduct().getName())
+                            .size(item.getSize().getSize().asString())
+                            .stampingName(item.getStampingName())
+                            .stampingNumber(item.getStampingNumber())
+                            .badges(badges)
+                            .build();
+                })
                 .collect(toList());
 
         var formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
@@ -100,6 +105,7 @@ class OrderRequestMapper {
                 .sizeId(dto.getSizeId())
                 .stampingName(dto.getStampingName())
                 .stampingNumber(dto.getStampingNumber())
+                .badges(dto.getBadges())
                 .build();
     }
 }

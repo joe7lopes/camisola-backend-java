@@ -61,7 +61,6 @@ public class ProductRequestMapperTest {
         assertThat(dto.isVisible()).isEqualTo(product.isVisible());
         assertThat(dto.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue().toPlainString());
         assertThat(dto.getDescription()).isEqualTo(product.getDescription());
-
     }
 
     @Test

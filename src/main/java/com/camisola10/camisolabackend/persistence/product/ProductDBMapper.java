@@ -3,31 +3,39 @@ package com.camisola10.camisolabackend.persistence.product;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+@Component
+class ProductDBMapper {
 
-@Mapper(componentModel = "spring")
-interface ProductDBMapper {
-
-    @Mapping(target = "defaultPrice", source = "product.defaultPrice.value")
-    @Mapping(target = "productId", source = "product.id")
-    ProductDb map(Product product);
-
-    @Mapping(target = "id", source = "productId")
-    Product map(ProductDb productDb);
-
-    default ProductId map(String productId) {
-        return new ProductId(UUID.fromString(productId));
+    ProductDb map(Product product) {
+        return ProductDb.builder()
+                .productId(product.getId().asString())
+                .name(product.getName())
+                .categories(product.getCategories())
+                .sizes(product.getSizes())
+                .images(product.getImages())
+                .badges(product.getBadges())
+                .customizable(product.isCustomizable())
+                .visible(product.isVisible())
+                .defaultPrice(product.getDefaultPrice().getValue())
+                .description(product.getDescription())
+                .build();
     }
 
-    default String productId(ProductId productId) {
-        return productId.asString();
+    Product map(ProductDb productDb) {
+        return Product.builder()
+                .id(ProductId.from(productDb.getProductId()))
+                .name(productDb.getName())
+                .categories(productDb.getCategories())
+                .sizes(productDb.getSizes())
+                .images(productDb.getImages())
+                .badges(productDb.getBadges())
+                .customizable(productDb.isCustomizable())
+                .visible(productDb.isVisible())
+                .defaultPrice(Money.from(productDb.getDefaultPrice()))
+                .description(productDb.getDescription())
+                .build();
     }
 
-    default Money convert(BigDecimal defaultPrice) {
-        return new Money(defaultPrice);
-    }
 }

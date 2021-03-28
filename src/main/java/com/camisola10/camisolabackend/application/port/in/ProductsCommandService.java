@@ -4,6 +4,7 @@ import com.camisola10.camisolabackend.application.port.in.command.product.Create
 import com.camisola10.camisolabackend.application.port.in.command.product.RemoveProductCommand;
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.images.Image.ImageId;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
@@ -28,6 +29,7 @@ public interface ProductsCommandService {
         List<ProductSize> sizes;
         List<ProductCategory> categories;
         List<ImageId> imageIds;
+        List<Badge> badges;
         Money defaultPrice;
         boolean customizable;
         boolean visible;

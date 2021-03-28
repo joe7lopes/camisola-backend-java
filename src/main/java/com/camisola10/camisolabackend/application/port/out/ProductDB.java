@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.application.port.out;
 
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 
@@ -15,5 +16,7 @@ public interface ProductDB {
     void save(Product product);
 
     void deleteById(ProductId productId);
+
+    void deleteUnmatchedBadges(List<Badge> badges);
 
 }

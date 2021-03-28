@@ -15,20 +15,16 @@ class OrderItemTest {
 
     @Test
     public void shouldThrowForNullProduct() {
-        assertThrows(InvalidOrderItemException.class, () -> {
-            OrderItem.builder()
-                    .build();
-        });
+        assertThrows(InvalidOrderItemException.class, () -> OrderItem.builder()
+                .build());
 
     }
 
 
     @Test
     public void shouldThrowForNullSize() {
-        assertThrows(InvalidOrderItemException.class, () -> {
-            OrderItem.builder()
-                    .build();
-        });
+        assertThrows(InvalidOrderItemException.class, () -> OrderItem.builder()
+                .build());
 
     }
 
@@ -39,7 +35,12 @@ class OrderItemTest {
         Money productPrice = Money.from(33);
         when(pSize.getPrice()).thenReturn(productPrice);
 
-        var item = new OrderItem(p, pSize, null, null );
+        var item = OrderItem.builder()
+                .product(p)
+                .size(pSize)
+                .stampingName(null)
+                .stampingNumber(null)
+                .build();
 
         assertThat(item.getPrice()).isEqualTo(productPrice);
     }
@@ -51,7 +52,12 @@ class OrderItemTest {
         Money productPrice = Money.from(33);
         when(pSize.getPrice()).thenReturn(productPrice);
 
-        var item = new OrderItem(p, pSize, "", "" );
+        var item = OrderItem.builder()
+                .product(p)
+                .size(pSize)
+                .stampingName("")
+                .stampingNumber("")
+                .build();
 
         assertThat(item.getPrice()).isEqualTo(productPrice);
     }
@@ -63,7 +69,12 @@ class OrderItemTest {
         Money productPrice = Money.from(33);
         when(pSize.getPrice()).thenReturn(productPrice);
 
-        var item = new OrderItem(p, pSize, "name", "" );
+        var item = OrderItem.builder()
+                .product(p)
+                .size(pSize)
+                .stampingName("name")
+                .stampingNumber("12")
+                .build();
 
         assertThat(item.getPrice()).isEqualTo(productPrice.add(OrderItem.STAMPING_COST));
     }
@@ -75,7 +86,12 @@ class OrderItemTest {
         Money productPrice = Money.from(33);
         when(pSize.getPrice()).thenReturn(productPrice);
 
-        var item = new OrderItem(p, pSize, "", "12" );
+        var item = OrderItem.builder()
+                .product(p)
+                .size(pSize)
+                .stampingName("")
+                .stampingNumber("12")
+                .build();
 
         assertThat(item.getPrice()).isEqualTo(productPrice.add(OrderItem.STAMPING_COST));
     }

@@ -4,6 +4,7 @@ import com.camisola10.camisolabackend.application.service.ProductNotFoundExcepti
 import com.camisola10.camisolabackend.application.service.ProductSizeNotFoundException;
 import com.camisola10.camisolabackend.domain.EmailAddress.InvalidEmailAddressException;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress.InvalidShippingAddress;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,9 @@ public class Exceptions {
             ProductNotFoundException.class,
             ProductSizeNotFoundException.class,
             InvalidEmailAddressException.class,
-            InvalidShippingAddress.class})
+            InvalidShippingAddress.class,
+            Badge.InvalidBadgeException.class
+    })
     ResponseEntity<VndErrors> handleProductExceptions(Exception e) {
         String logRef = createUniqueId();
         log.warn("invalid request {}", logRef, e);

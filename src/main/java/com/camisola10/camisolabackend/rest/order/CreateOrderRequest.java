@@ -1,6 +1,8 @@
 package com.camisola10.camisolabackend.rest.order;
 
+import com.camisola10.camisolabackend.domain.product.Badge;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,15 +17,12 @@ class CreateOrderRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Builder
     static class OrderItem {
         private String productId;
         private String sizeId;
         private String stampingName;
         private String stampingNumber;
-
-        public OrderItem(String productId, String sizeId) {
-            this.productId = productId;
-            this.sizeId = sizeId;
-        }
+        private List<Badge> badges;
     }
 }

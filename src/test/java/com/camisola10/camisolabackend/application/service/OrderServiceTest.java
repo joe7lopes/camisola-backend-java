@@ -11,6 +11,7 @@ import com.camisola10.camisolabackend.domain.order.ShippingAddress;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.ProductSize.ProductSizeId;
+import com.camisola10.camisolabackend.persistence.settings.SettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,10 +28,7 @@ import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSIN
 import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -42,13 +40,15 @@ class OrderServiceTest {
     @Mock
     private OrderDB db;
     @Mock
+    private SettingsRepository settingsRepository;
+    @Mock
     private ApplicationEventPublisher eventPublisher;
 
     private OrderService service;
 
     @BeforeEach
     public void setUp() {
-        service = new OrderService(productService, randomIdGenerator, db, eventPublisher);
+        service = new OrderService(productService,settingsRepository, randomIdGenerator, db, eventPublisher);
     }
 
     @Test
@@ -68,6 +68,7 @@ class OrderServiceTest {
                 .build();
         when(productService.findProductById(productId)).thenReturn(Optional.of(product));
         when(randomIdGenerator.base36WithDate()).thenReturn("2020-10-28-xbbn6kg");
+        when(settingsRepository.getProductSettings()).thenReturn(Optional.empty());
 
         //WHEN
         OrderId orderId = service.createOrder(command);

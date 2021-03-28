@@ -1,9 +1,13 @@
 package com.camisola10.camisolabackend.persistence.product;
 
 import com.camisola10.camisolabackend.application.port.out.ProductDB;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,6 +21,7 @@ class ProductPersistenceAdapter implements ProductDB {
 
     private final ProductRepository repository;
     private final ProductDBMapper mapper;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public List<Product> findAll() {
@@ -40,6 +45,24 @@ class ProductPersistenceAdapter implements ProductDB {
     @Override
     public void deleteById(ProductId productId) {
         repository.deleteById(productId.asString());
+    }
+
+
+    @Override
+    public void deleteUnmatchedBadges(List<Badge> badges) {
+        Query query = new Query(
+                Criteria.where("badges").exists(true));
+
+        List<ProductDb> productDbs = mongoTemplate.find(query, ProductDb.class);
+        productDbs.stream()
+                .map(productDb -> {
+                    var knownBadges = productDb.getBadges().stream()
+                            .filter(badges::contains)
+                            .collect(toList());
+                    return productDb.withBadges(knownBadges);
+                })
+                .forEach(repository::save);
+
     }
 
 }

@@ -6,8 +6,8 @@ import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,7 +17,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ProductDBMapperTest {
 
-    private ProductDBMapper mapper = Mappers.getMapper(ProductDBMapper.class);
+    private ProductDBMapper mapper;
+
+    @BeforeEach
+    void setUp() {
+        mapper = new ProductDBMapper();
+    }
 
     @Test
     void shouldMapToProductDocument() {

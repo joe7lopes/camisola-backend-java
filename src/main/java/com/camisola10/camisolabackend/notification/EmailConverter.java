@@ -3,8 +3,13 @@ package com.camisola10.camisolabackend.notification;
 import com.camisola10.camisolabackend.domain.Email;
 import com.camisola10.camisolabackend.domain.events.OrderCreatedEvent;
 import com.camisola10.camisolabackend.domain.order.Order;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
 class EmailConverter implements Converter<OrderCreatedEvent, Email> {
@@ -49,9 +54,23 @@ class EmailConverter implements Converter<OrderCreatedEvent, Email> {
         var result = new StringBuilder();
         for (com.camisola10.camisolabackend.domain.order.OrderItem item : items) {
             result.append("<div style=\"margin-top: 1rem; margin-left: 1rem;\">").append(item.getProduct().getName()).append("</div>")
-                    .append("<div style=\"margin-left: 1rem;\">" + "Tamanho: ").append(item.getSize().getSize().asString()).append("</div>")
-                    .append("<div style=\"margin-left: 1rem;\">" + "Nome: ").append(item.getStampingName()).append("</div>")
-                    .append("<div style=\"margin-left: 1rem;\">" + "N&uacute;mero: ").append(item.getStampingNumber()).append("</div>");
+                    .append("<div style=\"margin-left: 1rem;\">" + "Tamanho: ").append(item.getSize().getSize().asString()).append("</div>");
+
+            if (!isBlank(item.getStampingName())) {
+                result.append("<div style=\"margin-left: 1rem;\">" + "Nome: ").append(item.getStampingName()).append("</div>");
+            }
+
+            if (!isBlank(item.getStampingNumber())) {
+                result.append("<div style=\"margin-left: 1rem;\">" + "N&uacute;mero: ").append(item.getStampingNumber()).append("</div>");
+            }
+
+            if(item.getBadges().isPresent() && !item.getBadges().get().isEmpty()) {
+                String badges = item.getBadges().get().stream()
+                        .map(Badge::getName)
+                        .collect(Collectors.joining(","));
+                result.append("<div style=\"margin-left: 1rem;\">" + "Badges: ").append(badges).append(item.getStampingNumber()).append("</div>");
+            }
+
         }
 
         return result.toString();

@@ -7,6 +7,7 @@ import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
@@ -46,17 +47,35 @@ class OrderRequestMapperTest {
                 .address("ul.. milan")
                 .build();
 
-        var items = List.of(
-                new CreateOrderRequest.OrderItem("1", "1", "sergio", "mendonca"),
-                new CreateOrderRequest.OrderItem("2", "12"),
-                new CreateOrderRequest.OrderItem("1", "2")
-        );
+
+        var item1 = CreateOrderRequest.OrderItem.builder()
+                .productId("1")
+                .sizeId("1")
+                .stampingName("sergio")
+                .stampingNumber("23")
+                .build();
+        var badges = createBadges();
+        var item2 = CreateOrderRequest.OrderItem.builder()
+                .productId("2")
+                .sizeId("12")
+                .badges(badges)
+                .build();
+        var item3 = CreateOrderRequest.OrderItem.builder()
+                .productId("1")
+                .sizeId("2")
+                .build();
+        var items = List.of( item1, item2, item3);
 
         var dto = new CreateOrderRequest(items, shippingAddress);
         var command = mapper.map(dto);
 
-        //TODO assert all values
         assertThat(command.getItems()).hasSize(items.size());
+
+        assertThat(command.getItems().get(0).getProductId()).isEqualTo("1");
+        assertThat(command.getItems().get(0).getSizeId()).isEqualTo("1");
+        assertThat(command.getItems().get(0).getStampingName()).isEqualTo("sergio");
+        assertThat(command.getItems().get(0).getStampingNumber()).isEqualTo("23");
+        assertThat(command.getItems().get(1).getBadges()).containsAll(badges);
 
         assertThat(command.getShippingAddress().getFirstName()).isEqualTo(dto.getShippingAddress().getFirstName());
         assertThat(command.getShippingAddress().getLastName()).isEqualTo(dto.getShippingAddress().getLastName());
@@ -66,6 +85,8 @@ class OrderRequestMapperTest {
         assertThat(command.getShippingAddress().getPostCode()).isEqualTo(dto.getShippingAddress().getPostCode());
         assertThat(command.getShippingAddress().getEmailAddress().asString()).isEqualTo(dto.getShippingAddress().getEmail());
     }
+
+
 
     @Test
     public void shouldMapToUpdateOrderCommand() {
@@ -80,7 +101,7 @@ class OrderRequestMapperTest {
     }
 
     @Test
-    public void shouldMapToFetchOrdersCommand() {
+    public void shouldMapToFetchOrdersByStatusCommand() {
 
         FetchOrdersByStatusCommand command = mapper.mapStatus("processing");
 
@@ -157,6 +178,7 @@ class OrderRequestMapperTest {
                         .size(size)
                         .stampingName("joe")
                         .stampingNumber("7")
+                        .badges(createBadges())
                         .build()
         );
 
@@ -167,5 +189,11 @@ class OrderRequestMapperTest {
                 .shippingAddress(shippingAddress)
                 .items(items)
                 .build();
+    }
+
+    private List<Badge> createBadges() {
+        var badge1 = new Badge("123", "badge1");
+        var badge2 = new Badge("123", "badge2");
+        return List.of(badge1, badge2);
     }
 }

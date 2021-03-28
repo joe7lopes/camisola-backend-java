@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,13 +27,15 @@ class ProductPersistenceAdapterTest {
     @Mock
     private ProductRepository repository;
     @Mock
+    private MongoTemplate mongoTemplate;
+    @Mock
     private ProductDBMapper mapper;
 
     private ProductPersistenceAdapter adapter;
 
     @BeforeEach
     public void setUp() {
-        adapter = new ProductPersistenceAdapter(repository, mapper);
+        adapter = new ProductPersistenceAdapter(repository, mapper, mongoTemplate);
     }
 
     @Test

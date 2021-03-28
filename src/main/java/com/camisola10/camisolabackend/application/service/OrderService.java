@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.application.service;
 
 import com.camisola10.camisolabackend.application.port.in.OrderCommandService;
 import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
+import com.camisola10.camisolabackend.application.port.in.ProductsQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand.OrderItemCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
@@ -13,6 +14,8 @@ import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
+import com.camisola10.camisolabackend.domain.settings.Settings;
+import com.camisola10.camisolabackend.persistence.settings.SettingsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -20,13 +23,15 @@ import org.springframework.stereotype.Service;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 import static java.time.LocalDateTime.now;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
 class OrderService implements OrderCommandService, OrdersQueryService {
 
-    private final ProductService productService;
+    private final ProductsQueryService productService;
+    private final SettingsRepository settingsRepository;
     private final RandomIdGenerator randomIdGenerator;
     private final OrderDB db;
     private final ApplicationEventPublisher eventPublisher;
@@ -78,11 +83,19 @@ class OrderService implements OrderCommandService, OrdersQueryService {
                 .findAny()
                 .orElseThrow(() -> new ProductSizeNotFoundException(String.format("Invalid SizeId %s for Product %s ", sizeId, product)));
 
+        var badges = settingsRepository.getProductSettings()
+                .map(Settings.ProductSettings::getBadges)
+                .orElse(emptyList())
+                .stream()
+                .filter(badge -> item.getBadges().contains(badge))
+                .collect(toList());
+
         return OrderItem.builder()
                 .product(product)
                 .size(size)
                 .stampingName(item.getStampingName())
                 .stampingNumber(item.getStampingNumber())
+                .badges(badges)
                 .build();
     }
 

@@ -2,6 +2,7 @@ package com.camisola10.camisolabackend.application.port.in.command.product;
 
 import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.images.Image.ImageId;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class CreateProductCommand {
     private List<ImageId> images;
     private List<ProductSize> sizes;
     private List<ProductCategory> categories;
+    private List<Badge> badges;
     private Money defaultPrice;
     private boolean customizable;
     private String description;

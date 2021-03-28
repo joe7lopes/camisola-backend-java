@@ -1,5 +1,6 @@
 package com.camisola10.camisolabackend.rest.order;
 
+import com.camisola10.camisolabackend.domain.product.Badge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,12 +24,14 @@ class OrderDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Data
+    @Builder
     static class OrderItemDto {
         String productId;
         String productName;
         String size;
         String stampingName;
         String stampingNumber;
+        List<Badge> badges;
     }
 }
 

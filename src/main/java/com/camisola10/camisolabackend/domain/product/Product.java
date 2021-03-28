@@ -19,6 +19,7 @@ public class Product {
     List<ProductCategory> categories;
     List<ProductSize> sizes;
     List<Image> images;
+    List<Badge> badges;
     Money defaultPrice;
     String description;
     boolean customizable;
@@ -29,6 +30,7 @@ public class Product {
             List<ProductCategory> categories,
             List<ProductSize> sizes,
             List<Image> images,
+            List<Badge> badges,
             Money defaultPrice,
             String description,
             boolean customizable,
@@ -38,6 +40,7 @@ public class Product {
         this.categories = categories;
         this.sizes = sizes;
         this.images = images;
+        this.badges = badges;
         this.customizable = customizable;
         this.visible = visible;
         this.defaultPrice = defaultPrice;

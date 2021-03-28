@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.application.port.in.command.order;
 
 import com.camisola10.camisolabackend.domain.order.ShippingAddress;
+import com.camisola10.camisolabackend.domain.product.Badge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,5 +41,6 @@ public class CreateOrderCommand {
         private String sizeId;
         private String stampingName;
         private String stampingNumber;
+        private List<Badge> badges;
     }
 }

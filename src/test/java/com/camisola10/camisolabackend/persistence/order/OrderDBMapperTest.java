@@ -17,7 +17,6 @@ import java.util.List;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.PROCESSING;
 import static com.camisola10.camisolabackend.domain.order.Order.Status.SHIPPED;
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,7 +35,12 @@ class OrderDBMapperTest {
         var productMock = mock(Product.class);
         var productSizeMock = mock(ProductSize.class);
         var shippingAddressMock = mock(ShippingAddress.class);
-        var orderItem = new OrderItem(productMock, productSizeMock, "brian", "12");
+        var orderItem =  OrderItem.builder()
+                .product(productMock)
+                .size(productSizeMock)
+                .stampingName("brian")
+                .stampingNumber("12")
+                .build();
         var items = List.of(orderItem);
         var order = Order.builder()
                 .id(OrderId.create("1234"))
@@ -65,7 +69,13 @@ class OrderDBMapperTest {
         var orderId = OrderId.create("1234").asString();
         var product = mock(Product.class);
         var productSize = mock(ProductSize.class);
-        var items = List.of(new OrderItem(product, productSize, "name", "number"));
+        var orderItem = OrderItem.builder()
+                .product(product)
+                .size(productSize)
+                .stampingName("name")
+                .stampingNumber("number")
+                .build();
+        var items = List.of(orderItem);
         var shippingAddress = mock(ShippingAddress.class);
         LocalDateTime dateNow = LocalDateTime.now();
 
@@ -97,7 +107,13 @@ class OrderDBMapperTest {
         var productMock = mock(Product.class);
         var productSizeMock = mock(ProductSize.class);
         var shippingAddressMock = mock(ShippingAddress.class);
-        var orderItem = new OrderItem(productMock, productSizeMock, "brian", "12");
+        var orderItem = OrderItem.builder()
+                .product(productMock)
+                .size(productSizeMock)
+                .stampingName("brian")
+                .stampingNumber("12")
+                .build();
+
         var items = List.of(orderItem);
         var orderDB = OrderDb.builder()
                 .orderId("1234")
@@ -117,4 +133,5 @@ class OrderDBMapperTest {
         assertThat(order.getStatus()).isEqualTo(orderDB.getStatus());
         assertThat(order.getCreatedAt()).isEqualTo(orderDB.getCreatedAt());
     }
+
 }
