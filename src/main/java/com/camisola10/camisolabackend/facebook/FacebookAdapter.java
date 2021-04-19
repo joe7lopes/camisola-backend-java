@@ -52,6 +52,8 @@ class FacebookAdapter implements FacebookMedia {
                 .fromHttpUrl(facebookProperties.getApi() + "/" + facebookProperties.getPageId() + "/ratings?limit=10")
                 .queryParam("access_token", longLivedPageAccessToken);
 
-        return facebookClient.getForObject(fbRatingsUri.toUriString(), FacebookPageReviews.class);
+        FacebookPageReviews response = facebookClient.getForObject(fbRatingsUri.toUriString(), FacebookPageReviews.class);
+        log.info("retrieved reviews from FB API: {}", response);
+        return response;
     }
 }
