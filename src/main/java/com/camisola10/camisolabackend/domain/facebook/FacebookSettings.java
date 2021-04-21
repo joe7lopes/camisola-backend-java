@@ -1,6 +1,7 @@
 package com.camisola10.camisolabackend.domain.facebook;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,7 +14,8 @@ import java.util.Optional;
 public class FacebookSettings {
 
     @Id
-    private static Long id = 1L;
+    @JsonIgnore
+    private Long id = 1L;
     private final String longLivedPageAccessToken;
     private final LocalDateTime longLivedPageAccessTokenIssuedAt;
 
