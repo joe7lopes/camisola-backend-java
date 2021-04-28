@@ -5,8 +5,14 @@ import com.camisola10.camisolabackend.application.port.in.OrdersQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.order.CreateOrderCommand;
 import com.camisola10.camisolabackend.application.port.in.command.order.UpdateOrderCommand;
 import com.camisola10.camisolabackend.application.service.FetchOrdersCriteria;
+import com.camisola10.camisolabackend.domain.Money;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
+import com.camisola10.camisolabackend.domain.order.OrderItem;
+import com.camisola10.camisolabackend.domain.order.ShippingAddress;
+import com.camisola10.camisolabackend.domain.product.Product;
+import com.camisola10.camisolabackend.domain.product.ProductSize;
+import com.camisola10.camisolabackend.domain.product.Size;
 import com.camisola10.camisolabackend.rest.ApiUrl;
 import com.camisola10.camisolabackend.rest.ControllerTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,19 +26,15 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ControllerTest(controllers = OrderController.class)
 @ActiveProfiles("local")
@@ -68,8 +70,19 @@ class OrderControllerTest {
 
         var command = mock(CreateOrderCommand.class);
         OrderId orderId = OrderId.create("1234");
+        List<OrderItem> items = List.of(OrderItem.builder()
+                .product(mock(Product.class))
+                .size(new ProductSize(mock(ProductSize.ProductSizeId.class), new Size("XS"), Money.from(20)))
+                .build());
+        var order = Order.builder()
+                .id(orderId)
+                .items(items)
+                .shippingAddress(mock(ShippingAddress.class))
+                .status(Order.Status.SHIPPED)
+                .createdAt(LocalDateTime.now())
+                .build();
         when(mapper.map(request)).thenReturn(command);
-        when(service.createOrder(command)).thenReturn(orderId);
+        when(service.createOrder(command)).thenReturn(order);
 
         mockMvc.perform(
                 post(ApiUrl.ORDERS)
@@ -77,7 +90,9 @@ class OrderControllerTest {
                         .content(requestBody))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.orderId").value(orderId.asString()));
+                .andExpect(jsonPath("$.orderId").value(orderId.asString()))
+                .andExpect(jsonPath("$.shippingCost").value("5"))
+                .andExpect(jsonPath("$.total").value("25"));
 
 
         verify(mapper).map(request);
@@ -111,7 +126,7 @@ class OrderControllerTest {
         var orderMock = mock(Order.class);
         var orders = List.of(orderMock);
         var ordersPageable = new PageImpl<>(orders);
-        Page<OrderDto> response =  mock(Page.class);
+        Page<OrderDto> response = mock(Page.class);
         when(ordersQueryService.fetchOrders(any(FetchOrdersCriteria.class))).thenReturn(ordersPageable);
         when(mapper.map(ordersPageable)).thenReturn(response);
 

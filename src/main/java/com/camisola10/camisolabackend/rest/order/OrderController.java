@@ -49,8 +49,8 @@ class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     CreateOrderResponse createOrder(@RequestBody CreateOrderRequest dto) {
         var command = mapper.map(dto);
-        var orderId = orderCommandService.createOrder(command);
-        return new CreateOrderResponse(orderId.asString());
+        var order = orderCommandService.createOrder(command);
+        return new CreateOrderResponse(order.getId().asString(), order.getTotal().asString(), Order.shippingCost.asString());
     }
 
     @PutMapping("/{orderId}")

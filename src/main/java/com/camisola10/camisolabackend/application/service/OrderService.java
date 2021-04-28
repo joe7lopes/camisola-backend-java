@@ -37,7 +37,7 @@ class OrderService implements OrderCommandService, OrdersQueryService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    public OrderId createOrder(CreateOrderCommand command) {
+    public Order createOrder(CreateOrderCommand command) {
 
         var items = command.getItems().stream()
                 .map(this::mapItems)
@@ -54,7 +54,7 @@ class OrderService implements OrderCommandService, OrdersQueryService {
 
         db.save(order);
         eventPublisher.publishEvent(new OrderCreatedEvent(order));
-        return order.getId();
+        return order;
     }
 
     @Override

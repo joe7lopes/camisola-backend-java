@@ -71,7 +71,7 @@ class OrderServiceTest {
         when(settingsRepository.getProductSettings()).thenReturn(Optional.empty());
 
         //WHEN
-        OrderId orderId = service.createOrder(command);
+        service.createOrder(command);
 
         //THEN
         verify(productService).findProductById(productId);
@@ -79,17 +79,17 @@ class OrderServiceTest {
         var orderCapture = ArgumentCaptor.forClass(Order.class);
         var eventCapture = ArgumentCaptor.forClass(OrderCreatedEvent.class);
         verify(db).save(orderCapture.capture());
-        Order order = orderCapture.getValue();
-        assertThat(order.getId()).isNotNull();
-        assertThat(order.getItems()).hasSize(command.getItems().size());
-        assertThat(order.getShippingAddress()).isEqualTo(command.getShippingAddress());
-        assertThat(order.getStatus()).isEqualTo(RECEIVED);
-        assertThat(order.getCreatedAt()).isInstanceOf(LocalDateTime.class);
-        assertThat(orderId).isEqualTo(order.getId());
+        Order savedOrder = orderCapture.getValue();
+        assertThat(savedOrder.getId()).isNotNull();
+        assertThat(savedOrder.getItems()).hasSize(command.getItems().size());
+        assertThat(savedOrder.getShippingAddress()).isEqualTo(command.getShippingAddress());
+        assertThat(savedOrder.getStatus()).isEqualTo(RECEIVED);
+        assertThat(savedOrder.getCreatedAt()).isInstanceOf(LocalDateTime.class);
+        assertThat("2020-10-28-xbbn6kg").isEqualTo(savedOrder.getId().asString());
 
         verify(eventPublisher).publishEvent(eventCapture.capture());
         var event = eventCapture.getValue();
-        assertThat(event.getOrder()).isEqualTo(order);
+        assertThat(event.getOrder()).isEqualTo(savedOrder);
 
         verifyNoMoreInteractions(productService);
         verifyNoMoreInteractions(db);

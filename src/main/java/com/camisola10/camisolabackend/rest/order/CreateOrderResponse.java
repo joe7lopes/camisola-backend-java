@@ -9,4 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 class CreateOrderResponse {
     private String orderId;
+    private String total;
+    private String shippingCost;
 }

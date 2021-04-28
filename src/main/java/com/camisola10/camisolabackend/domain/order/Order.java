@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Builder
 @Value
 public class Order {
-    static final Money shippingCost = Money.from("5");
+    public static final Money shippingCost = Money.from("5");
     OrderId id;
     ShippingAddress shippingAddress;
     List<OrderItem> items;
