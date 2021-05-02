@@ -10,15 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -36,19 +28,21 @@ class OrderPersistenceAdapter implements OrderDB {
     }
 
     @Override
-    public Page<Order> findByCriteria(FetchOrdersCriteria criteria){
-        var queryCriteria = createCriteria(criteria);
-        var pageable = PageRequest.of(criteria.getPage(), criteria.getPageSize(), Sort.by(criteria.getSortBy()).descending());
-        var query = Query.query(queryCriteria).with(pageable);
+    public Page<Order> findByCriteria(FetchOrdersCriteria criteria) {
 
-        var orders = mongoTemplate.find(query, OrderDb.class).stream()
-                .map(mapper::map)
-                .collect(Collectors.toList());
+        var pageable = PageRequest.of(criteria.getPage(), criteria.getPageSize(), Sort.by("createdAt").descending());
 
-        return PageableExecutionUtils.getPage(
-                orders,
-                pageable,
-                () -> mongoTemplate.count(query, OrderDb.class));
+        if (criteria.hasName()) {
+            return repository.findByName(criteria.getName(), pageable)
+                    .map(mapper::map);
+        } else if (criteria.hasPhone()) {
+            return repository.findByPhone(criteria.getPhone(), pageable)
+                    .map(mapper::map);
+        } else {
+            return repository.findAll(pageable)
+                    .map(mapper::map);
+        }
+
     }
 
     @Override
@@ -68,32 +62,4 @@ class OrderPersistenceAdapter implements OrderDB {
         return mapper.map(order);
     }
 
-    private Criteria createCriteria(FetchOrdersCriteria criteria) {
-        var orderId = criteria.getOrderId();
-        var name = criteria.getName();
-        var phone = criteria.getPhone();
-        var createdAt = criteria.getCreatedAt();
-        var queryCriteria = new Criteria();
-
-
-        if (Objects.nonNull(orderId)) {
-            queryCriteria.and("orderId").is(orderId);
-        }
-
-        if (Objects.nonNull(phone)) {
-            queryCriteria.and("shippingAddress.phone").is(phone);
-        }
-
-        if (Objects.nonNull(createdAt)) {
-            LocalDate date = LocalDate.parse(createdAt, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-            queryCriteria.andOperator(Criteria.where("createdAt").gte(date).lt(date.plusDays(1)));
-        }
-
-        if (Objects.nonNull(name)) {
-            queryCriteria.orOperator(Criteria.where("shippingAddress.firstName").regex(name, "i"),
-                    Criteria.where("shippingAddress.lastName").regex(name, "i"));
-        }
-
-        return queryCriteria;
-    }
 }

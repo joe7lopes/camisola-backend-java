@@ -21,26 +21,7 @@ class OrderController {
     private final OrderRequestMapper mapper;
 
     @GetMapping
-    Page<OrderDto> fetchOrders(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int pageSize,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(required = false) String orderId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String phone,
-            @RequestParam(required = false) String createdAt
-    ) {
-
-        var criteria = FetchOrdersCriteria.builder()
-                .page(page)
-                .pageSize(pageSize)
-                .sortBy(sortBy)
-                .orderId(orderId)
-                .name(name)
-                .phone(phone)
-                .createdAt(createdAt)
-                .build();
-
+    Page<OrderDto> fetchOrders(FetchOrdersCriteria criteria) {
         Page<Order> orders = ordersQueryService.fetchOrders(criteria);
         return mapper.map(orders);
     }
