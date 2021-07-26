@@ -14,4 +14,7 @@ class TokenResponse {
     private String accessToken;
     @JsonProperty("expires_in")
     private long expiresIn;
+    private String name;
+    private String id;
+
 }

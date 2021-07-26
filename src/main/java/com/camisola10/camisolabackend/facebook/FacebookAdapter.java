@@ -36,6 +36,7 @@ class FacebookAdapter implements FacebookMedia {
 
     @Override
     public String exchangeLongLivedTokenToLongLivedPageToken(String userLongLivedToken) {
+        log.info("Requesting page Access token");
         val pageAccessTokenUri = UriComponentsBuilder
                 .fromHttpUrl(facebookProperties.getApi() + "/" + facebookProperties.getUserId() + "/accounts")
                 .queryParam("access_token", userLongLivedToken);
@@ -43,7 +44,11 @@ class FacebookAdapter implements FacebookMedia {
         val pageAccessTokenResponse = facebookClient
                 .getForObject(pageAccessTokenUri.toUriString(), PageAccessTokenResponse.class);
 
-        return pageAccessTokenResponse.getData().get(0).getAccessToken();
+        return pageAccessTokenResponse.getData().stream()
+                .filter(token -> token.getId().equals(facebookProperties.getPageId()))
+                .map(TokenResponse::getAccessToken)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("page token not found"));
     }
 
     @Override
