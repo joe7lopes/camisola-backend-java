@@ -3,7 +3,6 @@ package com.camisola10.camisolabackend.aws;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.camisola10.camisolabackend.application.port.in.command.product.Base64Image;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.domain.images.Image;
@@ -16,12 +15,14 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Component
 @RequiredArgsConstructor
@@ -36,24 +37,40 @@ class S3BucketAdapter implements CloudStorage {
     public List<Image> getAllImages() {
         var request = new ListObjectsRequest()
                 .withBucketName(s3Properties.getBucketName())
-                .withPrefix(s3Properties.getBucketPath()+"/")
-                .withMarker(s3Properties.getBucketPath()+"/");
+                .withPrefix(s3Properties.getBucketPath() + "/")
+                .withMarker(s3Properties.getBucketPath() + "/");
 
         return s3Client.listObjects(request).
                 getObjectSummaries().stream()
-                .map(S3ObjectSummary::getKey)
-                .map(key-> key.replace(s3Properties.getBucketPath() + "/", ""))
-                .map(key ->
-                        new Image(ImageId.createFrom(key), key, String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), key)))
-                .collect(Collectors.toList());
+                .map(storedObject -> {
+                    var key = storedObject.getKey();
+                    var myKey = key.replace(s3Properties.getBucketPath() + "/", "");
+                    var url = String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), myKey);
+                    return Image.builder()
+                            .id(ImageId.createFrom(myKey))
+                            .name(myKey)
+                            .url(url)
+                            .lastModified(storedObject.getLastModified())
+                            .build();
+                }).collect(toUnmodifiableList());
     }
 
     @Override
     public List<Image> getImagesByIds(List<ImageId> imageIds) {
         return imageIds.stream()
-                .map(key ->
-                        new Image(key, key.asString(), String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), key.asString())))
-                .collect(Collectors.toList());
+                .map(id -> String.format("%s/%s",s3Properties.getBucketPath(),id.asString()))
+                .map(s3Key -> s3Client.getObject(s3Properties.getBucketName(), s3Key))
+                .map(storedObject -> {
+                    var key = storedObject.getKey();
+                    var myKey = key.replace(s3Properties.getBucketPath() + "/", "");
+                    var url = String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), myKey);
+                    return Image.builder()
+                            .id(ImageId.createFrom(myKey))
+                            .name(myKey)
+                            .url(url)
+                            .lastModified(storedObject.getObjectMetadata().getLastModified())
+                            .build();
+                }).collect(toUnmodifiableList());
     }
 
     @Override
@@ -72,7 +89,12 @@ class S3BucketAdapter implements CloudStorage {
         log.info("Image {} uploaded successfully to {}", imageIdStr, filePath);
 
         var url = String.format("https://%s.s3-%s.amazonaws.com/%s/%s", bucketName, s3Properties.getRegion(), bucketPath, imageIdStr);
-        return new Image(imageId, image.getName(), url);
+        return Image.builder()
+                .id(imageId)
+                .name(image.getName())
+                .url(url)
+                .lastModified(new Date())
+                .build();
     }
 
     @Override
@@ -84,13 +106,13 @@ class S3BucketAdapter implements CloudStorage {
 
     @Override
     public void deleteImages(List<ImageId> imagesKeys) {
-        imagesKeys.forEach(key-> s3Client.deleteObject(
-                        s3Properties.getBucketName(),
-                        s3Properties.getBucketPath()+"/"+key.asString()));
+        imagesKeys.forEach(key -> s3Client.deleteObject(
+                s3Properties.getBucketName(),
+                s3Properties.getBucketPath() + "/" + key.asString()));
     }
 
     private ObjectMetadata getObjectMetadata(Base64Image image, String imageIdStr, byte[] content) {
-        Map<String, String> userMetaData = Map.of("id",imageIdStr, "name", image.getNameAsUTF8());
+        Map<String, String> userMetaData = Map.of("id", imageIdStr, "name", image.getNameAsUTF8());
         var metadata = new ObjectMetadata();
         metadata.setUserMetadata(userMetaData);
         metadata.setContentLength(content.length);

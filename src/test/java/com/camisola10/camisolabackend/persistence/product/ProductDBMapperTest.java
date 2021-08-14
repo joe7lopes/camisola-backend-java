@@ -87,8 +87,8 @@ class ProductDBMapperTest {
 
     private List<ProductSize> getProductSizes() {
         return List.of(
-                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("S"), Money.from("34")),
-                new ProductSize(ProductSize.ProductSizeId.create() ,new Size("XL"), Money.from("36.6"))
+                new ProductSize(ProductSize.ProductSizeId.create(), new Size("S"), Money.from("34")),
+                new ProductSize(ProductSize.ProductSizeId.create(), new Size("XL"), Money.from("36.6"))
         );
     }
 
@@ -100,9 +100,17 @@ class ProductDBMapperTest {
     }
 
     private List<Image> getImages() {
-        return List.of(
-                new Image(Image.ImageId.create(), "data1", "http://img1"),
-                new Image(Image.ImageId.create(), "data2", "http://img2")
-        );
+        var img1 = Image.builder()
+                .id(Image.ImageId.create())
+                .name("data1")
+                .url("http://img1")
+                .build();
+
+        var img2 = Image.builder()
+                .id(Image.ImageId.create())
+                .name("data2")
+                .url("http://img2")
+                .build();
+        return List.of(img1, img2);
     }
 }

@@ -1,20 +1,16 @@
 package com.camisola10.camisolabackend.rest.images;
 
-import com.camisola10.camisolabackend.rest.ApiUrl;
 import com.camisola10.camisolabackend.application.port.in.ImagesCommandService;
 import com.camisola10.camisolabackend.application.port.in.ImagesQueryService;
 import com.camisola10.camisolabackend.application.port.in.command.image.DeleteImagesCommand;
 import com.camisola10.camisolabackend.application.port.in.command.image.UploadImagesCommand;
+import com.camisola10.camisolabackend.rest.ApiUrl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +25,7 @@ class ImagesController {
     List<ImageResponse> getImages(){
         return imagesQueryService.getAll().stream()
                 .map(ImageResponse::new)
-                .collect(Collectors.toList());
+                .collect(toUnmodifiableList());
     }
 
     @PostMapping
@@ -37,7 +33,7 @@ class ImagesController {
         UploadImagesCommand command = mapper.map(uploadImageRequests);
         return imagesCommandService.uploadImages(command).stream()
                 .map(ImageResponse::new)
-                .collect(Collectors.toList());
+                .collect(toUnmodifiableList());
     }
 
     @DeleteMapping

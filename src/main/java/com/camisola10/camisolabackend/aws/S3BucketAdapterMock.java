@@ -12,7 +12,11 @@ import java.util.List;
 @Profile("local")
 class S3BucketAdapterMock implements CloudStorage {
 
-    private static final Image MOCK_IMAGE = new Image(Image.ImageId.create(), "mockImage", "https://camisola-backend.s3-eu-west-1.amazonaws.com/defaultshirt.png");
+    private static final Image MOCK_IMAGE = Image.builder()
+            .id(Image.ImageId.create())
+            .name("mockImage")
+            .url("https://camisola-backend.s3-eu-west-1.amazonaws.com/defaultshirt.png")
+            .build();
 
     @Override
     public List<Image> getAllImages() {

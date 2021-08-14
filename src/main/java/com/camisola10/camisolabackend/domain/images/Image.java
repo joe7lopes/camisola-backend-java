@@ -1,14 +1,18 @@
 package com.camisola10.camisolabackend.domain.images;
 
+import lombok.Builder;
 import lombok.Value;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Value
+@Builder
 public class Image {
     ImageId id;
     String name;
     String url;
+    Date lastModified;
 
     @Value
     public static class ImageId {
