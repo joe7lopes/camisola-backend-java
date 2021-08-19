@@ -40,6 +40,7 @@ public class ProductRequestMapperTest {
                 .customizable(true)
                 .defaultPrice(Money.from("23"))
                 .visible(true)
+                .prebooking(true)
                 .build();
 
         ProductResponse dto = mapper.map(product);
@@ -59,6 +60,7 @@ public class ProductRequestMapperTest {
 
         assertThat(dto.isCustomizable()).isEqualTo(product.isCustomizable());
         assertThat(dto.isVisible()).isEqualTo(product.isVisible());
+        assertThat(dto.isPrebooking()).isEqualTo(product.isPrebooking());
         assertThat(dto.getDefaultPrice()).isEqualTo(product.getDefaultPrice().getValue().toPlainString());
         assertThat(dto.getDescription()).isEqualTo(product.getDescription());
     }
@@ -76,9 +78,11 @@ public class ProductRequestMapperTest {
                 .sizes(sizes)
                 .images(imageIds)
                 .categories(categories)
-                .isCustomizable(true)
                 .defaultPrice("23")
                 .description("bla bla")
+                .customizable(true)
+                .prebooking(true)
+                .visible(true)
                 .build();
 
         CreateProductCommand command = mapper.map(request);
@@ -97,8 +101,10 @@ public class ProductRequestMapperTest {
 
         assertThat(command.getImages()).hasSize(2);
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from(request.defaultPrice));
-        assertThat(command.isCustomizable()).isEqualTo(true);
         assertThat(command.getDescription()).isEqualTo(request.description);
+        assertThat(command.isCustomizable()).isEqualTo(true);
+        assertThat(command.isPrebooking()).isEqualTo(true);
+        assertThat(command.isVisible()).isEqualTo(true);
     }
 
     @Test
@@ -109,8 +115,9 @@ public class ProductRequestMapperTest {
                 .categories(createCategories())
                 .sizes(createSizes())
                 .defaultPrice("445")
-                .isCustomizable(true)
-                .isVisible(true)
+                .customizable(true)
+                .visible(true)
+                .prebooking(true)
                 .build();
 
         UpdateProductCommand command = mapper.map(request);
@@ -122,6 +129,7 @@ public class ProductRequestMapperTest {
         assertThat(command.getDefaultPrice()).isEqualTo(Money.from("445"));
         assertThat(command.isCustomizable()).isEqualTo(true);
         assertThat(command.isVisible()).isEqualTo(true);
+        assertThat(command.isPrebooking()).isEqualTo(true);
     }
 
     private List<ProductSizeDto> createSizes() {

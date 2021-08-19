@@ -23,8 +23,9 @@ public class CreateProductCommand {
     private List<ProductCategory> categories;
     private List<Badge> badges;
     private Money defaultPrice;
-    private boolean customizable;
     private String description;
+    private boolean customizable;
     private boolean visible;
+    private boolean prebooking;
 
 }

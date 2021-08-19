@@ -24,6 +24,7 @@ public class Product {
     String description;
     boolean customizable;
     boolean visible;
+    boolean prebooking;
 
     private Product(
             ProductId id, String name,
@@ -34,7 +35,8 @@ public class Product {
             Money defaultPrice,
             String description,
             boolean customizable,
-            boolean visible) {
+            boolean visible,
+            boolean prebooking) {
         this.id = id;
         this.name = name;
         this.categories = categories;
@@ -45,6 +47,7 @@ public class Product {
         this.visible = visible;
         this.defaultPrice = defaultPrice;
         this.description = description;
+        this.prebooking = prebooking;
         validate();
     }
 

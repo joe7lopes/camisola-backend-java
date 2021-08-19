@@ -18,7 +18,8 @@ class UpdateProductRequest {
     public List<String> categories;
     public List<Badge> badges;
     public String defaultPrice;
-    public boolean isCustomizable;
-    public boolean isVisible;
     public String description;
+    public boolean customizable;
+    public boolean visible;
+    public boolean prebooking;
 }

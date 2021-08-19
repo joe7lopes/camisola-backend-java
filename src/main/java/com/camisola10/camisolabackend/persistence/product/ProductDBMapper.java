@@ -20,6 +20,7 @@ class ProductDBMapper {
                 .visible(product.isVisible())
                 .defaultPrice(product.getDefaultPrice().getValue())
                 .description(product.getDescription())
+                .prebooking(product.isPrebooking())
                 .build();
     }
 
@@ -35,6 +36,7 @@ class ProductDBMapper {
                 .visible(productDb.isVisible())
                 .defaultPrice(Money.from(productDb.getDefaultPrice()))
                 .description(productDb.getDescription())
+                .prebooking(productDb.isPrebooking())
                 .build();
     }
 

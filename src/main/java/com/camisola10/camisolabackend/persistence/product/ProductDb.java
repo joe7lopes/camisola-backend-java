@@ -29,12 +29,11 @@ class ProductDb {
     private List<Image> images;
     @With
     private List<Badge> badges;
-    private boolean customizable;
-    //TODO: DB migration tool needed.
-    @Builder.Default
-    private boolean visible = true;
     private BigDecimal defaultPrice;
     private String description;
+    private boolean customizable;
+    private boolean visible;
+    private boolean prebooking;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate

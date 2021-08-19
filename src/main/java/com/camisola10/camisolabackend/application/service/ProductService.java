@@ -47,6 +47,7 @@ class ProductService implements ProductsCommandService, ProductsQueryService, Se
                 .visible(command.isVisible())
                 .defaultPrice(command.getDefaultPrice())
                 .description(command.getDescription())
+                .prebooking(command.isPrebooking())
                 .build();
 
         db.save(newProduct);

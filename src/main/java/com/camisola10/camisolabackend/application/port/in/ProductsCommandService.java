@@ -31,9 +31,10 @@ public interface ProductsCommandService {
         List<ImageId> imageIds;
         List<Badge> badges;
         Money defaultPrice;
-        boolean customizable;
-        boolean visible;
         String description;
+        boolean visible;
+        boolean customizable;
+        boolean prebooking;
     }
 
 }
