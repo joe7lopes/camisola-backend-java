@@ -10,17 +10,14 @@ import com.camisola10.camisolabackend.domain.product.ProductCategory;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.product.Size;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.math.BigDecimal;
 
 @Mapper(componentModel = "spring")
 interface ProductRequestMapper {
 
-    @Mapping(target = "customizable", source = "isCustomizable")
     CreateProductCommand map(CreateProductRequest request);
 
-    @Mapping(target = "customizable", source = "isCustomizable")
     UpdateProductCommand map(UpdateProductRequest request);
 
     ProductResponse map(Product product);

@@ -22,11 +22,12 @@ class ProductResponse {
     private List<String> categories;
     private List<ProductSizeResponseDto> sizes;
     private List<Badge> badges;
-    private boolean customizable;
-    private boolean visible;
     private List<ProductImageResponse> images;
     private String defaultPrice;
     private String description;
+    private boolean customizable;
+    private boolean visible;
+    private boolean prebooking;
 
 
     @AllArgsConstructor

@@ -33,7 +33,8 @@ class ProductController {
     @GetMapping
     List<ProductResponse> findAll() {
         List<Product> products = productsQueryService.getAll();
-        return products.stream().map(mapper::map)
+        return products.stream()
+                .map(mapper::map)
                 .collect(toList());
     }
 
