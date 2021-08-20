@@ -12,14 +12,20 @@ import com.camisola10.camisolabackend.domain.events.OrderStatusUpdatedEvent;
 import com.camisola10.camisolabackend.domain.order.Order;
 import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.OrderItem;
+import com.camisola10.camisolabackend.domain.order.PrebookingReport;
+import com.camisola10.camisolabackend.domain.product.Product;
 import com.camisola10.camisolabackend.domain.product.Product.ProductId;
 import com.camisola10.camisolabackend.domain.product.ProductSize;
 import com.camisola10.camisolabackend.domain.settings.Settings;
 import com.camisola10.camisolabackend.persistence.settings.SettingsRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.camisola10.camisolabackend.domain.order.Order.Status.RECEIVED;
 import static java.time.LocalDateTime.now;
@@ -72,6 +78,20 @@ class OrderService implements OrderCommandService, OrdersQueryService {
         return db.findByCriteria(criteria);
     }
 
+    @Override
+    public List<PrebookingReport> fetchPrebookingOrders() {
+        var orders = db.findPrebookingOrders();
+
+        var items = orders.stream()
+                .flatMap(order -> order.getItems().stream())
+                .filter(item -> item.getProduct().isPrebooking())
+                .collect(Collectors.toMap(ItemKey::new, (item) -> 1, Integer::sum));
+
+        return items.entrySet().stream()
+                .map(entry -> new PrebookingReport(entry.getKey().product.getName(), entry.getKey().size.getSize().asString(), entry.getValue()))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
     private OrderItem mapItems(OrderItemCommand item) {
         var productId = ProductId.from(item.getProductId());
         var product = productService.findProductById(productId)
@@ -97,6 +117,22 @@ class OrderService implements OrderCommandService, OrdersQueryService {
                 .stampingNumber(item.getStampingNumber())
                 .badges(badges)
                 .build();
+    }
+
+    @Data
+    private static class ItemKey {
+        private final Product product;
+        private final ProductSize size;
+
+        public ItemKey(Product product, ProductSize size) {
+            this.product = product;
+            this.size = size;
+        }
+
+        ItemKey(OrderItem orderItem) {
+            this(orderItem.getProduct(), orderItem.getSize());
+        }
+
     }
 
 }

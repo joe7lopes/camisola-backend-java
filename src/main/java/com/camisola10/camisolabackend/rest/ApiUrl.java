@@ -4,6 +4,7 @@ public interface ApiUrl {
     String API = "/api";
     String PRODUCTS = API + "/products";
     String ORDERS = API + "/orders";
+    String ORDERS_REPORTS = API + "/orders/reports";
     String USERS = API + "/users";
     String IMAGES = API + "/images";
     String SIGN_UP = "/sign-up";

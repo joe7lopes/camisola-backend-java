@@ -69,10 +69,11 @@ class ProductService implements ProductsCommandService, ProductsQueryService, Se
                 .sizes(command.getSizes())
                 .badges(command.getBadges())
                 .images(images)
-                .customizable(command.isCustomizable())
-                .visible(command.isVisible())
                 .defaultPrice(command.getDefaultPrice())
                 .description(command.getDescription())
+                .customizable(command.isCustomizable())
+                .visible(command.isVisible())
+                .prebooking(command.isPrebooking())
                 .build();
 
         db.save(newProduct);

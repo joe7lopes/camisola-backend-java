@@ -6,6 +6,8 @@ import com.camisola10.camisolabackend.domain.order.Order.OrderId;
 import com.camisola10.camisolabackend.domain.order.Order.Status;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface OrderDB {
 
     Order findById(OrderId orderId);
@@ -15,4 +17,6 @@ public interface OrderDB {
     void save(Order order);
 
     Order updateOrder(OrderId orderId, Status newStatus, String privateNote);
+
+    List<Order> findPrebookingOrders();
 }

@@ -10,7 +10,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +32,14 @@ class OrderPersistenceAdapter implements OrderDB {
         return repository.findByOrderId(orderId.asString())
                 .map(mapper::map)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
+    }
+
+    @Override
+    public List<Order> findPrebookingOrders() {
+        CriteriaDefinition criteria = Criteria.where("items.product.prebooking").is(true);
+        Query query = new Query(criteria);
+        return mongoTemplate.find(query, OrderDb.class).stream().map(mapper::map)
+                .collect(toUnmodifiableList());
     }
 
     @Override
