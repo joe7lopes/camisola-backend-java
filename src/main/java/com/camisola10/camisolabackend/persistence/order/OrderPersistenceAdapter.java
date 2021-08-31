@@ -36,7 +36,9 @@ class OrderPersistenceAdapter implements OrderDB {
 
     @Override
     public List<Order> findPrebookingOrders() {
-        CriteriaDefinition criteria = Criteria.where("items.product.prebooking").is(true);
+        CriteriaDefinition criteria = Criteria
+                .where("items.product.prebooking").is(true)
+                .and("status").in(Status.RECEIVED.name(), Status.PROCESSING.name());
         Query query = new Query(criteria);
         return mongoTemplate.find(query, OrderDb.class).stream().map(mapper::map)
                 .collect(toUnmodifiableList());
