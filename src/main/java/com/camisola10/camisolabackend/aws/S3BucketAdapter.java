@@ -3,6 +3,7 @@ package com.camisola10.camisolabackend.aws;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
 import com.camisola10.camisolabackend.application.port.in.command.product.Base64Image;
 import com.camisola10.camisolabackend.application.port.out.CloudStorage;
 import com.camisola10.camisolabackend.domain.images.Image;
@@ -14,6 +15,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
@@ -58,12 +60,13 @@ class S3BucketAdapter implements CloudStorage {
     @Override
     public List<Image> getImagesByIds(List<ImageId> imageIds) {
         return imageIds.stream()
-                .map(id -> String.format("%s/%s",s3Properties.getBucketPath(),id.asString()))
+                .map(id -> String.format("%s/%s", s3Properties.getBucketPath(), id.asString()))
                 .map(s3Key -> s3Client.getObject(s3Properties.getBucketName(), s3Key))
                 .map(storedObject -> {
                     var key = storedObject.getKey();
                     var myKey = key.replace(s3Properties.getBucketPath() + "/", "");
                     var url = String.format("https://%s.s3-%s.amazonaws.com/%s/%s", s3Properties.getBucketName(), s3Properties.getRegion(), s3Properties.getBucketPath(), myKey);
+                    closeS3Object(storedObject);
                     return Image.builder()
                             .id(ImageId.createFrom(myKey))
                             .name(myKey)
@@ -123,6 +126,14 @@ class S3BucketAdapter implements CloudStorage {
                         .getHeaderValue()
         );
         return metadata;
+    }
+
+    private void closeS3Object(S3Object storedObject) {
+        try {
+            storedObject.close();
+        } catch (IOException e) {
+            log.warn("Unable to close s3 object {}", storedObject);
+        }
     }
 
 }
