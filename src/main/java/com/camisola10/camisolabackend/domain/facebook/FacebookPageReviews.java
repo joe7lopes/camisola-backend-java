@@ -21,11 +21,20 @@ public class FacebookPageReviews {
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Review {
+    public static class Review {
+        private static final String POSITIVE = "positive";
+
         @JsonProperty("created_time")
         private Date createdTime;
 
         @JsonProperty("review_text")
         private String reviewText;
+
+        @JsonProperty("recommendation_type")
+        private String recommendationType;
+
+       public boolean isPositiveReview() {
+           return recommendationType.equals(POSITIVE);
+        }
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.Period;
 
 import static java.time.LocalDateTime.now;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +41,15 @@ public class FacebookService {
             return FacebookPageReviews.EMPTY;
         }
 
-        return settings.flatMap(FacebookSettings::getLongLivedPageAccessToken)
+        val reviews = settings.flatMap(FacebookSettings::getLongLivedPageAccessToken)
                 .map(facebookMedia::getFacebookPageReviews)
                 .orElse(FacebookPageReviews.EMPTY);
+
+        val positiveReviews = reviews.getData().stream()
+                .filter(FacebookPageReviews.Review::isPositiveReview)
+                .collect(toUnmodifiableList());
+
+        return new FacebookPageReviews(positiveReviews);
     }
 
 }
